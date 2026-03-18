@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { RefreshCw, ChevronDown, ChevronUp, ChevronRight, Sliders } from 'lucide-react'
+import { RefreshCw, ChevronDown, ChevronUp, ChevronRight, Sliders, ImageDown } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/auth'
 import { generatePost, refinePost, regenerateVariation, LimitReachedError } from '@/lib/ai/client'
@@ -9,6 +9,7 @@ import Button from '@/components/ui/Button'
 import CopyButton from '@/components/ui/CopyButton'
 import Badge from '@/components/ui/Badge'
 import Textarea from '@/components/ui/Textarea'
+import { QuoteCardModal } from '@/components/ui/QuoteCard'
 import { cn } from '@/lib/utils'
 import type { Company } from '@/types/database'
 
@@ -27,7 +28,7 @@ interface PostResults {
 
 export default function Write() {
   const [searchParams] = useSearchParams()
-  const { company } = useAuthStore()
+  const { company, profile } = useAuthStore()
 
   const [topic, setTopic] = useState(searchParams.get('topic') ?? '')
   const [results, setResults] = useState<PostResults | null>(null)
@@ -36,6 +37,7 @@ export default function Write() {
   const [refining, setRefining] = useState<Variation | null>(null)
   const [inputCollapsed, setInputCollapsed] = useState(false)
   const [error, setError] = useState('')
+  const [quoteCard, setQuoteCard] = useState<{ text: string; variation: Variation } | null>(null)
 
   const [expanded, setExpanded] = useState<Record<Variation, boolean>>({
     safe: false, bold: false, controversial: false,
@@ -257,9 +259,21 @@ export default function Write() {
               onCopy={() => handleCopy(variation)}
               onRefine={(r) => refine(variation, r)}
               onRegenerate={() => regenerateOne(variation)}
+              onQuoteCard={() => setQuoteCard({ text: results[variation], variation })}
             />
           ))}
         </div>
+      )}
+
+      {/* Quote card modal */}
+      {quoteCard && company && (
+        <QuoteCardModal
+          text={quoteCard.text}
+          variation={quoteCard.variation}
+          founderName={profile?.full_name ?? profile?.email ?? 'Founder'}
+          companyName={company.name}
+          onClose={() => setQuoteCard(null)}
+        />
       )}
     </div>
   )
@@ -288,6 +302,7 @@ function PostCard({
   onCopy,
   onRefine,
   onRegenerate,
+  onQuoteCard,
 }: {
   variation: Variation
   text: string
@@ -299,6 +314,7 @@ function PostCard({
   onCopy: () => void
   onRefine: (r: Refinement) => void
   onRegenerate: () => void
+  onQuoteCard: () => void
 }) {
   const [showRefine, setShowRefine] = useState(false)
   const meta = VARIATION_META[variation]
@@ -380,6 +396,14 @@ function PostCard({
           >
             <Sliders className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Adjust</span>
+          </button>
+          <button
+            onClick={onQuoteCard}
+            title="Get quote card image"
+            className="p-1.5 text-text-muted hover:text-text hover:bg-surface-hover rounded-lg transition-colors flex items-center gap-1 text-xs"
+          >
+            <ImageDown className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Image</span>
           </button>
         </div>
         <CopyButton

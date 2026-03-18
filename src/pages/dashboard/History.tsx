@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
-import { FileText, MessageSquare, RefreshCw, Star, ChevronDown, ChevronUp } from 'lucide-react'
+import { FileText, MessageSquare, RefreshCw, Star, ChevronDown, ChevronUp, CheckCircle2, ImageDown } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/auth'
 import CopyButton from '@/components/ui/CopyButton'
 import Badge from '@/components/ui/Badge'
+import { QuoteCardModal } from '@/components/ui/QuoteCard'
 import { cn, truncate } from '@/lib/utils'
 import type { GeneratedPost, CommentSuggestion, DraftRewrite } from '@/types/database'
 
@@ -15,8 +16,9 @@ type HistoryItem =
   | { type: 'rewrite'; data: DraftRewrite; created_at: string }
 
 export default function History() {
-  const { user } = useAuthStore()
+  const { user, profile, company } = useAuthStore()
   const [filter, setFilter] = useState<Filter>('all')
+  const [quoteCard, setQuoteCard] = useState<{ text: string; variation: 'safe' | 'bold' | 'controversial' } | null>(null)
   const [items, setItems] = useState<HistoryItem[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -108,9 +110,22 @@ export default function History() {
               key={item.type + '-' + item.data.id}
               item={item}
               onRate={(id, rating) => handleRate(id, rating)}
+              onCopied={(id, variation) => handleCopied(id, variation)}
+              onMarkPosted={(id) => handleMarkPosted(id)}
+              onQuoteCard={(text, variation) => setQuoteCard({ text, variation })}
             />
           ))}
         </div>
+      )}
+
+      {quoteCard && company && (
+        <QuoteCardModal
+          text={quoteCard.text}
+          variation={quoteCard.variation}
+          founderName={profile?.full_name ?? profile?.email ?? 'Founder'}
+          companyName={company.name}
+          onClose={() => setQuoteCard(null)}
+        />
       )}
     </div>
   )
@@ -128,6 +143,35 @@ export default function History() {
       return item
     }))
   }
+
+  async function handleCopied(postId: string, variation: 'safe' | 'bold' | 'controversial') {
+    await supabase
+      .from('generated_posts')
+      .update({ was_copied: true, selected_variation: variation })
+      .eq('id', postId)
+
+    setItems(prev => prev.map(item => {
+      if (item.type === 'post' && item.data.id === postId) {
+        return { ...item, data: { ...item.data, was_copied: true, selected_variation: variation } }
+      }
+      return item
+    }))
+  }
+
+  async function handleMarkPosted(postId: string) {
+    const now = new Date().toISOString()
+    await supabase
+      .from('generated_posts')
+      .update({ is_published: true, published_at: now })
+      .eq('id', postId)
+
+    setItems(prev => prev.map(item => {
+      if (item.type === 'post' && item.data.id === postId) {
+        return { ...item, data: { ...item.data, is_published: true, published_at: now } }
+      }
+      return item
+    }))
+  }
 }
 
 // ─── History Card ─────────────────────────────────────────────────────────────
@@ -135,9 +179,15 @@ export default function History() {
 function HistoryCard({
   item,
   onRate,
+  onCopied,
+  onMarkPosted,
+  onQuoteCard,
 }: {
   item: HistoryItem
   onRate: (id: string, rating: 1 | 2 | 3) => void
+  onCopied: (id: string, variation: 'safe' | 'bold' | 'controversial') => void
+  onMarkPosted: (id: string) => void
+  onQuoteCard: (text: string, variation: 'safe' | 'bold' | 'controversial') => void
 }) {
   const [expanded, setExpanded] = useState(false)
   const [showRating, setShowRating] = useState(false)
@@ -162,6 +212,10 @@ function HistoryCard({
       ? post.variation_controversial
       : post.variation_safe
 
+    // The active text (what copy button should copy)
+    const activeText = expanded ? expandedText : collapsedText
+    const activeVar = expanded ? activeVariation : defaultVariation
+
     // Initialise active variation to the one they actually used
     const handleExpand = () => {
       if (!expanded) setActiveVariation(defaultVariation)
@@ -177,9 +231,25 @@ function HistoryCard({
             <span className="text-xs text-text-muted">POST</span>
             <Badge variant={defaultVariation}>{defaultVariation.toUpperCase()}</Badge>
             <span className="text-xs text-text-muted">{relativeDate(post.created_at)}</span>
+            {post.is_published && (
+              <span className="flex items-center gap-1 text-xs text-success">
+                <CheckCircle2 className="w-3 h-3" /> Posted
+              </span>
+            )}
           </div>
           <div className="flex items-center gap-2 shrink-0">
-            <CopyButton text={expanded ? expandedText : collapsedText} size="sm" />
+            <button
+              onClick={() => onQuoteCard(activeText, activeVar)}
+              title="Get quote card image"
+              className="p-1.5 text-text-muted hover:text-text hover:bg-surface-hover rounded-lg transition-colors"
+            >
+              <ImageDown className="w-3.5 h-3.5" />
+            </button>
+            <CopyButton
+              text={activeText}
+              size="sm"
+              onCopy={() => onCopied(post.id, activeVar)}
+            />
           </div>
         </div>
 
@@ -213,9 +283,10 @@ function HistoryCard({
         )}
 
         {/* Footer */}
-        <div className="px-4 py-2.5 border-t border-border flex items-center justify-between gap-2">
-          {/* Rating */}
-          <div className="flex items-center gap-2">
+        <div className="px-4 py-2.5 border-t border-border flex items-center justify-between gap-2 flex-wrap">
+          {/* Left: rating + mark as posted */}
+          <div className="flex items-center gap-3 flex-wrap">
+            {/* Rating */}
             {post.performance_rating ? (
               <div className="flex items-center gap-2">
                 <span className="text-sm">
@@ -253,6 +324,16 @@ function HistoryCard({
                 className="text-xs text-text-subtle hover:text-text-muted transition-colors flex items-center gap-1"
               >
                 <Star className="w-3 h-3" /> Rate
+              </button>
+            )}
+
+            {/* Mark as posted */}
+            {!post.is_published && (
+              <button
+                onClick={() => onMarkPosted(post.id)}
+                className="text-xs text-text-subtle hover:text-success transition-colors flex items-center gap-1"
+              >
+                <CheckCircle2 className="w-3 h-3" /> Mark as posted
               </button>
             )}
           </div>

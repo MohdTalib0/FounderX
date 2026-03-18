@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, Link, useSearchParams } from 'react-router-dom'
-import { PenLine, RefreshCw, MessageSquare, Clock, ArrowRight, Check } from 'lucide-react'
+import { PenLine, RefreshCw, MessageSquare, Clock, ArrowRight, Check, ImageDown } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/auth'
 import Button from '@/components/ui/Button'
 import CopyButton from '@/components/ui/CopyButton'
+import { QuoteCardModal } from '@/components/ui/QuoteCard'
 import { truncate } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 import type { GeneratedPost } from '@/types/database'
@@ -57,6 +58,7 @@ export default function Dashboard() {
   const [recentPosts, setRecentPosts] = useState<GeneratedPost[]>([])
   const [postedDays, setPostedDays] = useState<Date[]>([])
   const [loading, setLoading] = useState(true)
+  const [quoteCard, setQuoteCard] = useState<{ text: string; variation: 'safe' | 'bold' | 'controversial' } | null>(null)
 
   const firstName = profile?.full_name?.split(' ')[0] ?? 'there'
   const pillars = company?.content_pillars ?? []
@@ -271,7 +273,16 @@ export default function Dashboard() {
                       {truncate(text, 90)}
                     </p>
                   </div>
-                  <CopyButton text={text} size="sm" className="shrink-0" />
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <button
+                      onClick={() => setQuoteCard({ text, variation: variation as 'safe' | 'bold' | 'controversial' })}
+                      title="Get quote card"
+                      className="p-1.5 text-text-muted hover:text-text hover:bg-surface-hover rounded-lg transition-colors"
+                    >
+                      <ImageDown className="w-3.5 h-3.5" />
+                    </button>
+                    <CopyButton text={text} size="sm" />
+                  </div>
                 </div>
               )
             })}
@@ -294,6 +305,16 @@ export default function Dashboard() {
           <p className="text-sm font-medium text-text-muted">Your first post is one click away.</p>
           <p className="text-xs text-text-subtle">Use the suggestion above, it takes under 3 minutes.</p>
         </div>
+      )}
+
+      {quoteCard && company && (
+        <QuoteCardModal
+          text={quoteCard.text}
+          variation={quoteCard.variation}
+          founderName={profile?.full_name ?? profile?.email ?? 'Founder'}
+          companyName={company.name}
+          onClose={() => setQuoteCard(null)}
+        />
       )}
     </div>
   )
