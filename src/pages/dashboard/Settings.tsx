@@ -277,11 +277,15 @@ function AccountTab({
   const handleToggleNotifications = async (enabled: boolean) => {
     setEmailNotifications(enabled)
     setSavingPrefs(true)
-    await supabase
+    const { error } = await supabase
       .from('profiles')
       .update({ email_notifications: enabled })
       .eq('id', profile!.id)
     setSavingPrefs(false)
+    if (error) {
+      setEmailNotifications(!enabled) // rollback
+      toast.error('Failed to update email preference.')
+    }
   }
 
   return (

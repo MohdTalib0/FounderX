@@ -229,9 +229,13 @@ serve(async (req) => {
     return new Response('ok')
   }
 
-  // Authenticate — must match CRON_SECRET env var
+  // Authenticate — fail closed: if secret is unset, refuse all requests
   const cronSecret = Deno.env.get('CRON_SECRET')
-  if (cronSecret && req.headers.get('x-cron-secret') !== cronSecret) {
+  if (!cronSecret) {
+    console.error('CRON_SECRET env var is not set — refusing request')
+    return json({ error: 'Server misconfiguration' }, 500)
+  }
+  if (req.headers.get('x-cron-secret') !== cronSecret) {
     return json({ error: 'Unauthorized' }, 401)
   }
 
@@ -366,7 +370,10 @@ serve(async (req) => {
                            makeWeekly(firstName, companyName, getTopics(pillars, 3), baseUrl)
 
       await sendEmail(resendKey, fromAddr, user.email, subject, html)
-      await supabase.from('sent_emails').insert({ user_id: user.id, email_type: type })
+      const { error: insertError } = await supabase
+        .from('sent_emails')
+        .insert({ user_id: user.id, email_type: type })
+      if (insertError) throw new Error(`sent_emails insert failed: ${insertError.message}`)
       sent++
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)

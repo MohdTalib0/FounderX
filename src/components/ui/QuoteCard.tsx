@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { toPng } from 'html-to-image'
 import { ImageDown, X, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -170,14 +171,21 @@ interface QuoteCardModalProps {
   onClose: () => void
 }
 
-// Preview size in px — matches the modal content width (~430px after padding)
-const PREVIEW_SIZE = 430
-// Full export resolution
+// Full export resolution — always 1080px
 const EXPORT_SIZE = 1080
 
 export function QuoteCardModal({ text, founderName, companyName, variation, onClose }: QuoteCardModalProps) {
   const captureRef = useRef<HTMLDivElement>(null)
+  const previewContainerRef = useRef<HTMLDivElement>(null)
   const [downloading, setDownloading] = useState(false)
+  const [previewSize, setPreviewSize] = useState(380)
+
+  // Measure the container on mount so the preview fits any screen size
+  useEffect(() => {
+    if (!previewContainerRef.current) return
+    const w = previewContainerRef.current.clientWidth
+    if (w > 0) setPreviewSize(w)
+  }, [])
 
   const handleDownload = async () => {
     if (!captureRef.current) return
@@ -199,7 +207,7 @@ export function QuoteCardModal({ text, founderName, companyName, variation, onCl
     }
   }
 
-  return (
+  return createPortal(
     <>
       {/* Off-screen full-res card for capture only — never visible */}
       <div style={{ position: 'fixed', top: -9999, left: -9999, zIndex: -1, pointerEvents: 'none' }}>
@@ -211,7 +219,7 @@ export function QuoteCardModal({ text, founderName, companyName, variation, onCl
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Modal — portalled to body so no parent stacking context interferes */}
       <div
         className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
         onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
@@ -231,12 +239,12 @@ export function QuoteCardModal({ text, founderName, companyName, variation, onCl
             </button>
           </div>
 
-          {/* Preview — rendered at PREVIEW_SIZE, no overflow issues */}
+          {/* Preview — fills available width, measured on mount */}
           <div className="px-5">
-            <div className="rounded-[10px] overflow-hidden border border-border inline-flex">
+            <div className="rounded-[10px] overflow-hidden border border-border" ref={previewContainerRef}>
               <QuoteCardInner
                 text={text} founderName={founderName} companyName={companyName}
-                variation={variation} size={PREVIEW_SIZE}
+                variation={variation} size={previewSize}
               />
             </div>
           </div>
@@ -266,6 +274,7 @@ export function QuoteCardModal({ text, founderName, companyName, variation, onCl
           </div>
         </div>
       </div>
-    </>
+    </>,
+    document.body
   )
 }
