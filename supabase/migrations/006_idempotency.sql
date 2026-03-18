@@ -1,0 +1,9 @@
+-- Make the auth.users → profiles trigger idempotent.
+-- 001_initial.sql used plain CREATE TRIGGER which fails on re-apply.
+-- This migration drops and recreates it safely.
+
+drop trigger if exists on_auth_user_created on auth.users;
+
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure handle_new_user();

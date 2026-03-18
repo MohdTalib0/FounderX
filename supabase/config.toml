@@ -1,0 +1,30 @@
+[api]
+enabled = true
+
+[auth]
+enabled = true
+
+# ── Edge Functions ────────────────────────────────────────────────────────────
+# The gateway JWT verifier uses HS256 but new Supabase projects issue ES256
+# access tokens. The mismatch causes a 401 "Invalid JWT" before the function
+# code runs. Setting verify_jwt = false disables the gateway-level check;
+# each function performs its own auth via supabase.auth.getUser() which calls
+# the Auth API directly and correctly handles ES256 tokens.
+
+[functions.generate-post]
+verify_jwt = false
+
+[functions.generate-comments]
+verify_jwt = false
+
+[functions.generate-persona]
+verify_jwt = false
+
+[functions.rewrite-draft]
+verify_jwt = false
+
+[functions.refine-post]
+verify_jwt = false
+
+[functions.send-reengagement]
+verify_jwt = false

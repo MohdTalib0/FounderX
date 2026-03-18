@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create:*)",
+      "Bash(npx --yes create-vite@latest . --template react-ts)",
+      "Bash(npx create-vite@latest . --template react-ts)",
+      "Bash(printf '\\\\n')",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx vite:*)",
+      "Bash(sed -i \"s/— what''s actually working/- what''s actually working/\" src/pages/dashboard/Dashboard.tsx)",
+      "Bash(sed -i \"s/2 of 3 — almost there/2 of 3, almost there/\" src/pages/dashboard/Dashboard.tsx)",
+      "Bash(sed -i \"s/3 of 3 — week complete ✓/3 of 3 · week complete ✓/\" src/pages/dashboard/Dashboard.tsx)",
+      "Bash(sed -i \"s/it takes under 3 minutes./it takes under 3 minutes./\" src/pages/dashboard/Dashboard.tsx)",
+      "Bash(sed -i 's/Paste any post text — get 3 ready-to-use comments/Paste any post text, get 3 ready-to-use comments/' src/pages/dashboard/Engage.tsx)",
+      "Bash(sed -i 's/LinkedIn post URL \\(optional — for your own tracking\\)/LinkedIn post URL \\(optional, for your own tracking\\)/' src/pages/dashboard/Engage.tsx)",
+      "Bash(sed -i \"s/We can''t fetch post content from URLs — paste the text above instead./We can''t fetch post content from URLs. Paste the text above instead./\" src/pages/dashboard/Engage.tsx)",
+      "Bash(sed -i 's/Review before posting — make it yours/Review before posting, make it yours/' src/pages/dashboard/Engage.tsx)",
+      "Bash(sed -i \"s/Paste rough thoughts — we''ll make them postable/Paste rough thoughts, we''ll make them postable/\" src/pages/dashboard/Rewrite.tsx)",
+      "Bash(sed -i \"s/Copied — ready to paste on LinkedIn/Copied, ready to paste on LinkedIn/\" src/pages/dashboard/Write.tsx)",
+      "Bash(sed -i \"s/profile?.full_name ?? ''—''/profile?.full_name ?? ''-''/g\" src/pages/dashboard/Settings.tsx)",
+      "Bash(sed -i \"s/profile?.email ?? ''—''/profile?.email ?? ''-''/g\" src/pages/dashboard/Settings.tsx)",
+      "Bash(sed -i \"s/Upgrade to Pro — $19\\\\/month/Upgrade to Pro · $19\\\\/month/\" src/pages/dashboard/Settings.tsx)",
+      "Bash(sed -i \"s/Built from your answers — shapes every post from here./Built from your answers, shapes every post from here./\" src/pages/Onboarding.tsx)",
+      "Bash(sed -i \"s/Your first post — ready to copy/Your first post, ready to copy/\" src/pages/Onboarding.tsx)"
+    ]
+  }
+}

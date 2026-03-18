@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-optical-sizing: auto;
+  }
+
+  body {
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  body {
+    @apply bg-background text-text font-sans;
+    color-scheme: dark;
+  }
+
+  /* Focus strategy:
+     - Buttons/links: ring via component-level focus-visible:ring-* classes
+     - Inputs/textareas: border-color change only (no ring — cleaner in dense forms)
+     - Everything else: suppress browser default, component handles it
+  */
+  :focus-visible {
+    outline: none;
+  }
+
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: none;
+    /* border-border-focus applied via component className */
+  }
+
+  /* Custom scrollbar — refined */
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3a3a3a;
+  }
+
+  /* Selection */
+  ::selection {
+    background: rgba(99, 102, 241, 0.3);
+  }
+}
+
+@layer components {
+  /* Skeleton shimmer */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      #141414 0%,
+      #1C1C1C 40%,
+      #1C1C1C 60%,
+      #141414 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.8s ease-in-out infinite;
+  }
+
+  /* Section label — used across many components */
+  .section-label {
+    @apply text-[11px] font-medium text-text-muted uppercase tracking-widest;
+  }
+}
