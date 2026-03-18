@@ -60,6 +60,7 @@ export default function Dashboard() {
   const [postedDays, setPostedDays] = useState<Date[]>([])
   const [loading, setLoading] = useState(true)
   const [quoteCard, setQuoteCard] = useState<{ text: string; variation: 'safe' | 'bold' | 'controversial' } | null>(null)
+  const [dismissPersonaPrompt, setDismissPersonaPrompt] = useState(false)
 
   const firstName = profile?.full_name?.split(' ')[0] ?? 'there'
   const pillars = company?.content_pillars ?? []
@@ -78,7 +79,7 @@ export default function Dashboard() {
         .select('*')
         .eq('user_id', user!.id)
         .order('created_at', { ascending: false })
-        .limit(20)
+        .limit(40)
 
       if (data) {
         setAllPosts(data)
@@ -106,6 +107,18 @@ export default function Dashboard() {
     weekCount === 2 ? '2 of 3, almost there' :
     '3 of 3 · week complete ✓'
 
+  // Last week count — for continuity below the tracker
+  const { mon: thisWeekMon } = getWeekDots()
+  const lastWeekStart = new Date(thisWeekMon); lastWeekStart.setDate(thisWeekMon.getDate() - 7)
+  const lastWeekCount = Math.min(
+    new Set(
+      allPosts
+        .filter(p => { const d = new Date(p.created_at); return d >= lastWeekStart && d < thisWeekMon })
+        .map(p => new Date(p.created_at).toDateString())
+    ).size,
+    3
+  )
+
   // Best variation insight — only show after 5+ copied posts
   const copiedPosts = allPosts.filter(p => p.was_copied && p.selected_variation)
   const variationCounts = copiedPosts.reduce<Record<string, number>>((acc, p) => {
@@ -115,6 +128,9 @@ export default function Dashboard() {
   }, {})
   const bestVariation = Object.entries(variationCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null
   const showInsight = copiedPosts.length >= 5 && bestVariation !== null
+
+  // Persona refresh — show at 10/20/30/40 post milestones
+  const showPersonaPrompt = !dismissPersonaPrompt && allPosts.length > 0 && allPosts.length % 10 === 0
 
   return (
     <div className="space-y-8">
@@ -134,33 +150,74 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* First-visit checklist */}
-      {isFirstVisit && (
-        <div className="bg-surface border border-border rounded-card px-4 py-3 space-y-2">
-          {[
-            { label: 'Profile created', done: true },
-            { label: 'First post generated', done: true },
-            { label: 'First post copied & posted', done: false },
-          ].map(({ label, done }) => (
-            <div key={label} className="flex items-center gap-2.5">
-              <div className={cn(
-                'w-4 h-4 rounded-full border flex items-center justify-center shrink-0',
-                done ? 'bg-success border-success' : 'border-border'
-              )}>
-                {done && <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />}
-              </div>
-              <span className={cn(
-                'text-sm',
-                done ? 'text-text-muted line-through' : 'text-text font-medium'
-              )}>
-                {label}
-              </span>
-            </div>
-          ))}
-        </div>
-      )}
+      {/* First-visit: surface the actual generated post + clear next step */}
+      {isFirstVisit && !loading && recentPosts.length > 0 && (() => {
+        const firstPost = recentPosts[0]
+        const posted = firstPost.is_published
+        const postText = firstPost.variation_bold
 
-      {/* Today's post — hero card: primary border + gradient line are the emphasis */}
+        const handleMarkPosted = async () => {
+          const now = new Date().toISOString()
+          await supabase
+            .from('generated_posts')
+            .update({ is_published: true, published_at: now })
+            .eq('id', firstPost.id)
+          setRecentPosts(prev => prev.map((p, i) => i === 0 ? { ...p, is_published: true, published_at: now } : p))
+        }
+
+        return (
+          <div className="relative overflow-hidden rounded-card border border-primary/20 bg-surface space-y-0">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+
+            {/* Steps */}
+            <div className="px-5 pt-5 pb-4 space-y-2.5">
+              {[
+                { n: 1, label: 'Founder brand created', done: true },
+                { n: 2, label: 'First post generated', done: true },
+                { n: 3, label: posted ? 'Posted on LinkedIn ✓' : 'Copy → paste on LinkedIn → mark as posted', done: posted },
+              ].map(({ n, label, done }) => (
+                <div key={n} className="flex items-center gap-3">
+                  <div className={cn(
+                    'w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[10px] font-bold',
+                    done ? 'bg-success text-white' : 'bg-primary/10 text-primary border border-primary/30'
+                  )}>
+                    {done ? <Check className="w-3 h-3" strokeWidth={3} /> : n}
+                  </div>
+                  <span className={cn('text-sm', done && n < 3 ? 'text-text-muted line-through' : done ? 'text-success font-medium' : 'text-text font-medium')}>
+                    {label}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* Post preview */}
+            <div className="mx-5 rounded-lg border border-border bg-surface-hover/40 px-4 py-3">
+              <p className="text-sm text-text leading-relaxed line-clamp-4 whitespace-pre-wrap">{postText}</p>
+            </div>
+
+            {/* Actions */}
+            <div className="flex items-center gap-3 px-5 py-4">
+              <CopyButton
+                text={postText}
+                label="Copy post"
+                className="flex-1 justify-center"
+              />
+              {!posted && (
+                <button
+                  onClick={handleMarkPosted}
+                  className="text-xs text-text-subtle hover:text-success transition-colors flex items-center gap-1.5 shrink-0"
+                >
+                  <Check className="w-3.5 h-3.5" />
+                  Mark as posted
+                </button>
+              )}
+            </div>
+          </div>
+        )
+      })()}
+
+      {/* Today's post — hero card (hidden on first visit so the actual first post takes priority) */}
+      {!isFirstVisit && (
       <div className="relative overflow-hidden rounded-card border border-primary/20 bg-surface">
         {/* Subtle top gradient accent */}
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
@@ -184,6 +241,7 @@ export default function Dashboard() {
           </Button>
         </div>
       </div>
+      )}
 
       {/* Persona pill strip */}
       {company?.persona_statement && (
@@ -199,6 +257,34 @@ export default function Dashboard() {
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {/* Persona refresh prompt — shown at 10/20/30... post milestones */}
+      {showPersonaPrompt && (
+        <div className="relative bg-surface border border-primary/20 rounded-card px-4 py-3 flex items-start justify-between gap-3">
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-text">Your brand is evolving</p>
+            <p className="text-xs text-text-muted mt-0.5">
+              You've generated {allPosts.length} posts. Refresh your persona so every new post keeps sounding like you.
+            </p>
+            <button
+              onClick={() => navigate('/dashboard/settings')}
+              className="mt-2 text-xs text-primary hover:text-primary-hover transition-colors font-medium"
+            >
+              Refresh persona →
+            </button>
+          </div>
+          <button
+            onClick={() => setDismissPersonaPrompt(true)}
+            className="text-text-subtle hover:text-text-muted transition-colors shrink-0 mt-0.5"
+            aria-label="Dismiss"
+          >
+            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
       )}
 
@@ -246,13 +332,21 @@ export default function Dashboard() {
               )
             })}
           </div>
+
+          {/* Last week continuity */}
+          {lastWeekCount > 0 && (
+            <p className="text-[11px] text-text-subtle mt-3 pt-3 border-t border-border/60">
+              Last week: <span className={cn('font-medium', lastWeekCount === 3 ? 'text-success' : 'text-text-muted')}>{lastWeekCount}/3</span>
+              {lastWeekCount === 3 && <span className="text-success"> ✓</span>}
+            </p>
+          )}
         </div>
 
         {/* Quick actions — stacked */}
         <div className="space-y-2">
           {[
-            { to: '/dashboard/write', icon: PenLine, label: 'Write Post', sub: '3 variations' },
-            { to: '/dashboard/rewrite', icon: RefreshCw, label: 'Rewrite Draft', sub: 'Polish rough ideas' },
+            { to: '/dashboard/write', icon: PenLine, label: 'Write Post', sub: '3 variations in your voice' },
+            { to: '/dashboard/rewrite', icon: RefreshCw, label: 'Had a rough idea?', sub: 'Turn messy thoughts into a post' },
             { to: '/dashboard/engage', icon: MessageSquare, label: 'Get Comments', sub: 'Engage smarter' },
           ].map(({ to, icon: Icon, label, sub }) => (
             <Link

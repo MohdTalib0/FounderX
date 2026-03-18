@@ -124,7 +124,7 @@ Rules:
 // ─── Refine Post ────────────────────────────────────────────────────────────
 export function buildRefinePrompt(
   post: string,
-  refinement: 'too_formal' | 'too_generic' | 'too_long',
+  refinement: 'too_formal' | 'too_generic' | 'too_long' | 'too_ai',
   companyName: string,
   stage: string
 ): string {
@@ -132,6 +132,7 @@ export function buildRefinePrompt(
     too_formal: 'Use contractions. Cut corporate words. Write like a person texting a smart friend. Keep the ideas, lose the stiffness.',
     too_generic: `Make it more specific to this founder. Reference their company (${companyName}), their stage (${stage}), their actual experience. Replace any claim that could apply to anyone with something only this founder could say.`,
     too_long: 'Cut to under 120 words. Keep the hook, keep the single best insight, cut everything else. No filler.',
+    too_ai: `This post sounds AI-generated. Rewrite it so it sounds unmistakably human. Specific fixes: remove all transitional phrases like "In conclusion", "It\'s important to note", "This is a reminder that". Add one rough edge — an unfinished thought, a specific number that\'s oddly precise, a sentence fragment used intentionally. Use the founder\'s company name (${companyName}) and a real detail that feels lived-in. Vary sentence length dramatically. Make it sound like a person who types fast and knows exactly what they mean.`,
   }
 
   return `Refine this LinkedIn post. The founder says it feels: "${refinement.replace('_', ' ')}"

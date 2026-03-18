@@ -4,7 +4,7 @@ import { corsHeaders } from '../_shared/cors.ts'
 import { complete, MODELS } from '../_shared/openrouter.ts'
 import { buildBrandContext, buildRefinePrompt, buildPostPrompt, parsePostVariations } from '../_shared/prompts.ts'
 
-type RefinementType = 'too_formal' | 'too_generic' | 'too_long'
+type RefinementType = 'too_formal' | 'too_generic' | 'too_long' | 'too_ai'
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {

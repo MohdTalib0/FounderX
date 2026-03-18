@@ -62,12 +62,77 @@ export default function History() {
     { value: 'rewrites', label: 'Rewrites' },
   ]
 
+  // 48h rating nudge — posts published 24-72h ago with no rating
+  const now = Date.now()
+  const awaitingRating = items
+    .filter((i): i is { type: 'post'; data: GeneratedPost; created_at: string } => i.type === 'post')
+    .filter(i => {
+      if (!i.data.is_published || !i.data.published_at || i.data.performance_rating) return false
+      const hoursAgo = (now - new Date(i.data.published_at).getTime()) / 3_600_000
+      return hoursAgo >= 20 && hoursAgo <= 96
+    })
+    .slice(0, 1)[0] ?? null
+
+  // Aggregate stats — only show after there's enough data
+  const posts = items.filter(i => i.type === 'post') as { type: 'post'; data: GeneratedPost; created_at: string }[]
+  const totalPosts = posts.length
+  const copiedPosts = posts.filter(p => p.data.was_copied).length
+  const copyRate = totalPosts > 0 ? Math.round((copiedPosts / totalPosts) * 100) : 0
+  const varCounts = posts.reduce<Record<string, number>>((acc, p) => {
+    const v = p.data.selected_variation
+    if (v) acc[v] = (acc[v] ?? 0) + 1
+    return acc
+  }, {})
+  const topVariation = Object.entries(varCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null
+  const showStats = totalPosts >= 5
+
   return (
     <div className="max-w-2xl mx-auto space-y-5">
       <div>
         <h1 className="text-page text-text">History</h1>
         <p className="text-sm text-text-muted mt-0.5">All your generated content</p>
       </div>
+
+      {/* 48h rating nudge */}
+      {!loading && awaitingRating && (
+        <div className="bg-surface border border-warning/30 rounded-card px-4 py-3 space-y-2">
+          <p className="text-sm font-semibold text-text">How did your post land?</p>
+          <p className="text-xs text-text-muted leading-snug line-clamp-1">
+            "{awaitingRating.data.topic}"
+          </p>
+          <div className="flex items-center gap-2 pt-0.5">
+            {([
+              { rating: 3 as const, emoji: '🔥', label: 'Great' },
+              { rating: 2 as const, emoji: '😐', label: 'Ok' },
+              { rating: 1 as const, emoji: '😕', label: 'Quiet' },
+            ]).map(({ rating, emoji, label }) => (
+              <button
+                key={rating}
+                onClick={() => handleRate(awaitingRating.data.id, rating)}
+                className="text-xs px-3 py-1.5 rounded-btn border border-border hover:border-warning/50 hover:text-warning text-text-muted transition-all"
+              >
+                {emoji} {label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Aggregate stats — shown after 5+ posts */}
+      {!loading && showStats && (
+        <div className="grid grid-cols-3 gap-3">
+          {[
+            { label: 'Posts generated', value: String(totalPosts) },
+            { label: 'Copy rate', value: `${copyRate}%` },
+            { label: 'Top variation', value: topVariation ? topVariation.charAt(0).toUpperCase() + topVariation.slice(1) : '—' },
+          ].map(({ label, value }) => (
+            <div key={label} className="bg-surface border border-border rounded-card px-4 py-3 text-center">
+              <p className="text-lg font-bold text-text tabular-nums">{value}</p>
+              <p className="text-[11px] text-text-muted mt-0.5">{label}</p>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Filter tabs */}
       <div className="flex gap-1 bg-surface border border-border rounded-card p-1 w-fit">

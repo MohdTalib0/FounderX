@@ -16,7 +16,7 @@ import type { Company } from '@/types/database'
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type Variation = 'safe' | 'bold' | 'controversial'
-type Refinement = 'too_formal' | 'too_generic' | 'too_long'
+type Refinement = 'too_formal' | 'too_generic' | 'too_long' | 'too_ai'
 
 interface PostResults {
   safe: string
@@ -281,16 +281,17 @@ export default function Write() {
 
 // ─── Post Card ────────────────────────────────────────────────────────────────
 
-const VARIATION_META: Record<Variation, { label: string; emoji: string; desc: string }> = {
-  safe:          { label: 'SAFE',          emoji: '🟢', desc: 'Professional · builds authority' },
-  bold:          { label: 'BOLD',          emoji: '🟠', desc: 'Opinionated take' },
-  controversial: { label: 'CONTROVERSIAL', emoji: '🔴', desc: 'Starts a debate' },
+const VARIATION_META: Record<Variation, { label: string; emoji: string; desc: string; hint: string }> = {
+  safe:          { label: 'SAFE',          emoji: '🟢', desc: 'Professional · builds authority', hint: 'Builds trust. Best for new audiences.' },
+  bold:          { label: 'BOLD',          emoji: '🟠', desc: 'Opinionated take',                hint: 'Gets more comments. Great for engagement.' },
+  controversial: { label: 'CONTROVERSIAL', emoji: '🔴', desc: 'Starts a debate',                 hint: 'High risk, high reach. Use sparingly.' },
 }
 
 const REFINE_OPTIONS: { value: Refinement; label: string }[] = [
-  { value: 'too_formal', label: 'Too formal' },
+  { value: 'too_formal',  label: 'Too formal' },
   { value: 'too_generic', label: 'Too generic' },
-  { value: 'too_long', label: 'Too long' },
+  { value: 'too_long',    label: 'Too long' },
+  { value: 'too_ai',      label: 'Sounds AI' },
 ]
 
 function PostCard({
@@ -333,7 +334,7 @@ function PostCard({
       isRefining && 'opacity-60 pointer-events-none'
     )}>
       {/* Header strip */}
-      <div className="flex items-center justify-between gap-3 px-4 pt-4 pb-3">
+      <div className="flex items-center justify-between gap-3 px-4 pt-4 pb-2">
         <div className="flex items-center gap-2">
           <span className="text-sm">{meta.emoji}</span>
           <Badge variant={variation}>{meta.label}</Badge>
@@ -343,6 +344,7 @@ function PostCard({
           {charCount}/3000
         </span>
       </div>
+      <p className="px-4 pb-2 text-[11px] text-text-subtle italic">{meta.hint}</p>
 
       {/* Content */}
       <div className="px-4 pb-3 space-y-2">
@@ -372,6 +374,21 @@ function PostCard({
           </>
         )}
       </div>
+
+      {/* Mobile copy shortcut — shown when expanded so the copy button isn't far away */}
+      {isExpanded && isLong && (
+        <div className="sm:hidden px-4 pb-3">
+          <CopyButton
+            text={text}
+            onCopy={() => {
+              onCopy()
+              toast.success('Copied, ready to paste on LinkedIn')
+            }}
+            label="Copy post"
+            className="w-full justify-center"
+          />
+        </div>
+      )}
 
       {/* Action bar */}
       <div className="flex items-center justify-between gap-2 px-4 py-3 border-t border-border bg-surface-hover/40">

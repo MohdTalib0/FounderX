@@ -60,7 +60,7 @@ export async function generatePost(payload: {
 export async function refinePost(payload: {
   company_id: string
   post: string
-  refinement: 'too_formal' | 'too_generic' | 'too_long'
+  refinement: 'too_formal' | 'too_generic' | 'too_long' | 'too_ai'
 }): Promise<string> {
   const result = await invoke<{ refined: string }>('refine-post', { ...payload, mode: 'refine' })
   return result.refined
