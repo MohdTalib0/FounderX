@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Allow: /pricing
+
+# Block auth and app routes — no indexing value
+Disallow: /dashboard/
+Disallow: /login
+Disallow: /signup
+Disallow: /onboarding
+Disallow: /auth/
+
+Sitemap: https://founderx.app/sitemap.xml
