@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate, Link } from 'react-router-dom'
 import { Home, PenLine, FileEdit, MessageSquare, History, Settings, LogOut, Zap } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/store/auth'
@@ -78,6 +78,39 @@ export default function Sidebar() {
           </div>
         ))}
       </nav>
+
+      {/* Usage meter — free (12) and starter (80) only */}
+      {(profile?.plan === 'free' || profile?.plan === 'starter') && (() => {
+        const postsUsed = profile.posts_this_month ?? 0
+        const limit = profile.plan === 'starter' ? 80 : 12
+        const pct = (postsUsed / limit) * 100
+        const barColor = pct < 58 ? 'bg-primary' : pct < 83 ? 'bg-warning' : 'bg-danger'
+        return (
+          <div className="px-3 pb-3 space-y-1">
+            <p className="text-xs text-text-muted">{postsUsed}/{limit} posts this month</p>
+            <div className="w-full h-1.5 bg-border rounded-full overflow-hidden">
+              <div
+                className={cn('h-full rounded-full transition-all', barColor)}
+                style={{ width: `${Math.min(pct, 100)}%` }}
+              />
+            </div>
+          </div>
+        )
+      })()}
+
+      {/* Upgrade nudge — free → Starter, starter → Pro */}
+      {profile?.plan === 'free' && (
+        <Link to="/pricing" className="block mx-2 mb-2 px-3 py-2.5 rounded-[8px] bg-primary/[0.06] border border-primary/20 hover:bg-primary/[0.1] transition-colors">
+          <p className="text-xs font-semibold text-text">More posts, more growth</p>
+          <p className="text-xs text-text-muted">Starter · $9/month</p>
+        </Link>
+      )}
+      {profile?.plan === 'starter' && (
+        <Link to="/pricing" className="block mx-2 mb-2 px-3 py-2.5 rounded-[8px] bg-primary/[0.06] border border-primary/20 hover:bg-primary/[0.1] transition-colors">
+          <p className="text-xs font-semibold text-text">Unlock unlimited posts</p>
+          <p className="text-xs text-text-muted">Pro · $19/month</p>
+        </Link>
+      )}
 
       {/* User */}
       <div className="px-2 py-3 border-t border-border shrink-0">

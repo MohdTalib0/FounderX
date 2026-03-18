@@ -10,7 +10,7 @@ export type Database = {
           full_name: string | null
           avatar_url: string | null
           onboarded: boolean
-          plan: 'free' | 'pro' | 'beta'
+          plan: 'free' | 'starter' | 'pro' | 'beta'
           posts_this_month: number
           comments_this_month: number
           rewrites_this_month: number
@@ -26,7 +26,7 @@ export type Database = {
           full_name?: string | null
           avatar_url?: string | null
           onboarded?: boolean
-          plan?: 'free' | 'pro' | 'beta'
+          plan?: 'free' | 'starter' | 'pro' | 'beta'
           posts_this_month?: number
           comments_this_month?: number
           rewrites_this_month?: number

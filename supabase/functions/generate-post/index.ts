@@ -11,7 +11,6 @@ import {
   pickRotation,
 } from '../_shared/prompts.ts'
 
-const FREE_LIMIT = 12
 
 // ─── Performance summary builder ─────────────────────────────────────────────
 
@@ -101,14 +100,13 @@ serve(async (req) => {
     // Atomic check-and-increment via RPC (handles reset + race conditions)
     const { data: usage, error: usageError } = await supabase.rpc('increment_usage', {
       p_field: 'posts',
-      p_limit: FREE_LIMIT,
     })
 
     if (usageError) throw new Error(usageError.message)
 
     if (!usage.allowed) {
       return new Response(
-        JSON.stringify({ error: 'limit_reached', limit: FREE_LIMIT }),
+        JSON.stringify({ error: 'limit_reached', limit: usage.limit }),
         { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }

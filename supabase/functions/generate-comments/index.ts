@@ -4,7 +4,6 @@ import { corsHeaders } from '../_shared/cors.ts'
 import { complete, MODELS } from '../_shared/openrouter.ts'
 import { buildBrandContext, buildCommentPrompt, parseComments } from '../_shared/prompts.ts'
 
-const FREE_LIMIT = 15
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -45,14 +44,13 @@ serve(async (req) => {
     // Atomic check-and-increment
     const { data: usage, error: usageError } = await supabase.rpc('increment_usage', {
       p_field: 'comments',
-      p_limit: FREE_LIMIT,
     })
 
     if (usageError) throw new Error(usageError.message)
 
     if (!usage.allowed) {
       return new Response(
-        JSON.stringify({ error: 'limit_reached', limit: FREE_LIMIT }),
+        JSON.stringify({ error: 'limit_reached', limit: usage.limit }),
         { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }

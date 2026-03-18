@@ -55,6 +55,7 @@ export default function Dashboard() {
 
   const isFirstVisit = searchParams.get('onboarded') === '1'
 
+  const [allPosts, setAllPosts] = useState<GeneratedPost[]>([])
   const [recentPosts, setRecentPosts] = useState<GeneratedPost[]>([])
   const [postedDays, setPostedDays] = useState<Date[]>([])
   const [loading, setLoading] = useState(true)
@@ -80,6 +81,7 @@ export default function Dashboard() {
         .limit(20)
 
       if (data) {
+        setAllPosts(data)
         setRecentPosts(data.slice(0, 3))
         const days = data
           .filter(p => new Date(p.created_at) >= weekStart)
@@ -103,6 +105,16 @@ export default function Dashboard() {
     weekCount === 1 ? '1 of 3 this week' :
     weekCount === 2 ? '2 of 3, almost there' :
     '3 of 3 · week complete ✓'
+
+  // Best variation insight — only show after 5+ copied posts
+  const copiedPosts = allPosts.filter(p => p.was_copied && p.selected_variation)
+  const variationCounts = copiedPosts.reduce<Record<string, number>>((acc, p) => {
+    const v = p.selected_variation!
+    acc[v] = (acc[v] ?? 0) + 1
+    return acc
+  }, {})
+  const bestVariation = Object.entries(variationCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null
+  const showInsight = copiedPosts.length >= 5 && bestVariation !== null
 
   return (
     <div className="space-y-8">
@@ -173,14 +185,33 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Persona pill strip */}
+      {company?.persona_statement && (
+        <div className="bg-surface border border-border rounded-card px-4 py-3 space-y-2">
+          <p className="text-xs text-text-muted font-medium uppercase tracking-wide">Your founder brand</p>
+          <p className="text-sm text-text leading-snug">{company.persona_statement}</p>
+          {company.content_pillars && company.content_pillars.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 pt-0.5">
+              {company.content_pillars.map(pillar => (
+                <span key={pillar} className="text-xs px-2 py-0.5 rounded-full bg-primary/[0.08] border border-primary/20 text-primary font-medium">
+                  {pillar}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Weekly tracker + Quick actions — side by side */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
         {/* Weekly tracker */}
-        <div className="bg-surface border border-border rounded-card p-5">
+        <div className={cn('bg-surface border border-border rounded-card p-5', weekCount === 3 && 'ring-1 ring-success/20 bg-success/[0.03]')}>
           <div className="flex items-center justify-between mb-4">
-            <p className="text-sm font-medium text-text">This week</p>
-            <p className="text-xs text-text-muted">{weekMessage}</p>
+            <p className="text-sm font-medium text-text">
+              {weekCount === 3 ? <>🎉 <span className="text-success">Week complete!</span></> : 'This week'}
+            </p>
+            <p className={cn('text-xs', weekCount === 3 ? 'text-success' : 'text-text-muted')}>{weekMessage}</p>
           </div>
 
           <div className="flex items-center gap-4">
@@ -249,6 +280,16 @@ export default function Dashboard() {
               View all →
             </Link>
           </div>
+
+          {showInsight && (
+            <p className="text-xs text-text-muted mb-3">
+              Your <span className={cn(
+                'font-semibold',
+                bestVariation === 'bold' ? 'text-amber-400' :
+                bestVariation === 'controversial' ? 'text-red-400' : 'text-emerald-400'
+              )}>{bestVariation}</span> posts get copied most — keep going.
+            </p>
+          )}
 
           <div className="space-y-2">
             {recentPosts.map(post => {
