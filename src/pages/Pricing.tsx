@@ -331,7 +331,7 @@ function PlanCard({ plan }: { plan: typeof PLANS[number] }) {
         {/* CTA */}
         <Link to={ctaTo} className="block mt-auto">
           <Button
-            variant={featured ? 'default' : 'secondary'}
+            variant={featured ? 'primary' : 'secondary'}
             className="w-full"
           >
             {cta}

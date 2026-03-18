@@ -7,7 +7,6 @@ import { useAuthStore } from '@/store/auth'
 import { generatePersona, generatePost } from '@/lib/ai/client'
 import Button from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
-import type { Company } from '@/types/database'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

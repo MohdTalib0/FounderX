@@ -7,6 +7,7 @@ import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import Textarea from '@/components/ui/Textarea'
 import { cn } from '@/lib/utils'
+import type { Company, Profile } from '@/types/database'
 
 type Tab = 'brand' | 'account'
 
@@ -19,7 +20,7 @@ const PERSONALITIES = [
 ] as const
 
 export default function Settings() {
-  const { user, profile, company, setCompany, setProfile } = useAuthStore()
+  const { profile, company, setCompany, setProfile } = useAuthStore()
   const [tab, setTab] = useState<Tab>('brand')
 
   return (
@@ -68,8 +69,8 @@ export default function Settings() {
 // ─── Brand Tab ────────────────────────────────────────────────────────────────
 
 function BrandTab({ company, onUpdate }: {
-  company: NonNullable<ReturnType<typeof useAuthStore>['company']>
-  onUpdate: (c: typeof company) => void
+  company: Company
+  onUpdate: (c: Company) => void
 }) {
   const [name, setName] = useState(company.name)
   const [description, setDescription] = useState(company.description)
@@ -95,7 +96,7 @@ function BrandTab({ company, onUpdate }: {
         target_audience: targetAudience,
         stage,
         founder_personality: personality,
-        keywords: keywords.split(',').map(k => k.trim()).filter(Boolean),
+        keywords: keywords.split(',').map((k: string) => k.trim()).filter(Boolean),
       })
       .eq('id', company.id)
       .select()
@@ -128,7 +129,7 @@ function BrandTab({ company, onUpdate }: {
           target_audience: targetAudience,
           stage,
           founder_personality: personality,
-          keywords: keywords.split(',').map(k => k.trim()).filter(Boolean),
+          keywords: keywords.split(',').map((k: string) => k.trim()).filter(Boolean),
         })
         .eq('id', company.id)
 
@@ -155,7 +156,7 @@ function BrandTab({ company, onUpdate }: {
 
           {company.content_pillars && company.content_pillars.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-2">
-              {company.content_pillars.map((p, i) => (
+              {company.content_pillars.map((p: string, i: number) => (
                 <span key={i} className="text-xs px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
                   {p}
                 </span>
@@ -257,7 +258,7 @@ function AccountTab({
   profile,
   onSignOut,
 }: {
-  profile: ReturnType<typeof useAuthStore>['profile']
+  profile: Profile | null
   onSignOut: () => void
 }) {
   const [emailNotifications, setEmailNotifications] = useState(
