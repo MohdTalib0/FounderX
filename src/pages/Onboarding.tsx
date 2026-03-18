@@ -272,10 +272,10 @@ export default function Onboarding() {
           description: form.description,
           target_audience: form.target_audience,
           industry: form.industry,
-          stage: form.stage,
-          founder_goal: form.founder_goal,
-          tone: 'casual',
-          founder_personality: form.founder_personality,
+          stage: form.stage as 'idea' | 'mvp' | 'live' | 'scale',
+          founder_goal: form.founder_goal as 'get_users' | 'build_audience' | 'raise_funds' | 'hire',
+          tone: 'casual' as const,
+          founder_personality: form.founder_personality as 'builder' | 'storyteller' | 'analyst' | 'contrarian',
           keywords: keywords.length > 0 ? keywords : null,
         })
         .select()
