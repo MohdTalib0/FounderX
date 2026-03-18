@@ -4,6 +4,10 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  # VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are intentionally public —
+  # they are client-side Supabase credentials protected by Row Level Security,
+  # not secrets. Vite inlines all VITE_* vars into the bundle by design.
+  SECRETS_SCAN_OMIT_KEYS = "VITE_SUPABASE_URL,VITE_SUPABASE_ANON_KEY"
 
 # SPA fallback — all routes serve index.html
 [[redirects]]
