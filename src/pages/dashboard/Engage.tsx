@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { toast } from '@/store/toast'
 import { useAuthStore } from '@/store/auth'
+import { supabase } from '@/lib/supabase'
 import { generateComments, LimitReachedError } from '@/lib/ai/client'
 import Button from '@/components/ui/Button'
 import CopyButton from '@/components/ui/CopyButton'
 import Textarea from '@/components/ui/Textarea'
-import { isLinkedInPostUrl } from '@/lib/utils'
+import { isLinkedInPostUrl, cn } from '@/lib/utils'
 
 interface CommentResults {
   insightful: string
@@ -19,14 +20,45 @@ const COMMENT_META = [
   { key: 'bold'       as const, label: 'Bold',        desc: 'Strong take or respectful disagreement' },
 ]
 
+const COMMENT_GOAL = 5
+
+function getWeekStart(): Date {
+  const today = new Date()
+  const day = today.getDay()
+  const mon = new Date(today)
+  mon.setDate(today.getDate() - (day === 0 ? 6 : day - 1))
+  mon.setHours(0, 0, 0, 0)
+  return mon
+}
+
 export default function Engage() {
-  const { company } = useAuthStore()
+  const { company, user } = useAuthStore()
 
   const [postText, setPostText] = useState('')
   const [linkedinUrl, setLinkedinUrl] = useState('')
   const [results, setResults] = useState<CommentResults | null>(null)
   const [generating, setGenerating] = useState(false)
   const [error, setError] = useState('')
+  const [weeklyCount, setWeeklyCount] = useState(0)
+  const [goalLoading, setGoalLoading] = useState(true)
+
+  const loadWeeklyCount = async () => {
+    if (!user) return
+    const weekStart = getWeekStart()
+    const { data } = await supabase
+      .from('comment_suggestions')
+      .select('source_post, created_at')
+      .eq('user_id', user.id)
+      .gte('created_at', weekStart.toISOString())
+    const normalize = (s: string) => s.trim().toLowerCase().replace(/\s+/g, ' ')
+    const count = new Set((data ?? []).map(r => normalize(r.source_post))).size
+    setWeeklyCount(count)
+    setGoalLoading(false)
+  }
+
+  useEffect(() => {
+    loadWeeklyCount()
+  }, [user])
 
   const generate = async () => {
     if (!company || !postText.trim()) return
@@ -43,6 +75,7 @@ export default function Engage() {
 
       setResults(comments)
       toast.success('3 comment suggestions ready')
+      loadWeeklyCount()
     } catch (err: unknown) {
       console.error('Comment generation error:', err)
       if (err instanceof LimitReachedError) {
@@ -63,6 +96,53 @@ export default function Engage() {
         <h1 className="text-page text-text">Get Comment Suggestions</h1>
         <p className="text-sm text-text-muted mt-0.5">Paste any post text, get 3 ready-to-use comments</p>
       </div>
+
+      {goalLoading ? (
+        <div className="skeleton h-20 rounded-card" />
+      ) : (
+        (() => {
+          const displayCount = Math.min(weeklyCount, COMMENT_GOAL)
+          const complete = displayCount >= COMMENT_GOAL
+          return (
+            <div className={cn(
+              'bg-surface border rounded-card px-4 py-3',
+              complete ? 'border-success/20' : 'border-border'
+            )}>
+              <p className="text-sm font-medium text-text mb-2">
+                Comment on {COMMENT_GOAL} posts this week
+              </p>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: COMMENT_GOAL }).map((_, i) => (
+                    <div
+                      key={i}
+                      className={cn(
+                        'w-8 h-1.5 rounded-full',
+                        i < displayCount ? 'bg-primary' : 'bg-border'
+                      )}
+                    />
+                  ))}
+                </div>
+                <span className={cn(
+                  'text-xs font-medium',
+                  complete ? 'text-success' : 'text-text-muted'
+                )}>
+                  {complete ? `${COMMENT_GOAL}/${COMMENT_GOAL} ✓ Week complete!` : `${displayCount}/${COMMENT_GOAL} done`}
+                </span>
+              </div>
+              <p className="text-xs text-text-muted">Paste any post, get 3 comments in seconds.</p>
+              {complete && (
+                <div className="mt-2 pt-2.5 border-t border-success/20 space-y-1">
+                  <p className="text-xs font-medium text-success">Week complete — great engagement habit!</p>
+                  <p className="text-xs text-text-subtle">
+                    Keep going for bonus reach — every extra comment compounds your visibility.
+                  </p>
+                </div>
+              )}
+            </div>
+          )
+        })()
+      )}
 
       <div className="space-y-3">
         {/* Post text — primary */}

@@ -98,19 +98,21 @@ export default function Sidebar() {
         )
       })()}
 
-      {/* Upgrade nudge — free → Starter, starter → Pro */}
-      {profile?.plan === 'free' && (
-        <Link to="/pricing" className="block mx-2 mb-2 px-3 py-2.5 rounded-[8px] bg-primary/[0.06] border border-primary/20 hover:bg-primary/[0.1] transition-colors">
-          <p className="text-xs font-semibold text-text">More posts, more growth</p>
-          <p className="text-xs text-text-muted">Starter · $9/month</p>
-        </Link>
-      )}
-      {profile?.plan === 'starter' && (
-        <Link to="/pricing" className="block mx-2 mb-2 px-3 py-2.5 rounded-[8px] bg-primary/[0.06] border border-primary/20 hover:bg-primary/[0.1] transition-colors">
-          <p className="text-xs font-semibold text-text">Unlock unlimited posts</p>
-          <p className="text-xs text-text-muted">Pro · $19/month</p>
-        </Link>
-      )}
+      {/* Upgrade nudge — passive single-line, full wall only shows on limit-hit in Write */}
+      {(profile?.plan === 'free' || profile?.plan === 'starter') && (() => {
+        const limit = profile.plan === 'free' ? 12 : 80
+        const remaining = Math.max(0, limit - (profile.posts_this_month ?? 0))
+        return (
+          <div className="mx-2 mb-2 px-3 py-2 rounded-[8px] border border-border/60">
+            <p className="text-xs text-text-muted mb-1">
+              {remaining === 0 ? 'Monthly limit reached.' : `${remaining} of ${limit} posts left.`}
+            </p>
+            <Link to="/pricing" className="text-xs font-semibold text-primary hover:text-primary-hover transition-colors">
+              Upgrade to Pro →
+            </Link>
+          </div>
+        )
+      })()}
 
       {/* User */}
       <div className="px-2 py-3 border-t border-border shrink-0">

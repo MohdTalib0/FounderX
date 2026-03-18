@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { RefreshCw, ChevronDown, ChevronUp, ChevronRight, Sliders, ImageDown } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
@@ -10,6 +10,7 @@ import CopyButton from '@/components/ui/CopyButton'
 import Badge from '@/components/ui/Badge'
 import Textarea from '@/components/ui/Textarea'
 import { QuoteCardModal } from '@/components/ui/QuoteCard'
+import UpgradeWall from '@/components/ui/UpgradeWall'
 import { cn } from '@/lib/utils'
 import type { Company } from '@/types/database'
 
@@ -28,7 +29,7 @@ interface PostResults {
 
 export default function Write() {
   const [searchParams] = useSearchParams()
-  const { company, profile } = useAuthStore()
+  const { company, profile, user } = useAuthStore()
 
   const [topic, setTopic] = useState(searchParams.get('topic') ?? '')
   const [results, setResults] = useState<PostResults | null>(null)
@@ -37,7 +38,49 @@ export default function Write() {
   const [refining, setRefining] = useState<Variation | null>(null)
   const [inputCollapsed, setInputCollapsed] = useState(false)
   const [error, setError] = useState('')
+  const [limitReached, setLimitReached] = useState(false)
+  const [proofData, setProofData] = useState({ copied: 0, published: 0 })
   const [quoteCard, setQuoteCard] = useState<{ text: string; variation: Variation } | null>(null)
+
+  useEffect(() => {
+    if (!user) return
+    const thirtyDaysAgo = new Date()
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+    supabase
+      .from('generated_posts')
+      .select('was_copied, is_published')
+      .eq('user_id', user.id)
+      .gte('created_at', thirtyDaysAgo.toISOString())
+      .then(({ data }) => {
+        if (data) setProofData({
+          copied: data.filter(p => p.was_copied).length,
+          published: data.filter(p => p.is_published).length,
+        })
+      })
+  }, [user])
+
+  // Load an existing post when arriving from Dashboard "Copy post →" next step
+  const postId = searchParams.get('postId')
+  useEffect(() => {
+    if (!postId || !user) return
+    supabase
+      .from('generated_posts')
+      .select('id, topic, variation_safe, variation_bold, variation_controversial')
+      .eq('id', postId)
+      .eq('user_id', user.id)
+      .single()
+      .then(({ data }) => {
+        if (!data) return
+        setTopic(data.topic)
+        setResults({
+          safe: data.variation_safe,
+          bold: data.variation_bold,
+          controversial: data.variation_controversial,
+        })
+        setSavedPostId(data.id)
+        setInputCollapsed(true)
+      })
+  }, [postId, user])
 
   const [expanded, setExpanded] = useState<Record<Variation, boolean>>({
     safe: false, bold: false, controversial: false,
@@ -54,6 +97,7 @@ export default function Write() {
     if (!t) return
 
     setError('')
+    setLimitReached(false)
     setGenerating(true)
     setResults(null)
     setSavedPostId(null)
@@ -79,7 +123,7 @@ export default function Write() {
     } catch (err: unknown) {
       console.error('Generate error:', err)
       if (err instanceof LimitReachedError) {
-        setError('You have reached your monthly post limit. Upgrade to Pro for unlimited posts.')
+        setLimitReached(true)
       } else {
         setError('Failed to generate posts. Please try again.')
       }
@@ -144,7 +188,7 @@ export default function Write() {
     }
   }
 
-  // ─── Copy tracking ─────────────────────────────────────────────────────────
+  // ─── Copy + posted tracking ─────────────────────────────────────────────────
 
   const handleCopy = async (variation: Variation) => {
     if (!savedPostId) return
@@ -152,6 +196,19 @@ export default function Write() {
       .from('generated_posts')
       .update({ was_copied: true, selected_variation: variation })
       .eq('id', savedPostId)
+    // Unlock progressive disclosure in-session without waiting for a remount
+    setProofData(prev => ({ ...prev, copied: prev.copied + 1 }))
+  }
+
+  const handleMarkPosted = async (variation: Variation) => {
+    if (!savedPostId) return
+    const now = new Date().toISOString()
+    const { error } = await supabase
+      .from('generated_posts')
+      .update({ is_published: true, published_at: now, selected_variation: variation })
+      .eq('id', savedPostId)
+    if (error) throw error
+    setProofData(prev => ({ ...prev, published: prev.published + 1 }))
   }
 
   const toggleExpand = (v: Variation) =>
@@ -214,6 +271,18 @@ export default function Write() {
 
           {error && <p className="text-sm text-danger">{error}</p>}
 
+          {limitReached && profile && (
+            <UpgradeWall
+              plan={profile.plan}
+              postsGenerated={profile.posts_this_month}
+              postsCopied={proofData.copied}
+              postsPublished={proofData.published}
+              postsUsed={profile.posts_this_month}
+              postsLimit={profile.plan === 'free' ? 12 : profile.plan === 'starter' ? 80 : null}
+              compact
+            />
+          )}
+
           <Button
             onClick={() => generate()}
             loading={generating}
@@ -255,8 +324,10 @@ export default function Write() {
               company={company!}
               isExpanded={expanded[variation]}
               isRefining={refining === variation}
+              isNewUser={proofData.copied === 0 && proofData.published === 0}
               onToggleExpand={() => toggleExpand(variation)}
               onCopy={() => handleCopy(variation)}
+              onMarkPosted={() => handleMarkPosted(variation)}
               onRefine={(r) => refine(variation, r)}
               onRegenerate={() => regenerateOne(variation)}
               onQuoteCard={() => setQuoteCard({ text: results[variation], variation })}
@@ -299,8 +370,10 @@ function PostCard({
   text,
   isExpanded,
   isRefining,
+  isNewUser,
   onToggleExpand,
   onCopy,
+  onMarkPosted,
   onRefine,
   onRegenerate,
   onQuoteCard,
@@ -311,13 +384,24 @@ function PostCard({
   company: Company
   isExpanded: boolean
   isRefining: boolean
+  isNewUser: boolean
   onToggleExpand: () => void
   onCopy: () => void
+  onMarkPosted: () => Promise<void>
   onRefine: (r: Refinement) => void
   onRegenerate: () => void
   onQuoteCard: () => void
 }) {
   const [showRefine, setShowRefine] = useState(false)
+  const [showPostedPrompt, setShowPostedPrompt] = useState(false)
+  const [markedPosted, setMarkedPosted] = useState(false)
+  const [postingToLinkedIn, setPostingToLinkedIn] = useState(false)
+
+  useEffect(() => {
+    if (!showPostedPrompt) return
+    const t = setTimeout(() => setShowPostedPrompt(false), 10_000)
+    return () => clearTimeout(t)
+  }, [showPostedPrompt])
   const meta = VARIATION_META[variation]
   const lines = text.split('\n')
   const hook = lines[0] ?? ''
@@ -383,6 +467,7 @@ function PostCard({
             onCopy={() => {
               onCopy()
               toast.success('Copied, ready to paste on LinkedIn')
+              if (!markedPosted) setShowPostedPrompt(true)
             }}
             label="Copy post"
             className="w-full justify-center"
@@ -401,38 +486,82 @@ function PostCard({
           >
             <RefreshCw className="w-3.5 h-3.5" />
           </button>
-          <button
-            onClick={() => setShowRefine(v => !v)}
-            title="Refine this post"
-            className={cn(
-              'p-1.5 rounded-lg transition-colors flex items-center gap-1 text-xs',
-              showRefine
-                ? 'text-primary bg-primary/10'
-                : 'text-text-muted hover:text-text hover:bg-surface-hover'
-            )}
-          >
-            <Sliders className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Adjust</span>
-          </button>
-          <button
-            onClick={onQuoteCard}
-            title="Get quote card image"
-            className="p-1.5 text-text-muted hover:text-text hover:bg-surface-hover rounded-lg transition-colors flex items-center gap-1 text-xs"
-          >
-            <ImageDown className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Image</span>
-          </button>
+          {!isNewUser && (
+            <>
+              <button
+                onClick={() => setShowRefine(v => !v)}
+                title="Refine this post"
+                className={cn(
+                  'p-1.5 rounded-lg transition-colors flex items-center gap-1 text-xs',
+                  showRefine
+                    ? 'text-primary bg-primary/10'
+                    : 'text-text-muted hover:text-text hover:bg-surface-hover'
+                )}
+              >
+                <Sliders className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Adjust</span>
+              </button>
+              <button
+                onClick={onQuoteCard}
+                title="Get quote card image"
+                className="p-1.5 text-text-muted hover:text-text hover:bg-surface-hover rounded-lg transition-colors flex items-center gap-1 text-xs"
+              >
+                <ImageDown className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Image</span>
+              </button>
+            </>
+          )}
         </div>
         <CopyButton
           text={text}
           onCopy={() => {
             onCopy()
             toast.success('Copied, ready to paste on LinkedIn')
+            if (!markedPosted) setShowPostedPrompt(true)
           }}
           size="sm"
           label="Copy post"
         />
       </div>
+
+      {/* "Did you post?" inline prompt — shown after copy, auto-dismisses in 10s */}
+      {showPostedPrompt && (
+        <div className="flex items-center justify-between gap-3 px-4 py-2.5 border-t border-border bg-surface-hover/20">
+          <p className="text-xs text-text-muted">Did you post this on LinkedIn?</p>
+          <div className="flex items-center gap-3">
+            <button
+              disabled={postingToLinkedIn}
+              onClick={async () => {
+                setPostingToLinkedIn(true)
+                try {
+                  await onMarkPosted()
+                  setMarkedPosted(true)
+                  setShowPostedPrompt(false)
+                  toast.success('Marked as posted ✓')
+                } catch {
+                  toast.error('Could not save. Try again.')
+                } finally {
+                  setPostingToLinkedIn(false)
+                }
+              }}
+              className="text-xs font-medium text-success hover:text-success/80 transition-colors disabled:opacity-50"
+            >
+              Yes ✓
+            </button>
+            <button
+              onClick={() => setShowPostedPrompt(false)}
+              className="text-xs text-text-subtle hover:text-text-muted transition-colors"
+            >
+              Not yet
+            </button>
+          </div>
+        </div>
+      )}
+      {markedPosted && (
+        <div className="px-4 py-2 border-t border-success/20 bg-success/[0.04]">
+          <p className="text-xs text-success font-medium">Posted on LinkedIn ✓</p>
+        </div>
+      )}
 
       {/* Refine panel — hidden by default, revealed on click */}
       {showRefine && (

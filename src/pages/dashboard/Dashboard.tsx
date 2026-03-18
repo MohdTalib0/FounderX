@@ -10,27 +10,35 @@ import { truncate } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 import type { GeneratedPost } from '@/types/database'
 
-// ─── Topic pool (rotates daily) ───────────────────────────────────────────────
+// ─── Weekly plan templates ─────────────────────────────────────────────────────
 
-const TOPIC_TEMPLATES = [
-  (p: string) => `${p}: the thing nobody warned me about`,
-  (p: string) => `An honest look at ${p.toLowerCase()} - what's actually working`,
-  (p: string) => `What I wish I knew about ${p.toLowerCase()} 6 months ago`,
-  (p: string) => `The hardest part of ${p.toLowerCase()} right now`,
-  (p: string) => `A recent ${p.toLowerCase()} lesson that changed how I think`,
-  (p: string) => `${p}: what the advice gets wrong`,
-  (p: string) => `The counterintuitive truth about ${p.toLowerCase()}`,
+const WEEKLY_TEMPLATES = [
+  (p: string) => `${p}: what's actually working right now`,
+  (p: string) => `The thing nobody warned me about ${p.toLowerCase()}`,
+  (p: string) => `What I got wrong about ${p.toLowerCase()}`,
+  (p: string) => `A recent ${p.toLowerCase()} lesson worth sharing`,
+  (p: string) => `${p}: the uncomfortable truth`,
+  (p: string) => `How my thinking on ${p.toLowerCase()} has changed`,
 ]
 
-function getDailyTopic(pillars: string[]): string {
-  if (!pillars.length) return 'What you learned this week'
+function getWeekOfYear(): number {
   const now = new Date()
-  const dayOfYear = Math.floor(
-    (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86_400_000
-  )
-  const pillar = pillars[dayOfYear % pillars.length]
-  const template = TOPIC_TEMPLATES[dayOfYear % TOPIC_TEMPLATES.length]
-  return template(pillar)
+  const start = new Date(now.getFullYear(), 0, 1)
+  return Math.floor((now.getTime() - start.getTime()) / (7 * 86_400_000))
+}
+
+function getWeeklyTopics(pillars: string[]): [string, string, string] {
+  if (!pillars.length) return [
+    'What you learned building your product this week',
+    'The biggest challenge you navigated recently',
+    'What surprised you about your users this week',
+  ]
+  const w = getWeekOfYear()
+  return [0, 1, 2].map(i => {
+    const pillar = pillars[(w * 3 + i) % pillars.length]
+    const template = WEEKLY_TEMPLATES[(w * 3 + i) % WEEKLY_TEMPLATES.length]
+    return template(pillar)
+  }) as [string, string, string]
 }
 
 // ─── Weekly tracker ───────────────────────────────────────────────────────────
@@ -64,7 +72,6 @@ export default function Dashboard() {
 
   const firstName = profile?.full_name?.split(' ')[0] ?? 'there'
   const pillars = company?.content_pillars ?? []
-  const todayTopic = getDailyTopic(pillars)
 
   const hour = new Date().getHours()
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
@@ -132,6 +139,33 @@ export default function Dashboard() {
   // Persona refresh — show at 10/20/30/40 post milestones
   const showPersonaPrompt = !dismissPersonaPrompt && allPosts.length > 0 && allPosts.length % 10 === 0
 
+  // ─── Today's Next Step ────────────────────────────────────────────────────
+  const todayStr = new Date().toDateString()
+  const todayIsPostingDay = [1, 3, 5].includes(new Date().getDay())
+
+  const pendingRatingPost = !loading
+    ? allPosts.find(p => {
+        if (!p.is_published || p.performance_rating != null || !p.published_at) return false
+        const hours = (Date.now() - new Date(p.published_at).getTime()) / 3_600_000
+        return hours >= 20 && hours <= 96
+      }) ?? null
+    : null
+
+  const generatedTodayNotCopied = !loading
+    ? allPosts.find(p => new Date(p.created_at).toDateString() === todayStr && !p.was_copied) ?? null
+    : null
+
+  const hasPostToday = postedDays.some(d => d.toDateString() === todayStr)
+  const shouldPostToday = !loading && todayIsPostingDay && !hasPostToday && weekCount < 3
+
+  type NextStepType = { type: 'rate' } | { type: 'copy'; postId: string } | { type: 'generate' }
+  const nextStep: NextStepType | null = isFirstVisit ? null : (
+    pendingRatingPost != null ? { type: 'rate' } :
+    generatedTodayNotCopied != null ? { type: 'copy', postId: generatedTodayNotCopied.id } :
+    shouldPostToday ? { type: 'generate' } :
+    null
+  )
+
   return (
     <div className="space-y-8">
 
@@ -149,6 +183,27 @@ export default function Dashboard() {
           </div>
         )}
       </div>
+
+      {/* Today's Next Step — persistent action strip */}
+      {nextStep && (
+        <div className="flex items-center justify-between gap-3 bg-primary/[0.05] border border-primary/20 rounded-card px-4 py-3">
+          <p className="text-sm text-text">
+            {nextStep.type === 'rate' && 'How did that post land? A quick rating improves your next one.'}
+            {nextStep.type === 'copy' && 'Your post is ready — copy it and paste on LinkedIn.'}
+            {nextStep.type === 'generate' && "Today's your posting day — keep the streak going."}
+          </p>
+          <Link
+            to={
+              nextStep.type === 'rate' ? '/dashboard/history' :
+              nextStep.type === 'copy' ? `/dashboard/write?postId=${nextStep.postId}` :
+              '/dashboard/write'
+            }
+            className="text-xs font-semibold text-primary hover:text-primary-hover shrink-0 transition-colors whitespace-nowrap"
+          >
+            {nextStep.type === 'rate' ? 'Rate now →' : nextStep.type === 'copy' ? 'Copy post →' : 'Generate →'}
+          </Link>
+        </div>
+      )}
 
       {/* First-visit: surface the actual generated post + clear next step */}
       {isFirstVisit && !loading && recentPosts.length > 0 && (() => {
@@ -216,32 +271,168 @@ export default function Dashboard() {
         )
       })()}
 
-      {/* Today's post — hero card (hidden on first visit so the actual first post takes priority) */}
-      {!isFirstVisit && (
-      <div className="relative overflow-hidden rounded-card border border-primary/20 bg-surface">
-        {/* Subtle top gradient accent */}
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+      {/* Weekly plan card (hidden on first visit) */}
+      {!isFirstVisit && (() => {
+        const weeklyTopics = getWeeklyTopics(pillars)
+        const todayDay = new Date().getDay()
+        const todaySlot =
+          todayDay === 1 || todayDay === 2 ? 0 :
+          todayDay === 3 || todayDay === 4 ? 1 : 2
 
-        <div className="p-5 space-y-4">
-          <div className="flex items-center gap-2 text-xs text-text-muted">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-            Today's post suggestion
+        const { mon } = getWeekDots()
+        const weekLabel = mon.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+
+        const recentHookTypes = [...new Set(
+          allPosts.slice(0, 6).map(p => p.hook_type).filter(Boolean)
+        )].slice(0, 3) as string[]
+
+        const slotDays = ['Mon', 'Wed', 'Fri'] as const
+
+        return (
+          <div>
+            <div className="relative overflow-hidden rounded-card border border-primary/20 bg-surface">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+
+              <div className="p-5 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-xs text-text-muted">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                    This week's plan
+                  </div>
+                  <span className="text-[11px] text-text-subtle">week of {weekLabel}</span>
+                </div>
+
+                {weeklyTopics.map((topic, i) => {
+                  const done = weekCount >= i + 1
+                  const isToday = todaySlot === i && !done
+                  const dayLabel = slotDays[i]
+
+                  return (
+                    <div
+                      key={i}
+                      className={cn(
+                        'rounded-lg border px-3 py-2.5',
+                        done ? 'border-border bg-surface-hover/30' :
+                        isToday ? 'border-primary/40 bg-primary/[0.04] shadow-sm' :
+                        'border-border/60 bg-surface'
+                      )}
+                    >
+                      <div className="flex items-start gap-2.5">
+                        <span className="mt-0.5 shrink-0 text-base leading-none">
+                          {done ? '✅' : isToday ? '' : '○'}
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            {isToday && (
+                              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-400 border border-amber-500/20 tracking-wide">
+                                → TODAY
+                              </span>
+                            )}
+                            {done && !isToday && (
+                              <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-success/10 text-success border border-success/20 tracking-wide">
+                                Completed
+                              </span>
+                            )}
+                            {!done && !isToday && (
+                              <span className="text-[11px] text-text-subtle">
+                                {dayLabel} · Suggested
+                              </span>
+                            )}
+                          </div>
+                          <p className={cn(
+                            'text-sm leading-snug',
+                            done ? 'text-text-muted' : isToday ? 'text-text font-medium' : 'text-text-muted'
+                          )}>
+                            "{topic}"
+                          </p>
+                          <div className="mt-2">
+                            {done ? (
+                              <Link
+                                to={`/dashboard/write?topic=${encodeURIComponent(topic)}`}
+                                className="text-[11px] text-text-subtle hover:text-text-muted border border-border/60 rounded-btn px-2 py-0.5 transition-colors inline-block"
+                              >
+                                Copy topic
+                              </Link>
+                            ) : isToday ? (
+                              <Button
+                                onClick={() => navigate(`/dashboard/write?topic=${encodeURIComponent(topic)}`)}
+                                size="sm"
+                              >
+                                Generate →
+                              </Button>
+                            ) : (
+                              <Link
+                                to={`/dashboard/write?topic=${encodeURIComponent(topic)}`}
+                                className="text-xs text-text-muted hover:text-text border border-border rounded-btn px-3 py-1 transition-colors inline-block"
+                              >
+                                Generate →
+                              </Link>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            {recentHookTypes.length > 0 && (
+              <p className="text-[11px] text-text-subtle italic px-1 mt-1.5">
+                AI varied from recent styles: {recentHookTypes.join(' · ')}
+              </p>
+            )}
           </div>
+        )
+      })()}
 
-          <p className="text-base font-medium text-text leading-snug">
-            "{todayTopic}"
-          </p>
+      {/* Founder Scoreboard — outcome stats, shown after 3+ posts */}
+      {!loading && allPosts.length >= 3 && (() => {
+        const totalPosts = allPosts.length
+        const publishedCount = allPosts.filter(p => p.is_published).length
+        const copiedCount = allPosts.filter(p => p.was_copied).length
+        const copyRate = Math.round((copiedCount / totalPosts) * 100)
+        const ratedPosts = allPosts.filter(p => p.performance_rating != null)
+        const avgRating = ratedPosts.length > 0
+          ? (ratedPosts.reduce((sum, p) => sum + (p.performance_rating ?? 0), 0) / ratedPosts.length).toFixed(1)
+          : null
 
-          <Button
-            onClick={() => navigate(`/dashboard/write?topic=${encodeURIComponent(todayTopic)}`)}
-            className="w-full sm:w-auto"
-          >
-            Generate post
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Button>
-        </div>
-      </div>
-      )}
+        // Never show all-zero state
+        if (publishedCount === 0 && copiedCount === 0 && ratedPosts.length === 0) return null
+
+        const stats = [
+          {
+            label: 'Published',
+            value: publishedCount > 0 ? String(publishedCount) : '—',
+            sub: publishedCount > 0 ? `of ${totalPosts} generated` : 'mark posts as published',
+          },
+          {
+            label: 'Copy rate',
+            value: copiedCount > 0 ? `${copyRate}%` : '—',
+            sub: copiedCount > 0 ? `${copiedCount} post${copiedCount !== 1 ? 's' : ''} copied` : 'copy posts to track',
+          },
+          {
+            label: 'Avg rating',
+            value: avgRating ?? '—',
+            sub: avgRating ? `from ${ratedPosts.length} rated` : 'rate posts to track',
+          },
+        ]
+
+        return (
+          <div>
+            <p className="section-label mb-3">Your record</p>
+            <div className="grid grid-cols-3 gap-3">
+              {stats.map(({ label, value, sub }) => (
+                <div key={label} className="bg-surface border border-border rounded-card px-3 py-3 text-center">
+                  <p className="text-[22px] font-bold text-text leading-none">{value}</p>
+                  <p className="text-[11px] font-medium text-text-muted mt-1">{label}</p>
+                  <p className="text-[10px] text-text-subtle mt-0.5 leading-snug">{sub}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+      })()}
 
       {/* Persona pill strip */}
       {company?.persona_statement && (
