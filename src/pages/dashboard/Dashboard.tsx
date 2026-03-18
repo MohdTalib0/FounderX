@@ -113,11 +113,10 @@ export default function Dashboard() {
             : `${greeting}, ${firstName}.`}
         </h1>
         {company && !isFirstVisit && (
-          <p className="text-sm text-text-muted mt-0.5">
-            {company.name}
-            <span className="mx-2 text-border">·</span>
-            <span className="capitalize">{company.stage}</span>
-          </p>
+          <div className="flex items-center gap-2 mt-1">
+            <span className="text-sm text-text-muted">{company.name}</span>
+            <StageBadge stage={company.stage} />
+          </div>
         )}
       </div>
 
@@ -301,6 +300,21 @@ export default function Dashboard() {
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function StageBadge({ stage }: { stage: string }) {
+  const map: Record<string, { label: string; emoji: string; className: string }> = {
+    idea:  { label: 'Idea',  emoji: '💡', className: 'text-violet-400 bg-violet-500/[0.08] border-violet-500/20' },
+    mvp:   { label: 'MVP',   emoji: '🔨', className: 'text-amber-400 bg-amber-500/[0.08] border-amber-500/20' },
+    live:  { label: 'Live',  emoji: '🚀', className: 'text-emerald-400 bg-emerald-500/[0.08] border-emerald-500/20' },
+    scale: { label: 'Scale', emoji: '📈', className: 'text-sky-400 bg-sky-500/[0.08] border-sky-500/20' },
+  }
+  const { label, emoji, className } = map[stage] ?? map.idea
+  return (
+    <span className={cn('inline-flex items-center gap-1 text-[11px] font-semibold px-1.5 py-0.5 rounded border', className)}>
+      {emoji} {label}
+    </span>
+  )
+}
 
 function VariationBadge({ variation }: { variation: string }) {
   const map: Record<string, { label: string; className: string }> = {
