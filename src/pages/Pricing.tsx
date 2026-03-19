@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { Zap, Check, X, ArrowRight, ChevronDown } from 'lucide-react'
+import { Check, X, ArrowRight, ChevronDown, Zap } from 'lucide-react'
+import PublicHeader from '@/components/layout/PublicHeader'
 import { useState } from 'react'
 import Button from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
@@ -111,47 +112,7 @@ export default function Pricing() {
   return (
     <div className="min-h-screen bg-background text-text overflow-x-hidden">
 
-      {/* Nav */}
-      <header className="sticky top-0 z-20 border-b border-border/60 bg-background/80 backdrop-blur-md">
-        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between gap-8">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 shrink-0">
-            <div className="w-8 h-8 bg-primary-gradient rounded-lg flex items-center justify-center">
-              <Zap className="w-[18px] h-[18px] text-white" />
-            </div>
-            <span className="font-bold text-base tracking-tight">FounderX</span>
-          </Link>
-
-          {/* Centre nav */}
-          <nav className="hidden sm:flex items-center gap-1">
-            {[
-              { to: '/', label: 'Home' },
-              { to: '/pricing', label: 'Pricing' },
-            ].map(({ to, label }) => (
-              <Link
-                key={to}
-                to={to}
-                className="text-sm px-3.5 py-1.5 text-text-muted hover:text-text rounded-btn hover:bg-surface-hover transition-all duration-150"
-              >
-                {label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Right actions */}
-          <div className="flex items-center gap-2 shrink-0">
-            <Link
-              to="/login"
-              className="hidden sm:flex items-center text-sm px-3.5 py-1.5 rounded-btn border border-border text-text-muted hover:border-border-hover hover:text-text transition-all duration-150"
-            >
-              Sign in
-            </Link>
-            <Link to="/signup">
-              <Button size="sm">Start free</Button>
-            </Link>
-          </div>
-        </div>
-      </header>
+      <PublicHeader />
 
       {/* Hero */}
       <section className="max-w-2xl mx-auto px-6 pt-16 pb-12 text-center">

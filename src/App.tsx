@@ -5,6 +5,7 @@ import { useAuthStore } from '@/store/auth'
 
 // Pages
 import Landing from '@/pages/Landing'
+import ForIndividuals from '@/pages/ForIndividuals'
 import Pricing from '@/pages/Pricing'
 import Login from '@/pages/auth/Login'
 import Signup from '@/pages/auth/Signup'
@@ -56,6 +57,7 @@ export default function App() {
       <Routes>
         {/* Public */}
         <Route path="/" element={<Landing />} />
+        <Route path="/for-individuals" element={<ForIndividuals />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />

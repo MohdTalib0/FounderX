@@ -1,45 +1,14 @@
 import { Link } from 'react-router-dom'
-import { Zap, ArrowRight, Copy, Check, PenLine, RefreshCw, MessageSquare, Sparkles } from 'lucide-react'
+import { ArrowRight, Copy, Check, PenLine, RefreshCw, MessageSquare, Sparkles, Zap } from 'lucide-react'
 import Button from '@/components/ui/Button'
+import PublicHeader from '@/components/layout/PublicHeader'
 import { cn } from '@/lib/utils'
 
 export default function Landing() {
   return (
     <div className="min-h-screen bg-background text-text overflow-x-hidden">
 
-      {/* ── Nav ──────────────────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-20 border-b border-border/60 bg-background/80 backdrop-blur-md">
-        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between gap-8">
-          <Link to="/" className="flex items-center gap-2.5 shrink-0">
-            <div className="w-8 h-8 bg-primary-gradient rounded-lg flex items-center justify-center">
-              <Zap className="w-[18px] h-[18px] text-white" />
-            </div>
-            <span className="font-bold text-base tracking-tight">FounderX</span>
-          </Link>
-
-          <nav className="hidden sm:flex items-center gap-1">
-            {[
-              { to: '/#how-it-works', label: 'How it works' },
-              { to: '/pricing', label: 'Pricing' },
-            ].map(({ to, label }) => (
-              <Link key={to} to={to}
-                className="text-sm px-3.5 py-1.5 text-text-muted hover:text-text rounded-btn hover:bg-surface-hover transition-all duration-150"
-              >
-                {label}
-              </Link>
-            ))}
-          </nav>
-
-          <div className="flex items-center gap-2 shrink-0">
-            <Link to="/login"
-              className="hidden sm:flex items-center text-sm px-3.5 py-1.5 rounded-btn border border-border text-text-muted hover:border-border-hover hover:text-text transition-all duration-150"
-            >
-              Sign in
-            </Link>
-            <Link to="/signup"><Button size="sm">Start free</Button></Link>
-          </div>
-        </div>
-      </header>
+      <PublicHeader />
 
       {/* ── 1. Hero ──────────────────────────────────────────────────────────── */}
       <section className="relative max-w-5xl mx-auto px-6 pt-20 pb-12">
@@ -64,12 +33,18 @@ export default function Landing() {
               You tried posting before. It didn't land. Not because you had nothing to say,
               but because the posts didn't sound like you.
             </p>
-            <p className="text-base text-text-muted leading-relaxed mb-8 max-w-md mx-auto lg:mx-0">
-              FounderX builds your founder voice first, then writes every post from it.
+            <p className="text-base text-text-muted leading-relaxed mb-2 max-w-md mx-auto lg:mx-0">
+              FounderX builds your voice first, then writes every post from it.
+              Works for founders, consultants, executives, and creators.
               Blank page to published in under 3 minutes.
             </p>
+            <p className="text-sm mb-8 max-w-md mx-auto lg:mx-0">
+              <Link to="/for-individuals" className="text-primary hover:text-primary-hover transition-colors">
+                Not a startup? Personal brand mode →
+              </Link>
+            </p>
 
-            <div className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-3 mb-4">
+            <div className="flex flex-row items-center lg:items-start justify-center lg:justify-start gap-4 mb-4 flex-wrap">
               <Link to="/signup">
                 <Button size="lg" className="px-7">
                   Start free in 2 minutes
@@ -99,7 +74,7 @@ export default function Landing() {
             {[
               { value: '< 3 min', label: 'From open to first post copied' },
               { value: '3x/week', label: 'Posting habit the product is built around' },
-              { value: '40+', label: 'Founders already in the beta' },
+              { value: '40+', label: 'Founders and creators already in the beta' },
             ].map(({ value, label }) => (
               <div key={label}>
                 <p className="text-xl font-bold text-text">{value}</p>
@@ -260,7 +235,7 @@ export default function Landing() {
             <div className="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center mb-3">
               <Sparkles className="w-5 h-5 text-violet-400" />
             </div>
-            <p className="text-[10px] font-bold tracking-widest text-text-subtle uppercase mb-1">Founder Persona</p>
+            <p className="text-[10px] font-bold tracking-widest text-text-subtle uppercase mb-1">Your Persona</p>
             <h3 className="font-bold text-text mb-2">Your voice, built once.</h3>
             <p className="text-sm text-text-muted leading-relaxed mb-4">
               Set up in 2 minutes. Used in every post, comment, and rewrite forever.
