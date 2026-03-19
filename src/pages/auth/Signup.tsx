@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Zap, ArrowLeft } from 'lucide-react'
+import { Zap, ArrowLeft, Eye, EyeOff } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
@@ -19,6 +19,7 @@ export default function Signup() {
   const navigate = useNavigate()
   const [error, setError] = useState('')
   const [emailSent, setEmailSent] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
@@ -102,7 +103,7 @@ export default function Signup() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <Input
               label="Your name"
-              placeholder="Mohammed"
+              placeholder="Alex Johnson"
               error={errors.full_name?.message}
               {...register('full_name')}
             />
@@ -113,13 +114,26 @@ export default function Signup() {
               error={errors.email?.message}
               {...register('email')}
             />
-            <Input
-              label="Password"
-              type="password"
-              placeholder="At least 8 characters"
-              error={errors.password?.message}
-              {...register('password')}
-            />
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-text-muted">Password</label>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="At least 8 characters"
+                  className={`w-full bg-surface border rounded-input px-3 py-2.5 pr-10 text-sm text-text placeholder:text-text-subtle transition-colors duration-100 focus:outline-none focus:shadow-input-focus ${errors.password ? 'border-danger focus:border-danger' : 'border-border hover:border-border-hover focus:border-border-focus'}`}
+                  {...register('password')}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(p => !p)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text-subtle hover:text-text-muted transition-colors"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+              {errors.password && <p className="text-xs text-danger mt-0.5">{errors.password.message}</p>}
+            </div>
 
             {error && (
               <p className="text-sm text-danger bg-danger/10 border border-danger/20 rounded-btn px-3 py-2">
