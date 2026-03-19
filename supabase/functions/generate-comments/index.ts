@@ -41,28 +41,22 @@ serve(async (req) => {
       })
     }
 
-    // Atomic check-and-increment
-    const { data: usage, error: usageError } = await supabase.rpc('increment_usage', {
-      p_field: 'comments',
-    })
+    // Run usage check + company fetch in parallel
+    const [usageRes, companyRes] = await Promise.all([
+      supabase.rpc('increment_usage', { p_field: 'comments' }),
+      supabase.from('companies').select('*').eq('id', company_id).eq('user_id', user.id).single(),
+    ])
 
-    if (usageError) throw new Error(usageError.message)
-
-    if (!usage.allowed) {
+    if (usageRes.error) throw new Error(usageRes.error.message)
+    if (!usageRes.data.allowed) {
       return new Response(
-        JSON.stringify({ error: 'limit_reached', limit: usage.limit }),
+        JSON.stringify({ error: 'limit_reached', limit: usageRes.data.limit }),
         { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
-    const { data: company, error: companyError } = await supabase
-      .from('companies')
-      .select('*')
-      .eq('id', company_id)
-      .eq('user_id', user.id)
-      .single()
-
-    if (companyError || !company) {
+    const company = companyRes.data
+    if (companyRes.error || !company) {
       return new Response(JSON.stringify({ error: 'Company not found' }), {
         status: 404,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

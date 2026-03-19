@@ -97,42 +97,32 @@ serve(async (req) => {
       })
     }
 
-    // Atomic check-and-increment via RPC (handles reset + race conditions)
-    const { data: usage, error: usageError } = await supabase.rpc('increment_usage', {
-      p_field: 'posts',
-    })
+    // Run all three DB queries in parallel — none depend on each other
+    const [usageRes, companyRes, postsRes] = await Promise.all([
+      supabase.rpc('increment_usage', { p_field: 'posts' }),
+      supabase.from('companies').select('*').eq('id', company_id).eq('user_id', user.id).single(),
+      supabase.from('generated_posts')
+        .select('post_structure, hook_type, selected_variation, was_copied, performance_rating')
+        .eq('user_id', user.id).order('created_at', { ascending: false }).limit(50),
+    ])
 
-    if (usageError) throw new Error(usageError.message)
-
-    if (!usage.allowed) {
+    if (usageRes.error) throw new Error(usageRes.error.message)
+    if (!usageRes.data.allowed) {
       return new Response(
-        JSON.stringify({ error: 'limit_reached', limit: usage.limit }),
+        JSON.stringify({ error: 'limit_reached', limit: usageRes.data.limit }),
         { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
-    // Verify company ownership
-    const { data: company, error: companyError } = await supabase
-      .from('companies')
-      .select('*')
-      .eq('id', company_id)
-      .eq('user_id', user.id)
-      .single()
-
-    if (companyError || !company) {
+    const company = companyRes.data
+    if (companyRes.error || !company) {
       return new Response(JSON.stringify({ error: 'Company not found' }), {
         status: 404,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
 
-    // Fetch recent posts for structure/hook rotation + performance signals in one query
-    const { data: recentPosts } = await supabase
-      .from('generated_posts')
-      .select('post_structure, hook_type, selected_variation, was_copied, performance_rating')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
-      .limit(50)
+    const recentPosts = postsRes.data
 
     const recentStructures = (recentPosts ?? []).slice(0, 3).map((p: { post_structure: string | null }) => p.post_structure).filter(Boolean) as string[]
     const recentHooks = (recentPosts ?? []).slice(0, 3).map((p: { hook_type: string | null }) => p.hook_type).filter(Boolean) as string[]

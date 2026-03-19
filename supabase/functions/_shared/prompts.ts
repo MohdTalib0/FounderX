@@ -50,6 +50,7 @@ Rules:
 - Write as this founder, first person, not as an AI assistant
 - Sound human — contractions, occasional imperfect grammar is fine
 - NEVER use: "In today's world", "As a founder", "Game-changer", "Dive into", "Leverage", "Delve"
+- NEVER use em dashes (—). Use commas, periods, or colons instead
 - LinkedIn posts only: short paragraphs (1-3 lines max), line breaks between paragraphs, max 3000 chars`
 }
 
