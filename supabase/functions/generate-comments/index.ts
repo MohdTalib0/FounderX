@@ -1,7 +1,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { corsHeaders } from '../_shared/cors.ts'
-import { complete, MODELS } from '../_shared/openrouter.ts'
+import { complete } from '../_shared/openrouter.ts'
 import { buildBrandContext, buildCommentPrompt, parseComments } from '../_shared/prompts.ts'
 
 
@@ -74,7 +74,7 @@ serve(async (req) => {
         { role: 'system', content: buildBrandContext(company) },
         { role: 'user', content: buildCommentPrompt(source_post) },
       ],
-      { model: MODELS.fast, temperature: 0.85, max_tokens: 600 }
+      { temperature: 0.85, max_tokens: 600 }
     )
 
     const parsed = parseComments(raw)

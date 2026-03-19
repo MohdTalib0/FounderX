@@ -1,7 +1,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { corsHeaders } from '../_shared/cors.ts'
-import { complete, MODELS } from '../_shared/openrouter.ts'
+import { complete } from '../_shared/openrouter.ts'
 import { buildBrandContext, buildRewritePrompt, parseRewrite } from '../_shared/prompts.ts'
 
 
@@ -74,7 +74,7 @@ serve(async (req) => {
         { role: 'system', content: buildBrandContext(company) },
         { role: 'user', content: buildRewritePrompt(draft) },
       ],
-      { model: MODELS.quality, temperature: 0.75, max_tokens: 700 }
+      { temperature: 0.75, max_tokens: 700 }
     )
 
     const parsed = parseRewrite(raw)

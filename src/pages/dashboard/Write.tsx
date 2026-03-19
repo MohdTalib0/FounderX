@@ -397,11 +397,6 @@ function PostCard({
   const [markedPosted, setMarkedPosted] = useState(false)
   const [postingToLinkedIn, setPostingToLinkedIn] = useState(false)
 
-  useEffect(() => {
-    if (!showPostedPrompt) return
-    const t = setTimeout(() => setShowPostedPrompt(false), 10_000)
-    return () => clearTimeout(t)
-  }, [showPostedPrompt])
   const meta = VARIATION_META[variation]
   const lines = text.split('\n')
   const hook = lines[0] ?? ''
@@ -487,30 +482,28 @@ function PostCard({
             <RefreshCw className="w-3.5 h-3.5" />
           </button>
           {!isNewUser && (
-            <>
-              <button
-                onClick={() => setShowRefine(v => !v)}
-                title="Refine this post"
-                className={cn(
-                  'p-1.5 rounded-lg transition-colors flex items-center gap-1 text-xs',
-                  showRefine
-                    ? 'text-primary bg-primary/10'
-                    : 'text-text-muted hover:text-text hover:bg-surface-hover'
-                )}
-              >
-                <Sliders className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Adjust</span>
-              </button>
-              <button
-                onClick={onQuoteCard}
-                title="Get quote card image"
-                className="p-1.5 text-text-muted hover:text-text hover:bg-surface-hover rounded-lg transition-colors flex items-center gap-1 text-xs"
-              >
-                <ImageDown className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Image</span>
-              </button>
-            </>
+            <button
+              onClick={() => setShowRefine(v => !v)}
+              title="Refine this post"
+              className={cn(
+                'p-1.5 rounded-lg transition-colors flex items-center gap-1 text-xs',
+                showRefine
+                  ? 'text-primary bg-primary/10'
+                  : 'text-text-muted hover:text-text hover:bg-surface-hover'
+              )}
+            >
+              <Sliders className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Adjust</span>
+            </button>
           )}
+          <button
+            onClick={onQuoteCard}
+            title="Get quote card image"
+            className="p-1.5 text-text-muted hover:text-text hover:bg-surface-hover rounded-lg transition-colors flex items-center gap-1 text-xs"
+          >
+            <ImageDown className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Image</span>
+          </button>
         </div>
         <CopyButton
           text={text}

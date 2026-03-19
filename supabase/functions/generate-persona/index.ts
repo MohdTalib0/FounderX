@@ -1,7 +1,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { corsHeaders } from '../_shared/cors.ts'
-import { complete, MODELS } from '../_shared/openrouter.ts'
+import { complete } from '../_shared/openrouter.ts'
 import { buildPersonaPrompt, parsePersona } from '../_shared/prompts.ts'
 
 serve(async (req) => {
@@ -68,7 +68,7 @@ serve(async (req) => {
 
     const raw = await complete(
       [{ role: 'user', content: prompt }],
-      { model: MODELS.quality, temperature: 0.7, max_tokens: 400 }
+      { temperature: 0.7, max_tokens: 400 }
     )
 
     const parsed = parsePersona(raw)
@@ -102,9 +102,10 @@ serve(async (req) => {
       }
     )
   } catch (err) {
-    console.error('generate-persona error:', err)
+    const msg = err instanceof Error ? err.message : String(err)
+    console.error('generate-persona error:', msg)
     return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
+      JSON.stringify({ error: msg }),
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

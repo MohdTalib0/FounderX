@@ -238,6 +238,7 @@ export default function Onboarding() {
   // Reveal screen state
   const [persona, setPersona] = useState<{ statement: string; pillars: string[] } | null>(null)
   const [firstPost, setFirstPost] = useState<string>('')
+  const [firstPostId, setFirstPostId] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
   const [typewriterDone, setTypewriterDone] = useState(false)
 
@@ -310,6 +311,7 @@ export default function Onboarding() {
       })
 
       const boldPost = postResult.variation_bold || postResult.variation_safe
+      setFirstPostId(postResult.id)
 
       // Update local company with persona data returned from Edge Function
       const updatedCompany = personaResult.company as typeof company
@@ -347,7 +349,10 @@ export default function Onboarding() {
   }
 
   const handleSeeVariations = () => {
-    navigate('/dashboard/write')
+    const url = firstPostId
+      ? `/dashboard/write?postId=${firstPostId}`
+      : '/dashboard/write'
+    navigate(url)
   }
 
   const handleSkip = () => {

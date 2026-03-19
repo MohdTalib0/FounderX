@@ -10,9 +10,44 @@ export interface CompletionOptions {
 }
 
 const MODELS = {
-  quality: 'anthropic/claude-3.5-sonnet',
-  fast: 'anthropic/claude-3-haiku',
+  quality: 'anthropic/claude-3.5-sonnet-20241022',
+  fast: 'anthropic/claude-3-haiku-20240307',
   fallback: 'openai/gpt-4o-mini',
+}
+
+const TIMEOUT_MS = 25_000 // 25 s — well under Supabase's 150 s wall-clock limit
+
+async function fetchWithTimeout(url: string, init: RequestInit): Promise<Response> {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS)
+  try {
+    return await fetch(url, { ...init, signal: controller.signal })
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
+async function callOpenRouter(apiKey: string, body: object): Promise<string> {
+  const res = await fetchWithTimeout('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': 'https://founderx.app',
+      'X-Title': 'FounderX',
+    },
+    body: JSON.stringify(body),
+  })
+
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`OpenRouter ${res.status}: ${text}`)
+  }
+
+  const data = await res.json()
+  const content = data.choices?.[0]?.message?.content
+  if (!content) throw new Error('Empty response from OpenRouter')
+  return content
 }
 
 export async function complete(
@@ -32,45 +67,15 @@ export async function complete(
     max_tokens: options.max_tokens ?? 800,
   }
 
-  // Try OpenRouter first
   try {
-    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://founderx.app',
-        'X-Title': 'FounderX',
-      },
-      body: JSON.stringify(body),
-    })
-
-    if (!res.ok) {
-      const text = await res.text()
-      throw new Error(`OpenRouter ${res.status}: ${text}`)
-    }
-
-    const data = await res.json()
-    const content = data.choices?.[0]?.message?.content
-    if (!content) throw new Error('Empty response from OpenRouter')
-    return content
+    return await callOpenRouter(apiKey, body)
   } catch (err) {
-    // Fallback to OpenRouter with fallback model
+    // Fallback to gpt-4o-mini if primary model fails
     if (model !== MODELS.fallback) {
-      const fallbackRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-          'HTTP-Referer': 'https://founderx.app',
-          'X-Title': 'FounderX',
-        },
-        body: JSON.stringify({ ...body, model: MODELS.fallback }),
-      })
-      if (fallbackRes.ok) {
-        const data = await fallbackRes.json()
-        const content = data.choices?.[0]?.message?.content
-        if (content) return content
+      try {
+        return await callOpenRouter(apiKey, { ...body, model: MODELS.fallback })
+      } catch {
+        // ignore fallback error, throw original
       }
     }
     throw err

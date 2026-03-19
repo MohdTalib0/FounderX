@@ -1,7 +1,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { corsHeaders } from '../_shared/cors.ts'
-import { complete, MODELS } from '../_shared/openrouter.ts'
+import { complete } from '../_shared/openrouter.ts'
 import { buildBrandContext, buildRefinePrompt, buildPostPrompt, parsePostVariations } from '../_shared/prompts.ts'
 
 type RefinementType = 'too_formal' | 'too_generic' | 'too_long' | 'too_ai'
@@ -78,7 +78,7 @@ serve(async (req) => {
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt },
         ],
-        { model: MODELS.quality, temperature: 0.7, max_tokens: 500 }
+        { temperature: 0.7, max_tokens: 500 }
       )
 
       return new Response(
@@ -109,7 +109,7 @@ Important: Only return the <${variation}> variation. Return it in the same forma
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt },
         ],
-        { model: MODELS.quality, temperature: 0.8, max_tokens: 400 }
+        { temperature: 0.8, max_tokens: 400 }
       )
 
       const all = parsePostVariations(raw)
