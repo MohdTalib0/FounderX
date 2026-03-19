@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate, Link, useSearchParams } from 'react-router-dom'
-import { PenLine, RefreshCw, MessageSquare, Clock, ArrowRight, Check, ImageDown } from 'lucide-react'
+import { PenLine, RefreshCw, MessageSquare, Clock, ArrowRight, Check, ImageDown, CheckCircle2, Circle, Zap, Lightbulb, Hammer, TrendingUp, Sparkles } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/auth'
 import Button from '@/components/ui/Button'
@@ -179,7 +179,7 @@ export default function Dashboard() {
         {company && !isFirstVisit && (
           <div className="flex items-center gap-2 mt-1">
             <span className="text-sm text-text-muted">{company.name}</span>
-            <StageBadge stage={company.stage} />
+            <StageBadge stage={company.stage} isIndividual={company.is_individual} />
           </div>
         )}
       </div>
@@ -289,96 +289,110 @@ export default function Dashboard() {
         const slotDays = ['Mon', 'Wed', 'Fri'] as const
 
         return (
-          <div>
-            <div className="relative overflow-hidden rounded-card border border-primary/20 bg-surface">
-              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+          <div className="space-y-2">
+            {/* Header */}
+            <div className="flex items-center justify-between px-0.5">
+              <span className="text-xs font-medium text-text-muted tracking-wide uppercase">This week's plan</span>
+              <span className="text-[11px] text-text-subtle">week of {weekLabel}</span>
+            </div>
 
-              <div className="p-5 space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-xs text-text-muted">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                    This week's plan
-                  </div>
-                  <span className="text-[11px] text-text-subtle">week of {weekLabel}</span>
-                </div>
+            {/* Slots */}
+            <div className="rounded-card border border-border overflow-hidden divide-y divide-border">
+              {weeklyTopics.map((topic, i) => {
+                const done = weekCount >= i + 1
+                const isToday = todaySlot === i && !done
+                const dayLabel = slotDays[i]
 
-                {weeklyTopics.map((topic, i) => {
-                  const done = weekCount >= i + 1
-                  const isToday = todaySlot === i && !done
-                  const dayLabel = slotDays[i]
-
-                  return (
-                    <div
-                      key={i}
-                      className={cn(
-                        'rounded-lg border px-3 py-2.5',
-                        done ? 'border-border bg-surface-hover/30' :
-                        isToday ? 'border-primary/40 bg-primary/[0.04] shadow-sm' :
-                        'border-border/60 bg-surface'
+                return (
+                  <div
+                    key={i}
+                    className={cn(
+                      'flex items-start gap-3 px-4 py-3.5 transition-colors',
+                      done ? 'bg-surface-hover/40' :
+                      isToday ? 'bg-primary/[0.03]' :
+                      'bg-surface'
+                    )}
+                  >
+                    {/* State icon */}
+                    <div className="mt-0.5 shrink-0">
+                      {done ? (
+                        <CheckCircle2 className="w-4 h-4 text-success" strokeWidth={2} />
+                      ) : isToday ? (
+                        <Zap className="w-4 h-4 text-primary" strokeWidth={2} />
+                      ) : (
+                        <Circle className="w-4 h-4 text-border" strokeWidth={1.5} />
                       )}
-                    >
-                      <div className="flex items-start gap-2.5">
-                        <span className="mt-0.5 shrink-0 text-base leading-none">
-                          {done ? '✅' : isToday ? '' : '○'}
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      {/* Day + state label */}
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <span className={cn(
+                          'text-[11px] font-medium',
+                          done ? 'text-success' :
+                          isToday ? 'text-primary' :
+                          'text-text-subtle'
+                        )}>
+                          {dayLabel}
                         </span>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            {isToday && (
-                              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-400 border border-amber-500/20 tracking-wide">
-                                → TODAY
-                              </span>
-                            )}
-                            {done && !isToday && (
-                              <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-success/10 text-success border border-success/20 tracking-wide">
-                                Completed
-                              </span>
-                            )}
-                            {!done && !isToday && (
-                              <span className="text-[11px] text-text-subtle">
-                                {dayLabel} · Suggested
-                              </span>
-                            )}
-                          </div>
-                          <p className={cn(
-                            'text-sm leading-snug',
-                            done ? 'text-text-muted' : isToday ? 'text-text font-medium' : 'text-text-muted'
-                          )}>
-                            "{topic}"
-                          </p>
-                          <div className="mt-2">
-                            {done ? (
-                              <Link
-                                to={`/dashboard/write?topic=${encodeURIComponent(topic)}`}
-                                className="text-[11px] text-text-subtle hover:text-text-muted border border-border/60 rounded-btn px-2 py-0.5 transition-colors inline-block"
-                              >
-                                Copy topic
-                              </Link>
-                            ) : isToday ? (
-                              <Button
-                                onClick={() => navigate(`/dashboard/write?topic=${encodeURIComponent(topic)}`)}
-                                size="sm"
-                              >
-                                Generate →
-                              </Button>
-                            ) : (
-                              <Link
-                                to={`/dashboard/write?topic=${encodeURIComponent(topic)}`}
-                                className="text-xs text-text-muted hover:text-text border border-border rounded-btn px-3 py-1 transition-colors inline-block"
-                              >
-                                Generate →
-                              </Link>
-                            )}
-                          </div>
-                        </div>
+                        {isToday && (
+                          <span className="text-[10px] font-semibold px-1.5 py-px rounded-full bg-primary/10 text-primary border border-primary/20 tracking-wide leading-4">
+                            Today
+                          </span>
+                        )}
+                        {done && (
+                          <span className="text-[10px] font-semibold px-1.5 py-px rounded-full bg-success/10 text-success border border-success/20 tracking-wide leading-4">
+                            Done
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Topic */}
+                      <p className={cn(
+                        'text-sm leading-snug',
+                        done ? 'text-text-subtle line-through decoration-text-subtle/40' :
+                        isToday ? 'text-text font-medium' :
+                        'text-text-muted'
+                      )}>
+                        {topic}
+                      </p>
+
+                      {/* Action */}
+                      <div className="mt-2">
+                        {done ? (
+                          <Link
+                            to={`/dashboard/write?topic=${encodeURIComponent(topic)}`}
+                            className="inline-flex items-center gap-1 text-[11px] text-text-subtle hover:text-text-muted transition-colors"
+                          >
+                            <ArrowRight className="w-3 h-3" />
+                            Write again
+                          </Link>
+                        ) : isToday ? (
+                          <Button
+                            size="sm"
+                            onClick={() => navigate(`/dashboard/write?topic=${encodeURIComponent(topic)}`)}
+                          >
+                            Generate post
+                            <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                          </Button>
+                        ) : (
+                          <Link
+                            to={`/dashboard/write?topic=${encodeURIComponent(topic)}`}
+                            className="inline-flex items-center gap-1 text-[11px] text-text-muted hover:text-text transition-colors"
+                          >
+                            <ArrowRight className="w-3 h-3" />
+                            Generate
+                          </Link>
+                        )}
                       </div>
                     </div>
-                  )
-                })}
-              </div>
+                  </div>
+                )
+              })}
             </div>
 
             {recentHookTypes.length > 0 && (
-              <p className="text-[11px] text-text-subtle italic px-1 mt-1.5">
+              <p className="text-[11px] text-text-subtle italic px-0.5">
                 AI varied from recent styles: {recentHookTypes.join(' · ')}
               </p>
             )}
@@ -485,8 +499,8 @@ export default function Dashboard() {
         {/* Weekly tracker */}
         <div className={cn('bg-surface border border-border rounded-card p-5', weekCount === 3 && 'ring-1 ring-success/20 bg-success/[0.03]')}>
           <div className="flex items-center justify-between mb-4">
-            <p className="text-sm font-medium text-text">
-              {weekCount === 3 ? <>🎉 <span className="text-success">Week complete!</span></> : 'This week'}
+            <p className="text-sm font-medium text-text flex items-center gap-1.5">
+              {weekCount === 3 ? <><Sparkles className="w-3.5 h-3.5 text-success" /><span className="text-success">Week complete!</span></> : 'This week'}
             </p>
             <p className={cn('text-xs', weekCount === 3 ? 'text-success' : 'text-text-muted')}>{weekMessage}</p>
           </div>
@@ -648,17 +662,25 @@ export default function Dashboard() {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function StageBadge({ stage }: { stage: string }) {
-  const map: Record<string, { label: string; emoji: string; className: string }> = {
-    idea:  { label: 'Idea',  emoji: '💡', className: 'text-violet-400 bg-violet-500/[0.08] border-violet-500/20' },
-    mvp:   { label: 'MVP',   emoji: '🔨', className: 'text-amber-400 bg-amber-500/[0.08] border-amber-500/20' },
-    live:  { label: 'Live',  emoji: '🚀', className: 'text-emerald-400 bg-emerald-500/[0.08] border-emerald-500/20' },
-    scale: { label: 'Scale', emoji: '📈', className: 'text-sky-400 bg-sky-500/[0.08] border-sky-500/20' },
+function StageBadge({ stage, isIndividual = false }: { stage: string; isIndividual?: boolean }) {
+  const companyMap: Record<string, { label: string; icon: React.ReactNode; className: string }> = {
+    idea:  { label: 'Idea',  icon: <Lightbulb className="w-3 h-3" />,   className: 'text-violet-400 bg-violet-500/[0.08] border-violet-500/20' },
+    mvp:   { label: 'MVP',   icon: <Hammer className="w-3 h-3" />,      className: 'text-amber-400 bg-amber-500/[0.08] border-amber-500/20' },
+    live:  { label: 'Live',  icon: <Zap className="w-3 h-3" />,         className: 'text-emerald-400 bg-emerald-500/[0.08] border-emerald-500/20' },
+    scale: { label: 'Scale', icon: <TrendingUp className="w-3 h-3" />,  className: 'text-sky-400 bg-sky-500/[0.08] border-sky-500/20' },
   }
-  const { label, emoji, className } = map[stage] ?? map.idea
+  // Individual mode: stage values were mapped from roles during onboarding
+  const individualMap: Record<string, { label: string; icon: React.ReactNode; className: string }> = {
+    idea:  { label: 'Founder',    icon: <Hammer className="w-3 h-3" />,    className: 'text-amber-400 bg-amber-500/[0.08] border-amber-500/20' },
+    mvp:   { label: 'Creator',    icon: <Sparkles className="w-3 h-3" />,  className: 'text-violet-400 bg-violet-500/[0.08] border-violet-500/20' },
+    live:  { label: 'Consultant', icon: <Zap className="w-3 h-3" />,       className: 'text-emerald-400 bg-emerald-500/[0.08] border-emerald-500/20' },
+    scale: { label: 'Executive',  icon: <TrendingUp className="w-3 h-3" />, className: 'text-sky-400 bg-sky-500/[0.08] border-sky-500/20' },
+  }
+  const map = isIndividual ? individualMap : companyMap
+  const { label, icon, className } = map[stage] ?? (isIndividual ? individualMap.idea : companyMap.idea)
   return (
     <span className={cn('inline-flex items-center gap-1 text-[11px] font-semibold px-1.5 py-0.5 rounded border', className)}>
-      {emoji} {label}
+      {icon} {label}
     </span>
   )
 }

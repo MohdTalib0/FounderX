@@ -56,6 +56,7 @@ export type Database = {
           keywords: string[] | null
           website_url: string | null
           linkedin_url: string | null
+          is_individual: boolean
           created_at: string
           updated_at: string
         }
@@ -75,6 +76,7 @@ export type Database = {
           keywords?: string[] | null
           website_url?: string | null
           linkedin_url?: string | null
+          is_individual?: boolean
           created_at?: string
           updated_at?: string
         }

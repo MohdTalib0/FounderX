@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { toast } from '@/store/toast'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/auth'
@@ -31,7 +31,7 @@ export default function Settings() {
 
       {/* Tabs */}
       <div className="flex gap-1 bg-surface border border-border rounded-card p-1 w-fit">
-        {([['brand', 'Founder Brand'], ['account', 'Account']] as const).map(([value, label]) => (
+        {([['brand', company?.is_individual ? 'Personal Brand' : 'Founder Brand'], ['account', 'Account']] as [Tab, string][]).map(([value, label]) => (
           <button
             key={value}
             onClick={() => setTab(value)}
@@ -55,6 +55,7 @@ export default function Settings() {
       {tab === 'account' && (
         <AccountTab
           profile={profile}
+          isIndividual={company?.is_individual ?? false}
           onSignOut={async () => {
             await supabase.auth.signOut()
             setProfile(null)
@@ -68,10 +69,16 @@ export default function Settings() {
 
 // ─── Brand Tab ────────────────────────────────────────────────────────────────
 
+const ROLES = ['idea', 'live', 'scale', 'mvp'] as const
+const ROLE_LABELS: Record<string, string> = {
+  idea: 'Founder', live: 'Consultant', scale: 'Executive', mvp: 'Creator',
+}
+
 function BrandTab({ company, onUpdate }: {
   company: Company
   onUpdate: (c: Company) => void
 }) {
+  const isIndividual = company.is_individual
   const [name, setName] = useState(company.name)
   const [description, setDescription] = useState(company.description)
   const [targetAudience, setTargetAudience] = useState(company.target_audience)
@@ -108,7 +115,7 @@ function BrandTab({ company, onUpdate }: {
     } else if (data) {
       onUpdate(data)
       setSaved(true)
-      toast.success('Brand settings saved.')
+      toast.success(isIndividual ? 'Profile saved.' : 'Brand settings saved.')
       setTimeout(() => setSaved(false), 2000)
     }
 
@@ -178,13 +185,13 @@ function BrandTab({ company, onUpdate }: {
       {/* Edit fields */}
       <div className="space-y-4">
         <Input
-          label="Company name"
+          label={isIndividual ? 'Your name' : 'Company name'}
           value={name}
           onChange={e => setName(e.target.value)}
         />
 
         <Textarea
-          label="What it does"
+          label={isIndividual ? 'What you do' : 'What it does'}
           rows={2}
           value={description}
           onChange={e => setDescription(e.target.value)}
@@ -196,9 +203,9 @@ function BrandTab({ company, onUpdate }: {
           onChange={e => setTargetAudience(e.target.value)}
         />
 
-        <Field label="Stage">
+        <Field label={isIndividual ? 'Your role' : 'Stage'}>
           <div className="flex gap-2 flex-wrap">
-            {STAGES.map(s => (
+            {(isIndividual ? ROLES : STAGES).map(s => (
               <button
                 key={s}
                 onClick={() => setStage(s)}
@@ -209,7 +216,7 @@ function BrandTab({ company, onUpdate }: {
                     : 'border-border text-text-muted hover:border-border-hover hover:text-text'
                 )}
               >
-                {s}
+                {isIndividual ? ROLE_LABELS[s] : s}
               </button>
             ))}
           </div>
@@ -235,7 +242,7 @@ function BrandTab({ company, onUpdate }: {
         </Field>
 
         <Input
-          label="Brand keywords"
+          label={isIndividual ? 'Voice keywords' : 'Brand keywords'}
           hint="Comma-separated"
           value={keywords}
           onChange={e => setKeywords(e.target.value)}
@@ -256,9 +263,11 @@ function BrandTab({ company, onUpdate }: {
 
 function AccountTab({
   profile,
+  isIndividual,
   onSignOut,
 }: {
   profile: Profile | null
+  isIndividual: boolean
   onSignOut: () => void
 }) {
   const [emailNotifications, setEmailNotifications] = useState(
@@ -319,7 +328,7 @@ function AccountTab({
             <div>
               <p className="text-sm font-semibold text-text mb-0.5">Beta — full access</p>
               <p className="text-xs text-text-muted leading-relaxed">
-                You're one of the first 50 founders. All features are free during the beta.
+                You're one of the first 50 {isIndividual ? 'creators' : 'founders'}. All features are free during the beta.
                 Pro plan coming soon.
               </p>
             </div>

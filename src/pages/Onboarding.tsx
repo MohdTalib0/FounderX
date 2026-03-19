@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronRight, Check, Sparkles, Copy, Zap } from 'lucide-react'
+import { ChevronRight, Check, Sparkles, Copy, Zap, Building2, User, Hammer, Users, Briefcase, PenLine, Wrench, BookOpen, BarChart2, Flame } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/auth'
 import { generatePersona, generatePost } from '@/lib/ai/client'
@@ -10,7 +10,10 @@ import { cn } from '@/lib/utils'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
+type Mode = 'brand' | 'individual'
+
 interface FormData {
+  mode: Mode
   name: string
   description: string
   stage: string
@@ -21,15 +24,23 @@ interface FormData {
   keywords: string
 }
 
-type Step = 1 | 2 | 3 | 4 | 'generating' | 'reveal'
+type Step = 0 | 1 | 2 | 3 | 4 | 'generating' | 'reveal'
 
 // ─── Options ─────────────────────────────────────────────────────────────────
 
 const STAGES = [
-  { value: 'idea', label: 'Idea', emoji: '💡', sub: 'Pre-product' },
-  { value: 'mvp', label: 'MVP', emoji: '🔨', sub: 'Building' },
-  { value: 'live', label: 'Live', emoji: '🚀', sub: 'Revenue' },
-  { value: 'scale', label: 'Scale', emoji: '📈', sub: 'Growing' },
+  { value: 'idea',  label: 'Idea',  icon: <Sparkles className="w-4 h-4" />,  sub: 'Pre-product' },
+  { value: 'mvp',   label: 'MVP',   icon: <Hammer className="w-4 h-4" />,    sub: 'Building' },
+  { value: 'live',  label: 'Live',  icon: <Zap className="w-4 h-4" />,       sub: 'Revenue' },
+  { value: 'scale', label: 'Scale', icon: <PenLine className="w-4 h-4" />,   sub: 'Growing' },
+]
+
+// Maps to existing stage values so no DB migration is needed
+const ROLES = [
+  { value: 'idea',  label: 'Founder',    icon: <Hammer className="w-4 h-4" />,    sub: 'Building' },
+  { value: 'live',  label: 'Consultant', icon: <Briefcase className="w-4 h-4" />, sub: 'Client work' },
+  { value: 'scale', label: 'Executive',  icon: <Users className="w-4 h-4" />,     sub: 'In-house' },
+  { value: 'mvp',   label: 'Creator',    icon: <PenLine className="w-4 h-4" />,   sub: 'Content / Capital' },
 ]
 
 const INDUSTRIES = [
@@ -47,25 +58,25 @@ const GOALS = [
 const PERSONALITIES = [
   {
     value: 'builder',
-    emoji: '🔧',
+    icon: <Wrench className="w-4 h-4" />,
     label: 'The Builder',
     description: 'Raw progress, technical insight, build-in-public',
   },
   {
     value: 'storyteller',
-    emoji: '📖',
+    icon: <BookOpen className="w-4 h-4" />,
     label: 'The Storyteller',
     description: 'Experiences turned into lessons, narrative-driven',
   },
   {
     value: 'analyst',
-    emoji: '🧠',
+    icon: <BarChart2 className="w-4 h-4" />,
     label: 'The Analyst',
     description: 'Frameworks, data, structured insight, deep-dives',
   },
   {
     value: 'contrarian',
-    emoji: '🔥',
+    icon: <Flame className="w-4 h-4" />,
     label: 'The Contrarian',
     description: 'Bold takes, challenges norms, starts debates',
   },
@@ -74,13 +85,14 @@ const PERSONALITIES = [
 // ─── Progress Bar ─────────────────────────────────────────────────────────────
 
 function ProgressBar({ step }: { step: Step }) {
+  if (step === 0) return null
   const stepNum = typeof step === 'number' ? step : 4
   const pct = (stepNum / 4) * 100
 
   return (
     <div className="w-full mb-8">
       <div className="flex justify-between text-xs text-text-muted mb-2">
-        <span>Step {typeof step === 'number' ? step : 4} of 4</span>
+        <span>Step {stepNum} of 4</span>
       </div>
       <div className="h-1 bg-surface-hover rounded-full overflow-hidden">
         <motion.div
@@ -130,12 +142,12 @@ function Typewriter({ text, onDone }: { text: string; onDone?: () => void }) {
 
 const GENERATING_STEPS = [
   'Analyzing your inputs...',
-  'Crafting your founder persona...',
+  'Crafting your persona...',
   'Building your content pillars...',
   'Writing your first post...',
 ]
 
-function GeneratingScreen() {
+function GeneratingScreen({ mode }: { mode: Mode }) {
   const [activeStep, setActiveStep] = useState(0)
 
   useEffect(() => {
@@ -151,7 +163,9 @@ function GeneratingScreen() {
       <div className="w-full max-w-sm space-y-8">
         <div className="text-center">
           <div className="w-12 h-12 mx-auto border-2 border-primary border-t-transparent rounded-full animate-spin mb-4" />
-          <h2 className="text-lg font-semibold text-text">Building your founder brand</h2>
+          <h2 className="text-lg font-semibold text-text">
+            {mode === 'individual' ? 'Building your personal brand' : 'Building your founder brand'}
+          </h2>
         </div>
 
         <div className="space-y-3">
@@ -207,8 +221,9 @@ export default function Onboarding() {
   const navigate = useNavigate()
   const { user, setProfile, setCompany } = useAuthStore()
 
-  const [step, setStep] = useState<Step>(1)
+  const [step, setStep] = useState<Step>(0)
   const [form, setForm] = useState<FormData>({
+    mode: 'brand',
     name: '',
     description: '',
     stage: '',
@@ -277,6 +292,7 @@ export default function Onboarding() {
           tone: 'casual' as const,
           founder_personality: form.founder_personality as 'builder' | 'storyteller' | 'analyst' | 'contrarian',
           keywords: keywords.length > 0 ? keywords : null,
+          is_individual: form.mode === 'individual',
         })
         .select()
         .single()
@@ -341,7 +357,7 @@ export default function Onboarding() {
   // ─── Render steps ──────────────────────────────────────────────────────────
 
   if (step === 'generating') {
-    return <GeneratingScreen />
+    return <GeneratingScreen mode={form.mode} />
   }
 
   if (step === 'reveal' && persona) {
@@ -361,7 +377,7 @@ export default function Onboarding() {
           >
             <div className="inline-flex items-center gap-2 border border-primary/25 bg-primary/[0.07] text-primary text-xs font-medium px-3 py-1.5 rounded-pill">
               <Sparkles className="w-3.5 h-3.5" />
-              Your founder brand is ready
+              {form.mode === 'individual' ? 'Your personal brand is ready' : 'Your founder brand is ready'}
             </div>
           </motion.div>
 
@@ -479,6 +495,15 @@ export default function Onboarding() {
         <ProgressBar step={step as Step} />
 
         <AnimatePresence mode="wait">
+          {step === 0 && (
+            <StepZero
+              key="step0"
+              onSelect={(mode: Mode) => {
+                update('mode', mode)
+                setStep(1)
+              }}
+            />
+          )}
           {step === 1 && (
             <StepOne
               key="step1"
@@ -518,6 +543,7 @@ export default function Onboarding() {
               onFinish={handleFinish}
               canContinue={canContinue()}
               error={error}
+              mode={form.mode}
             />
           )}
         </AnimatePresence>
@@ -534,6 +560,53 @@ const stepVariants = {
   exit: { opacity: 0, x: -24 },
 }
 
+// ─── Step 0: Mode select ─────────────────────────────────────────────────────
+
+function StepZero({ onSelect }: { onSelect: (mode: Mode) => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -16 }}
+      transition={{ duration: 0.2 }}
+      className="space-y-8"
+    >
+      <div className="text-center">
+        <h1 className="text-[22px] font-semibold text-text tracking-tight">Who are you building a brand for?</h1>
+        <p className="text-text-muted mt-1.5 text-sm">This shapes every post we write for you.</p>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        <button
+          onClick={() => onSelect('brand')}
+          className="flex flex-col items-center gap-3 p-6 rounded-card border border-border bg-surface hover:border-primary/50 hover:bg-primary/[0.03] transition-all group text-center"
+        >
+          <div className="w-10 h-10 rounded-xl bg-surface-hover border border-border flex items-center justify-center group-hover:border-primary/30 group-hover:bg-primary/[0.06] transition-all">
+            <Building2 className="w-5 h-5 text-text-muted group-hover:text-primary transition-colors" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-text">My company</p>
+            <p className="text-xs text-text-muted mt-0.5 leading-snug">Posting as a startup or business</p>
+          </div>
+        </button>
+
+        <button
+          onClick={() => onSelect('individual')}
+          className="flex flex-col items-center gap-3 p-6 rounded-card border border-border bg-surface hover:border-primary/50 hover:bg-primary/[0.03] transition-all group text-center"
+        >
+          <div className="w-10 h-10 rounded-xl bg-surface-hover border border-border flex items-center justify-center group-hover:border-primary/30 group-hover:bg-primary/[0.06] transition-all">
+            <User className="w-5 h-5 text-text-muted group-hover:text-primary transition-colors" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-text">Myself</p>
+            <p className="text-xs text-text-muted mt-0.5 leading-snug">Posting as a person, consultant, or creator</p>
+          </div>
+        </button>
+      </div>
+    </motion.div>
+  )
+}
+
 // ─── Step 1: Company info ────────────────────────────────────────────────────
 
 function StepOne({
@@ -547,20 +620,26 @@ function StepOne({
   onNext: () => void
   canContinue: boolean
 }) {
+  const isIndividual = form.mode === 'individual'
+
   return (
     <motion.div {...stepVariants} transition={{ duration: 0.2 }} className="space-y-6">
       <div>
-        <h1 className="text-[22px] font-semibold text-text tracking-tight">Let's build your founder brand.</h1>
+        <h1 className="text-[22px] font-semibold text-text tracking-tight">
+          {isIndividual ? "Let's build your personal brand." : "Let's build your founder brand."}
+        </h1>
         <p className="text-text-muted mt-1 text-sm">Takes about 2 minutes.</p>
       </div>
 
       <div className="space-y-4">
         <div className="space-y-1.5">
-          <label className="text-sm text-text-muted">What's your startup called?</label>
+          <label className="text-sm text-text-muted">
+            {isIndividual ? "What's your name?" : "What's your startup called?"}
+          </label>
           <input
             autoFocus
             type="text"
-            placeholder="e.g. Acme"
+            placeholder={isIndividual ? 'e.g. Sarah Chen' : 'e.g. Acme'}
             value={form.name}
             onChange={e => update('name', e.target.value)}
             onKeyDown={e => e.key === 'Enter' && canContinue && onNext()}
@@ -569,10 +648,16 @@ function StepOne({
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-sm text-text-muted">What does it do? <span className="text-text-muted/60">(one sentence)</span></label>
+          <label className="text-sm text-text-muted">
+            {isIndividual
+              ? <>What do you do? <span className="text-text-muted/60">(one sentence)</span></>
+              : <>What does it do? <span className="text-text-muted/60">(one sentence)</span></>}
+          </label>
           <input
             type="text"
-            placeholder="e.g. We help B2B teams automate their onboarding"
+            placeholder={isIndividual
+              ? 'e.g. I help startup founders close their first 10 clients'
+              : 'e.g. We help B2B teams automate their onboarding'}
             value={form.description}
             onChange={e => update('description', e.target.value)}
             onKeyDown={e => e.key === 'Enter' && canContinue && onNext()}
@@ -605,27 +690,34 @@ function StepTwo({
   onNext: () => void
   canContinue: boolean
 }) {
+  const isIndividual = form.mode === 'individual'
+  const slots = isIndividual ? ROLES : STAGES
+
   return (
     <motion.div {...stepVariants} transition={{ duration: 0.2 }} className="space-y-6">
       <div>
-        <h1 className="text-[22px] font-semibold text-text tracking-tight">Where are you right now?</h1>
+        <h1 className="text-[22px] font-semibold text-text tracking-tight">
+          {isIndividual ? 'What best describes you?' : 'Where are you right now?'}
+        </h1>
       </div>
 
-      {/* Stage */}
+      {/* Stage / Role */}
       <div className="grid grid-cols-4 gap-2">
-        {STAGES.map(s => (
+        {slots.map(s => (
           <button
             key={s.value}
             onClick={() => update('stage', s.value)}
             className={cn(
               'flex flex-col items-center gap-1 p-3 rounded-card border text-center transition-all',
               form.stage === s.value
-                ? 'border-primary bg-primary/10 text-text'
+                ? 'border-primary bg-primary/10 text-primary'
                 : 'border-border bg-surface text-text-muted hover:border-border-hover hover:bg-surface-hover'
             )}
           >
-            <span className="text-xl">{s.emoji}</span>
-            <span className="text-xs font-medium">{s.label}</span>
+            <span className={cn('mb-0.5', form.stage === s.value ? 'text-primary' : 'text-text-muted')}>
+              {s.icon}
+            </span>
+            <span className="text-xs font-medium text-text">{s.label}</span>
             <span className="text-[10px] text-text-muted">{s.sub}</span>
           </button>
         ))}
@@ -679,19 +771,27 @@ function StepThree({
   onNext: () => void
   canContinue: boolean
 }) {
+  const isIndividual = form.mode === 'individual'
+
   return (
     <motion.div {...stepVariants} transition={{ duration: 0.2 }} className="space-y-6">
       <div>
-        <h1 className="text-[22px] font-semibold text-text tracking-tight">Who are you building for?</h1>
+        <h1 className="text-[22px] font-semibold text-text tracking-tight">
+          {isIndividual ? 'Who do you want to reach?' : 'Who are you building for?'}
+        </h1>
       </div>
 
       <div className="space-y-4">
         <div className="space-y-1.5">
-          <label className="text-sm text-text-muted">Target audience</label>
+          <label className="text-sm text-text-muted">
+            {isIndividual ? 'Your target audience' : 'Target audience'}
+          </label>
           <input
             autoFocus
             type="text"
-            placeholder="e.g. B2B marketers at 50-500 person companies"
+            placeholder={isIndividual
+              ? 'e.g. Early-stage founders looking for their first clients'
+              : 'e.g. B2B marketers at 50-500 person companies'}
             value={form.target_audience}
             onChange={e => update('target_audience', e.target.value)}
             className="w-full bg-surface border border-border rounded-input px-4 py-2.5 text-text placeholder:text-text-subtle text-sm focus:outline-none focus:border-border-focus focus:shadow-input-focus hover:border-border-hover transition-colors"
@@ -748,6 +848,7 @@ function StepFour({
   onFinish,
   canContinue,
   error,
+  mode,
 }: {
   form: FormData
   update: (k: keyof FormData, v: string) => void
@@ -755,11 +856,14 @@ function StepFour({
   onFinish: () => void
   canContinue: boolean
   error: string
+  mode: Mode
 }) {
   return (
     <motion.div {...stepVariants} transition={{ duration: 0.2 }} className="space-y-6">
       <div>
-        <h1 className="text-[22px] font-semibold text-text tracking-tight">Which founder are you?</h1>
+        <h1 className="text-[22px] font-semibold text-text tracking-tight">
+          {mode === 'individual' ? "What's your posting style?" : 'Which founder are you?'}
+        </h1>
         <p className="text-text-muted mt-1 text-sm">This shapes how every post sounds.</p>
       </div>
 
@@ -776,7 +880,9 @@ function StepFour({
                 : 'border-border bg-surface hover:border-border-hover hover:bg-surface-hover'
             )}
           >
-            <span className="text-2xl">{p.emoji}</span>
+            <span className={cn('mb-0.5', form.founder_personality === p.value ? 'text-primary' : 'text-text-muted')}>
+              {p.icon}
+            </span>
             <div>
               <p className={cn(
                 'text-sm font-medium',
@@ -793,7 +899,7 @@ function StepFour({
       {/* Keywords (optional) */}
       <div className="space-y-1.5">
         <label className="text-sm text-text-muted">
-          Brand keywords <span className="text-text-muted/60">(optional)</span>
+          {mode === 'individual' ? 'Voice keywords' : 'Brand keywords'} <span className="text-text-muted/60">(optional)</span>
         </label>
         <input
           type="text"
@@ -816,7 +922,7 @@ function StepFour({
           Back
         </Button>
         <Button onClick={onFinish} disabled={!canContinue} className="flex-1" size="lg">
-          Create my founder brand →
+          {mode === 'individual' ? 'Create my personal brand →' : 'Create my founder brand →'}
         </Button>
       </div>
     </motion.div>

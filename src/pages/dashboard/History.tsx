@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { FileText, MessageSquare, RefreshCw, Star, ChevronDown, ChevronUp, CheckCircle2, ImageDown } from 'lucide-react'
+import { FileText, MessageSquare, RefreshCw, Star, ChevronDown, ChevronUp, CheckCircle2, ImageDown, TrendingUp, Minus, TrendingDown } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/auth'
 import CopyButton from '@/components/ui/CopyButton'
@@ -102,16 +102,16 @@ export default function History() {
           </p>
           <div className="flex items-center gap-2 pt-0.5">
             {([
-              { rating: 3 as const, emoji: '🔥', label: 'Great' },
-              { rating: 2 as const, emoji: '😐', label: 'Ok' },
-              { rating: 1 as const, emoji: '😕', label: 'Quiet' },
-            ]).map(({ rating, emoji, label }) => (
+              { rating: 3 as const, icon: <TrendingUp className="w-3.5 h-3.5" />, label: 'Great' },
+              { rating: 2 as const, icon: <Minus className="w-3.5 h-3.5" />,      label: 'Ok' },
+              { rating: 1 as const, icon: <TrendingDown className="w-3.5 h-3.5" />, label: 'Quiet' },
+            ]).map(({ rating, icon, label }) => (
               <button
                 key={rating}
                 onClick={() => handleRate(awaitingRating.data.id, rating)}
-                className="text-xs px-3 py-1.5 rounded-btn border border-border hover:border-warning/50 hover:text-warning text-text-muted transition-all"
+                className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-btn border border-border hover:border-warning/50 hover:text-warning text-text-muted transition-all"
               >
-                {emoji} {label}
+                {icon} {label}
               </button>
             ))}
           </div>
@@ -354,8 +354,8 @@ function HistoryCard({
             {/* Rating */}
             {post.performance_rating ? (
               <div className="flex items-center gap-2">
-                <span className="text-sm">
-                  {post.performance_rating === 3 ? '🔥' : post.performance_rating === 2 ? '😐' : '😕'}
+                <span className={cn('flex items-center', post.performance_rating === 3 ? 'text-success' : post.performance_rating === 2 ? 'text-text-muted' : 'text-text-subtle')}>
+                  {post.performance_rating === 3 ? <TrendingUp className="w-3.5 h-3.5" /> : post.performance_rating === 2 ? <Minus className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}
                 </span>
                 <span className="text-xs text-text-muted">
                   {post.performance_rating === 3 ? 'Great' : post.performance_rating === 2 ? 'Ok' : 'Poor'}
@@ -370,16 +370,16 @@ function HistoryCard({
             ) : showRating ? (
               <div className="flex items-center gap-1.5 flex-wrap">
                 {([
-                  { rating: 3 as const, emoji: '🔥', label: 'Great' },
-                  { rating: 2 as const, emoji: '😐', label: 'Ok' },
-                  { rating: 1 as const, emoji: '😕', label: 'Poor' },
-                ]).map(({ rating, emoji, label }) => (
+                  { rating: 3 as const, icon: <TrendingUp className="w-3.5 h-3.5" />,   label: 'Great' },
+                  { rating: 2 as const, icon: <Minus className="w-3.5 h-3.5" />,         label: 'Ok' },
+                  { rating: 1 as const, icon: <TrendingDown className="w-3.5 h-3.5" />,  label: 'Poor' },
+                ]).map(({ rating, icon, label }) => (
                   <button
                     key={rating}
                     onClick={() => { onRate(post.id, rating); setShowRating(false) }}
-                    className="text-xs px-2 py-1 rounded border border-border text-text-muted hover:border-primary/50 hover:text-primary transition-all"
+                    className="inline-flex items-center gap-1.5 text-xs px-2 py-1 rounded border border-border text-text-muted hover:border-primary/50 hover:text-primary transition-all"
                   >
-                    {emoji} {label}
+                    {icon} {label}
                   </button>
                 ))}
               </div>
