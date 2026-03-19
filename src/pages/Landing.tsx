@@ -328,7 +328,7 @@ export default function Landing() {
       </section>
 
       {/* ── 7. Pricing ───────────────────────────────────────────────────────── */}
-      <section className="max-w-3xl mx-auto px-6 py-16">
+      <section className="max-w-5xl mx-auto px-6 py-16">
         <div className="text-center mb-10">
           <h2 className="text-xl font-semibold">Start free. Upgrade when you're posting.</h2>
           <p className="text-sm text-text-muted mt-2">
@@ -339,19 +339,23 @@ export default function Landing() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start">
+          {/* Free */}
           <div className="bg-surface border border-border rounded-card p-6 space-y-5">
             <div>
               <p className="font-semibold text-text">Free</p>
-              <p className="text-3xl font-bold text-text mt-1">$0</p>
+              <div className="flex items-baseline gap-0.5 mt-1">
+                <p className="text-3xl font-bold text-text">$0</p>
+              </div>
               <p className="text-xs text-text-muted mt-2">For founders just starting out.</p>
             </div>
             <ul className="space-y-2.5">
               {[
-                { text: '12 posts / month', sub: 'Enough for 3 posts/week your first month' },
+                { text: '12 posts / month', sub: 'Enough for 3×/week your first month' },
                 { text: '15 comment suggestions', sub: null },
                 { text: '5 draft rewrites', sub: null },
-                { text: 'Founder persona (1 generation)', sub: null },
+                { text: 'Founder persona', sub: '1 generation' },
+                { text: 'Content history', sub: 'Last 30 days' },
               ].map(({ text, sub }) => (
                 <li key={text} className="flex items-start gap-2.5">
                   <Check className="w-3.5 h-3.5 text-success shrink-0 mt-0.5" />
@@ -367,16 +371,49 @@ export default function Landing() {
             </Link>
           </div>
 
+          {/* Starter — featured */}
           <div className="relative bg-surface border border-primary/30 rounded-card p-6 space-y-5 overflow-hidden">
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
             <div>
-              <div className="flex items-center gap-2">
-                <p className="font-semibold text-text">Pro</p>
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">
-                  MOST POPULAR
+              <div className="flex items-center justify-between mb-1">
+                <p className="font-semibold text-primary">Starter</p>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-pill border border-primary/30 bg-primary/[0.08] text-primary">
+                  Most popular
                 </span>
               </div>
-              <div className="flex items-baseline gap-1 mt-1">
+              <div className="flex items-baseline gap-0.5 mt-1">
+                <p className="text-3xl font-bold text-text">$9</p>
+                <p className="text-sm text-text-muted">/month</p>
+              </div>
+              <p className="text-xs text-text-muted mt-2">For founders building the habit.</p>
+            </div>
+            <ul className="space-y-2.5">
+              {[
+                { text: '80 posts / month', sub: 'Daily posting, with plenty to spare' },
+                { text: '100 comment suggestions', sub: null },
+                { text: '40 draft rewrites', sub: null },
+                { text: 'Founder persona', sub: 'Regenerate anytime' },
+                { text: 'Content history', sub: 'Last 90 days' },
+              ].map(({ text, sub }) => (
+                <li key={text} className="flex items-start gap-2.5">
+                  <Check className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm text-text-muted">{text}</p>
+                    {sub && <p className="text-xs text-text-subtle mt-0.5">{sub}</p>}
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <Link to="/signup" className="block">
+              <Button className="w-full">Get Starter</Button>
+            </Link>
+          </div>
+
+          {/* Pro */}
+          <div className="bg-surface border border-border rounded-card p-6 space-y-5">
+            <div>
+              <p className="font-semibold text-text">Pro</p>
+              <div className="flex items-baseline gap-0.5 mt-1">
                 <p className="text-3xl font-bold text-text">$19</p>
                 <p className="text-sm text-text-muted">/month</p>
               </div>
@@ -384,20 +421,25 @@ export default function Landing() {
             </div>
             <ul className="space-y-2.5">
               {[
-                'Unlimited posts, comments + rewrites',
-                'Regenerate persona anytime',
-                'Full content history',
-                'Priority AI, faster responses',
-                'AI learns what works for you over time',
-              ].map(f => (
-                <li key={f} className="flex items-start gap-2.5 text-sm text-text-muted">
-                  <Check className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
-                  {f}
+                { text: 'Unlimited posts', sub: null },
+                { text: 'Unlimited comments', sub: null },
+                { text: 'Unlimited rewrites', sub: null },
+                { text: 'Founder persona', sub: 'Regenerate anytime' },
+                { text: 'Full content history', sub: null },
+                { text: 'Priority AI', sub: 'Faster responses' },
+                { text: 'Performance insights', sub: 'AI learns what works for you' },
+              ].map(({ text, sub }) => (
+                <li key={text} className="flex items-start gap-2.5">
+                  <Check className="w-3.5 h-3.5 text-success shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm text-text-muted">{text}</p>
+                    {sub && <p className="text-xs text-text-subtle mt-0.5">{sub}</p>}
+                  </div>
                 </li>
               ))}
             </ul>
             <Link to="/signup" className="block">
-              <Button className="w-full">Start free, upgrade anytime</Button>
+              <Button variant="secondary" className="w-full">Get Pro</Button>
             </Link>
           </div>
         </div>

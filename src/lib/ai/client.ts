@@ -104,6 +104,24 @@ export async function rewriteDraft(payload: {
   return invoke<RewriteDraftResult>('rewrite-draft', payload)
 }
 
+// ─── Remix Post ──────────────────────────────────────────────────────────────
+
+export interface RemixPostResult {
+  structure: string
+  hook_type: string
+  tone: string
+  why_it_works: string
+  adapted_version: string
+  id: string
+}
+
+export async function remixPost(payload: {
+  source_post: string
+  company_id: string
+}): Promise<RemixPostResult> {
+  return invoke<RemixPostResult>('remix-post', payload)
+}
+
 // ─── Generate Persona ─────────────────────────────────────────────────────────
 export interface GeneratePersonaResult {
   persona_statement: string

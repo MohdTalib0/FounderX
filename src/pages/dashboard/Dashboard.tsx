@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, Link, useSearchParams } from 'react-router-dom'
-import { PenLine, RefreshCw, MessageSquare, Clock, ArrowRight, Check, ImageDown, CheckCircle2, Circle, Zap, Lightbulb, Hammer, TrendingUp, Sparkles } from 'lucide-react'
+import { PenLine, RefreshCw, MessageSquare, Shuffle, Clock, ArrowRight, Check, ImageDown, CheckCircle2, Circle, Zap, Lightbulb, Hammer, TrendingUp, Sparkles } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/auth'
 import Button from '@/components/ui/Button'
@@ -553,6 +553,7 @@ export default function Dashboard() {
             { to: '/dashboard/write', icon: PenLine, label: 'Write Post', sub: '3 variations in your voice' },
             { to: '/dashboard/rewrite', icon: RefreshCw, label: 'Had a rough idea?', sub: 'Turn messy thoughts into a post' },
             { to: '/dashboard/engage', icon: MessageSquare, label: 'Get Comments', sub: 'Engage smarter' },
+            { to: '/dashboard/remix', icon: Shuffle, label: 'Remix a Post', sub: 'Steal a structure that works' },
           ].map(({ to, icon: Icon, label, sub }) => (
             <Link
               key={to}

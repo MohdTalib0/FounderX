@@ -250,6 +250,58 @@ export function parseRewrite(content: string) {
   }
 }
 
+// ─── Remix a Post ────────────────────────────────────────────────────────────
+export function buildRemixPrompt(sourcePost: string, personaStatement: string, companyName: string, description: string): string {
+  return `Analyze this viral LinkedIn post and then write an adapted version for our founder.
+
+VIRAL POST:
+"""
+${sourcePost}
+"""
+
+FOUNDER PERSONA: ${personaStatement}
+COMPANY: ${companyName} — ${description}
+
+Return EXACTLY this format, nothing else:
+
+<analysis>
+Structure: [e.g. "Problem → Stakes → Twist → Lesson"]
+Hook type: [e.g. "Counterintuitive claim"]
+Tone: [e.g. "Vulnerable + authoritative"]
+Why it works: [1 sentence — what makes it scroll-stopping]
+</analysis>
+
+<adapted>
+[Full post in the founder's voice, using the same structure but their context and company.
+Replace all specific details with the founder's own experience.
+130-200 words. Short paragraphs. End with a question or strong CTA.]
+</adapted>
+
+Rules:
+- The adapted version must use the SAME structure as the original
+- Replace every concrete detail (numbers, company names, situations) with the founder's own context
+- The result should not be recognisable as derivative of the original
+- Do NOT start with "I" — vary the opening`
+}
+
+export function parseRemix(content: string) {
+  const analysisRaw = parseTag(content, 'analysis')
+  const adapted_version = parseTag(content, 'adapted')
+
+  const get = (label: string) => {
+    const match = analysisRaw.match(new RegExp(`${label}:\\s*(.+)`))
+    return match?.[1]?.trim() ?? ''
+  }
+
+  return {
+    structure: get('Structure'),
+    hook_type: get('Hook type'),
+    tone: get('Tone'),
+    why_it_works: get('Why it works'),
+    adapted_version,
+  }
+}
+
 // ─── Structure / Hook rotation pools ────────────────────────────────────────
 export const POST_STRUCTURES = [
   'Problem → Lesson',

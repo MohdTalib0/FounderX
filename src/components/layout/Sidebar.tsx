@@ -1,5 +1,5 @@
 import { NavLink, useNavigate, Link } from 'react-router-dom'
-import { Home, PenLine, FileEdit, MessageSquare, History, Settings, LogOut, Zap } from 'lucide-react'
+import { Home, PenLine, FileEdit, Shuffle, MessageSquare, History, Settings, LogOut, Zap } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/store/auth'
 
@@ -8,6 +8,7 @@ const navItems = [
     { to: '/dashboard', label: 'Home', icon: Home, end: true },
     { to: '/dashboard/write', label: 'Write Post', icon: PenLine },
     { to: '/dashboard/rewrite', label: 'Rewrite Draft', icon: FileEdit },
+    { to: '/dashboard/remix', label: 'Remix a Post', icon: Shuffle },
   ]},
   { section: 'Engage', items: [
     { to: '/dashboard/engage', label: 'Get Comments', icon: MessageSquare },

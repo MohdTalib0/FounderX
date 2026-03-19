@@ -181,6 +181,36 @@ export type Database = {
         Update: Partial<Database['public']['Tables']['draft_rewrites']['Insert']>
         Relationships: []
       }
+      remixed_posts: {
+        Row: {
+          id: string
+          user_id: string
+          company_id: string
+          source_post: string
+          structure: string
+          hook_type: string
+          tone: string
+          why_it_works: string
+          adapted_version: string
+          is_saved: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          company_id: string
+          source_post: string
+          structure: string
+          hook_type: string
+          tone: string
+          why_it_works: string
+          adapted_version: string
+          is_saved?: boolean
+          created_at?: string
+        }
+        Update: Partial<Database['public']['Tables']['remixed_posts']['Insert']>
+        Relationships: []
+      }
       sent_emails: {
         Row: {
           id: string
@@ -211,3 +241,4 @@ export type Company = Database['public']['Tables']['companies']['Row']
 export type GeneratedPost = Database['public']['Tables']['generated_posts']['Row']
 export type CommentSuggestion = Database['public']['Tables']['comment_suggestions']['Row']
 export type DraftRewrite = Database['public']['Tables']['draft_rewrites']['Row']
+export type RemixedPost = Database['public']['Tables']['remixed_posts']['Row']

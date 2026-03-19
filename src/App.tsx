@@ -15,6 +15,7 @@ import DashboardLayout from '@/layouts/DashboardLayout'
 import Dashboard from '@/pages/dashboard/Dashboard'
 import Write from '@/pages/dashboard/Write'
 import Rewrite from '@/pages/dashboard/Rewrite'
+import Remix from '@/pages/dashboard/Remix'
 import Engage from '@/pages/dashboard/Engage'
 import History from '@/pages/dashboard/History'
 import Settings from '@/pages/dashboard/Settings'
@@ -81,6 +82,7 @@ export default function App() {
           <Route index element={<Dashboard />} />
           <Route path="write" element={<Write />} />
           <Route path="rewrite" element={<Rewrite />} />
+          <Route path="remix" element={<Remix />} />
           <Route path="engage" element={<Engage />} />
           <Route path="history" element={<History />} />
           <Route path="settings" element={<Settings />} />

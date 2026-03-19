@@ -31,6 +31,7 @@ export default function Signup() {
       password: data.password,
       options: {
         data: { full_name: data.full_name },
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     })
     if (error) {

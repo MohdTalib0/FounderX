@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react'
-import { FileText, MessageSquare, RefreshCw, Star, ChevronDown, ChevronUp, CheckCircle2, ImageDown, TrendingUp, Minus, TrendingDown } from 'lucide-react'
+import { FileText, MessageSquare, RefreshCw, Shuffle, Star, ChevronDown, ChevronUp, CheckCircle2, ImageDown, TrendingUp, Minus, TrendingDown } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/auth'
 import CopyButton from '@/components/ui/CopyButton'
 import Badge from '@/components/ui/Badge'
 import { QuoteCardModal } from '@/components/ui/QuoteCard'
 import { cn, truncate } from '@/lib/utils'
-import type { GeneratedPost, CommentSuggestion, DraftRewrite } from '@/types/database'
+import type { GeneratedPost, CommentSuggestion, DraftRewrite, RemixedPost } from '@/types/database'
 
-type Filter = 'all' | 'posts' | 'comments' | 'rewrites'
+type Filter = 'all' | 'posts' | 'comments' | 'rewrites' | 'remixes'
 
 type HistoryItem =
   | { type: 'post'; data: GeneratedPost; created_at: string }
   | { type: 'comment'; data: CommentSuggestion; created_at: string }
   | { type: 'rewrite'; data: DraftRewrite; created_at: string }
+  | { type: 'remix'; data: RemixedPost; created_at: string }
 
 export default function History() {
   const { user, profile, company } = useAuthStore()
@@ -30,16 +31,18 @@ export default function History() {
   async function load() {
     setLoading(true)
 
-    const [postsRes, commentsRes, rewritesRes] = await Promise.all([
+    const [postsRes, commentsRes, rewritesRes, remixesRes] = await Promise.all([
       supabase.from('generated_posts').select('*').eq('user_id', user!.id).order('created_at', { ascending: false }).limit(50),
       supabase.from('comment_suggestions').select('*').eq('user_id', user!.id).order('created_at', { ascending: false }).limit(50),
       supabase.from('draft_rewrites').select('*').eq('user_id', user!.id).order('created_at', { ascending: false }).limit(50),
+      supabase.from('remixed_posts').select('*').eq('user_id', user!.id).order('created_at', { ascending: false }).limit(50),
     ])
 
     const all: HistoryItem[] = [
       ...(postsRes.data ?? []).map(d => ({ type: 'post' as const, data: d, created_at: d.created_at })),
       ...(commentsRes.data ?? []).map(d => ({ type: 'comment' as const, data: d, created_at: d.created_at })),
       ...(rewritesRes.data ?? []).map(d => ({ type: 'rewrite' as const, data: d, created_at: d.created_at })),
+      ...(remixesRes.data ?? []).map(d => ({ type: 'remix' as const, data: d, created_at: d.created_at })),
     ]
 
     all.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
@@ -52,6 +55,7 @@ export default function History() {
     if (filter === 'posts') return item.type === 'post'
     if (filter === 'comments') return item.type === 'comment'
     if (filter === 'rewrites') return item.type === 'rewrite'
+    if (filter === 'remixes') return item.type === 'remix'
     return true
   })
 
@@ -60,6 +64,7 @@ export default function History() {
     { value: 'posts', label: 'Posts' },
     { value: 'comments', label: 'Comments' },
     { value: 'rewrites', label: 'Rewrites' },
+    { value: 'remixes', label: 'Remixes' },
   ]
 
   // 48h rating nudge — posts published 24-72h ago with no rating
@@ -507,6 +512,50 @@ function HistoryCard({
             {expanded
               ? <><ChevronUp className="w-3.5 h-3.5" /> Collapse</>
               : <><ChevronDown className="w-3.5 h-3.5" /> Show full rewrite</>
+            }
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  if (item.type === 'remix') {
+    const r = item.data
+
+    return (
+      <div className="bg-surface border border-border rounded-card overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center justify-between gap-3 px-4 pt-4 pb-3">
+          <div className="flex items-center gap-2">
+            <Shuffle className="w-3.5 h-3.5 text-text-muted" />
+            <span className="text-xs text-text-muted">REMIX</span>
+            {r.structure && (
+              <span className="text-xs text-text-subtle hidden sm:inline">{r.structure}</span>
+            )}
+            <span className="text-xs text-text-muted">{relativeDate(r.created_at)}</span>
+          </div>
+          <CopyButton text={r.adapted_version} size="sm" />
+        </div>
+
+        {/* Source */}
+        <p className="text-xs text-text-subtle px-4 pb-2">Source: "{truncate(r.source_post, 70)}"</p>
+
+        {/* Body */}
+        {expanded ? (
+          <p className="text-sm text-text leading-relaxed whitespace-pre-wrap px-4 pb-3">{r.adapted_version}</p>
+        ) : (
+          <p className="text-sm text-text-muted leading-relaxed px-4 pb-3">{truncate(r.adapted_version, 140)}</p>
+        )}
+
+        {/* Footer */}
+        <div className="px-4 py-2.5 border-t border-border flex justify-end">
+          <button
+            onClick={() => setExpanded(v => !v)}
+            className="flex items-center gap-1 text-xs text-text-muted hover:text-text transition-colors"
+          >
+            {expanded
+              ? <><ChevronUp className="w-3.5 h-3.5" /> Collapse</>
+              : <><ChevronDown className="w-3.5 h-3.5" /> Show full remix</>
             }
           </button>
         </div>
