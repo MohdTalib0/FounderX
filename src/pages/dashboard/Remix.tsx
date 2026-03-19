@@ -112,7 +112,7 @@ export default function Remix() {
             <div className="px-5 pb-5">
               <CopyButton
                 text={result.adapted_version}
-                onCopy={() => toast.success('Copied — paste on LinkedIn')}
+                onCopy={() => toast.success('Copied! Paste on LinkedIn')}
                 label="Copy your version"
                 className="w-full justify-center"
                 size="sm"

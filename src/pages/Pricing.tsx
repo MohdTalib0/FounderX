@@ -82,7 +82,7 @@ const COMPARISON = [
 const FAQ = [
   {
     q: 'Do I need a credit card to start?',
-    a: 'No. Free is fully free — no card, no trial period, no hidden anything. Sign up and start generating posts immediately.',
+    a: 'No. Free is fully free. No card, no trial period, no hidden anything. Sign up and start generating posts immediately.',
   },
   {
     q: 'What happens when I hit my monthly limit?',
@@ -90,11 +90,11 @@ const FAQ = [
   },
   {
     q: 'Does the AI actually sound like me?',
-    a: 'Yes — the persona system built during your 4-question onboarding shapes every single generation. Safe, Bold, and Controversial are three tones, all grounded in your voice, stage, and audience.',
+    a: 'Yes. The persona system built during your 4-question onboarding shapes every single generation. Safe, Bold, and Controversial are three tones, all grounded in your voice, stage, and audience.',
   },
   {
     q: 'What are Performance insights?',
-    a: 'Once you\'ve generated 10+ posts, FounderX tracks which variations you copy most and how you rate them. Pro users get prompts that learn from this — future posts lean toward what\'s actually working for you.',
+    a: 'Once you\'ve generated 10+ posts, FounderX tracks which variations you copy most and how you rate them. Pro users get prompts that learn from this. Future posts lean toward what\'s actually working for you.',
   },
   {
     q: 'Can I cancel anytime?',
@@ -102,7 +102,7 @@ const FAQ = [
   },
   {
     q: 'Is there an annual plan?',
-    a: "Not yet — monthly only for now. Annual billing with a discount is on the roadmap.",
+    a: "Not yet. Monthly only for now. Annual billing with a discount is on the roadmap.",
   },
 ]
 
@@ -121,7 +121,7 @@ export default function Pricing() {
         </h1>
         <p className="text-base text-text-muted leading-relaxed">
           Start free. Upgrade when you're posting. Every plan includes the full
-          product — limits are the only difference.
+          product. Limits are the only difference.
         </p>
 
         {/* Beta banner */}
@@ -244,7 +244,7 @@ function PlanCard({ plan }: { plan: typeof PLANS[number] }) {
         ? 'bg-surface border border-primary/30'
         : 'bg-surface border border-border'
     )}>
-      {/* Gradient line — only on featured */}
+      {/* Gradient line - only on featured */}
       {featured && (
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
       )}

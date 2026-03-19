@@ -22,7 +22,7 @@ export const useToastStore = create<ToastStore>((set) => ({
   remove: (id) => set(s => ({ toasts: s.toasts.filter(t => t.id !== id) })),
 }))
 
-// Call from anywhere — no hook needed
+// Call from anywhere - no hook needed
 export const toast = {
   success: (msg: string) => useToastStore.getState().add(msg, 'success'),
   error: (msg: string) => useToastStore.getState().add(msg, 'error'),

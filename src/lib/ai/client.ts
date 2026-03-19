@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabase'
 
-// All AI calls go through Supabase Edge Functions — API key never touches the browser.
+// All AI calls go through Supabase Edge Functions - API key never touches the browser.
 
 export class LimitReachedError extends Error {
   readonly limit: number
@@ -24,7 +24,7 @@ async function invoke<T>(fn: string, body: Record<string, unknown>): Promise<T> 
   })
 
   if (error) {
-    // supabase-js wraps non-2xx responses as FunctionsHttpError — the body is in error.context
+    // supabase-js wraps non-2xx responses as FunctionsHttpError - the body is in error.context
     const context = (error as { context?: Response }).context
     if (context instanceof Response) {
       let json: { error?: string; limit?: number } = {}

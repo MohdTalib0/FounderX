@@ -140,7 +140,7 @@ function BrandTab({ company, onUpdate }: {
         })
         .eq('id', company.id)
 
-      // Call Edge Function — it generates persona and saves it back to company
+      // Call Edge Function - it generates persona and saves it back to company
       const result = await generatePersona({ company_id: company.id })
 
       onUpdate(result.company as typeof company)
@@ -326,7 +326,7 @@ function AccountTab({
           <div className="flex items-start gap-3">
             <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0 animate-pulse" />
             <div>
-              <p className="text-sm font-semibold text-text mb-0.5">Beta — full access</p>
+              <p className="text-sm font-semibold text-text mb-0.5">Beta: full access</p>
               <p className="text-xs text-text-muted leading-relaxed">
                 You're one of the first 50 {isIndividual ? 'creators' : 'founders'}. All features are free during the beta.
                 Pro plan coming soon.

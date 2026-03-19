@@ -20,7 +20,7 @@ export default function AuthCallback() {
             .maybeSingle()
           navigate(profile?.onboarded ? '/dashboard' : '/onboarding')
         } else if (event === 'INITIAL_SESSION' && !session) {
-          // No token in URL and no existing session — bad link or already used
+          // No token in URL and no existing session - bad link or already used
           subscription.unsubscribe()
           navigate('/login?error=invalid_link')
         }

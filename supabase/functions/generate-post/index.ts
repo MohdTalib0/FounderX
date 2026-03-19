@@ -97,7 +97,7 @@ serve(async (req) => {
       })
     }
 
-    // Run all three DB queries in parallel — none depend on each other
+    // Run all three DB queries in parallel - none depend on each other
     const [usageRes, companyRes, postsRes] = await Promise.all([
       supabase.rpc('increment_usage', { p_field: 'posts' }),
       supabase.from('companies').select('*').eq('id', company_id).eq('user_id', user.id).single(),
@@ -148,7 +148,7 @@ serve(async (req) => {
       throw new Error('AI returned incomplete variations')
     }
 
-    // Persist — single source of truth, frontend only patches (copy/rate/publish)
+    // Persist - single source of truth, frontend only patches (copy/rate/publish)
     const { data: saved, error: saveError } = await supabase
       .from('generated_posts')
       .insert({

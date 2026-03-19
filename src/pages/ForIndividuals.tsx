@@ -26,7 +26,7 @@ export default function ForIndividuals() {
         </h1>
 
         <p className="text-base text-text-muted leading-relaxed mb-3 max-w-lg mx-auto">
-          Consultants, coaches, executives, and creators face the exact same problem founders do —
+          Consultants, coaches, executives, and creators face the exact same problem founders do:
           blank page, generic output, inconsistent posting.
         </p>
         <p className="text-base text-text-muted leading-relaxed mb-10 max-w-lg mx-auto">
@@ -54,7 +54,7 @@ export default function ForIndividuals() {
           <p className="text-xs font-semibold text-primary tracking-widest uppercase mb-3">Who uses it</p>
           <h2 className="text-2xl font-bold tracking-tight">Built for anyone who posts as a person.</h2>
           <p className="text-sm text-text-muted mt-2 max-w-md mx-auto">
-            If you're posting as yourself — not as a company account — this mode is for you.
+            If you're posting as yourself, not as a company account, this mode is for you.
           </p>
         </div>
 
@@ -64,7 +64,7 @@ export default function ForIndividuals() {
               icon: <Briefcase className="w-5 h-5 text-amber-400" />,
               iconBg: 'bg-amber-500/10 border-amber-500/20',
               title: 'Consultant / Coach',
-              body: 'Build inbound. Let clients find you through consistent, credible posts — not cold outreach.',
+              body: 'Build inbound. Let clients find you through consistent, credible posts, not cold outreach.',
             },
             {
               icon: <Users className="w-5 h-5 text-sky-400" />,
@@ -76,7 +76,7 @@ export default function ForIndividuals() {
               icon: <Zap className="w-5 h-5 text-violet-400" />,
               iconBg: 'bg-violet-500/10 border-violet-500/20',
               title: 'Founder',
-              body: 'Post as yourself, not just your brand. The best founder content is personal — this helps you write it.',
+              body: 'Post as yourself, not just your brand. The best founder content is personal. This helps you write it.',
             },
             {
               icon: <PenLine className="w-5 h-5 text-emerald-400" />,
@@ -110,7 +110,7 @@ export default function ForIndividuals() {
               step: 1,
               icon: Sparkles,
               title: 'Choose "Myself" at setup',
-              body: 'One click at the start. FounderX builds your personal voice profile — your style, your role, your audience.',
+              body: 'One click at the start. FounderX builds your personal voice profile: your style, your role, your audience.',
             },
             {
               step: 2,
@@ -151,13 +151,13 @@ export default function ForIndividuals() {
               icon: <Sparkles className="w-5 h-5 text-violet-400" />,
               iconBg: 'bg-violet-500/10 border-violet-500/20',
               title: 'Personal voice profile',
-              body: 'Set up once in 2 minutes. Your personality, role, and audience get baked into every post — not just when you remember to mention it.',
+              body: 'Set up once in 2 minutes. Your personality, role, and audience get baked into every post, not just when you remember to mention it.',
             },
             {
               icon: <PenLine className="w-5 h-5 text-primary" />,
               iconBg: 'bg-primary/10 border-primary/20',
               title: '3 variations per post',
-              body: 'Safe, Bold, Contrarian. All in your voice. Pick the one that feels right for the day — don\'t overthink it.',
+              body: 'Safe, Bold, Contrarian. All in your voice. Pick the one that feels right for the day. Don\'t overthink it.',
             },
             {
               icon: <RefreshCw className="w-5 h-5 text-amber-400" />,

@@ -50,7 +50,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         {...props}
       >
-        {/* Loading spinner — absolutely positioned so button width stays stable */}
+        {/* Loading spinner - absolutely positioned so button width stays stable */}
         {loading && (
           <span className="absolute inset-0 flex items-center justify-center">
             <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />

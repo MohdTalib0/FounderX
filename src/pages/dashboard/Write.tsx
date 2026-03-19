@@ -223,7 +223,7 @@ export default function Write() {
         <p className="text-sm text-text-muted mt-0.5">Get 3 variations ready to post</p>
       </div>
 
-      {/* Input section — collapsible after generation */}
+      {/* Input section - collapsible after generation */}
       {inputCollapsed ? (
         <div className="bg-surface border border-border rounded-card px-4 py-3 flex items-center justify-between gap-3">
           <div className="min-w-0">
@@ -254,7 +254,7 @@ export default function Write() {
             }}
           />
 
-          {/* Pillar chips — suggest topic from pillar, not replace with pillar name */}
+          {/* Pillar chips - suggest topic from pillar, not replace with pillar name */}
           {pillars.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {pillars.map(pillar => (
@@ -427,7 +427,7 @@ function PostCard({
 
       {/* Content */}
       <div className="px-4 pb-3 space-y-2">
-        {/* Hook line — the scroll-stopper, always prominent */}
+        {/* Hook line - the scroll-stopper, always prominent */}
         <p className="text-base font-semibold text-text leading-snug">{hook}</p>
 
         {/* Body */}
@@ -454,7 +454,7 @@ function PostCard({
         )}
       </div>
 
-      {/* Mobile copy shortcut — shown when expanded so the copy button isn't far away */}
+      {/* Mobile copy shortcut - shown when expanded so the copy button isn't far away */}
       {isExpanded && isLong && (
         <div className="sm:hidden px-4 pb-3">
           <CopyButton
@@ -517,7 +517,7 @@ function PostCard({
         />
       </div>
 
-      {/* "Did you post?" inline prompt — shown after copy, auto-dismisses in 10s */}
+      {/* "Did you post?" inline prompt - shown after copy, auto-dismisses in 10s */}
       {showPostedPrompt && (
         <div className="flex items-center justify-between gap-3 px-4 py-2.5 border-t border-border bg-surface-hover/20">
           <p className="text-xs text-text-muted">Did you post this on LinkedIn?</p>
@@ -556,7 +556,7 @@ function PostCard({
         </div>
       )}
 
-      {/* Refine panel — hidden by default, revealed on click */}
+      {/* Refine panel - hidden by default, revealed on click */}
       {showRefine && (
         <div className="px-4 py-3 border-t border-border space-y-2">
           <p className="text-xs text-text-muted">This sounds...</p>

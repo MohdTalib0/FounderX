@@ -76,7 +76,7 @@ serve(async (req) => {
       throw new Error('AI returned incomplete rewrite')
     }
 
-    // Persist — return id so frontend can update selected_hook without a second insert
+    // Persist - return id so frontend can update selected_hook without a second insert
     const { data: saved, error: saveError } = await supabase
       .from('draft_rewrites')
       .insert({

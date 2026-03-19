@@ -25,10 +25,10 @@ export default function UpgradeWall({
   const remaining = postsLimit !== null ? Math.max(0, postsLimit - postsUsed) : null
   const showScarcity = !isFullAccess && remaining !== null
 
-  // Lead sentence — strongest signal first
+  // Lead sentence - strongest signal first
   const leadSentence =
     postsPublished >= 1
-      ? `You've published ${postsPublished} post${postsPublished > 1 ? 's' : ''} — your content is out there working.`
+      ? `You've published ${postsPublished} post${postsPublished > 1 ? 's' : ''}. Your content is out there working.`
       : postsCopied >= 1
       ? `${postsCopied} post${postsCopied > 1 ? 's' : ''} copied and ready to post on LinkedIn.`
       : postsGenerated >= 3
@@ -71,7 +71,7 @@ export default function UpgradeWall({
             Founders who post 3×/week on LinkedIn see 5–10× more profile views within 30 days.
           </p>
           <p className="text-sm text-text-muted">
-            Start building your record — FounderX tracks what works for you over time.
+            Start building your record. FounderX tracks what works for you over time.
           </p>
         </>
       )}

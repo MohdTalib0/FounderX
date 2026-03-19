@@ -147,7 +147,7 @@ export default function Landing() {
         <h2 className="text-xl font-semibold text-center mb-10">How it works</h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 relative">
-          {/* Connector line — desktop only */}
+          {/* Connector line - desktop only */}
           <div className="hidden sm:block absolute top-8 left-[calc(16.67%+1rem)] right-[calc(16.67%+1rem)] h-px bg-gradient-to-r from-border via-primary/30 to-border" />
 
           {[
@@ -193,7 +193,7 @@ export default function Landing() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
-          {/* Write Post — featured, spans 2 cols, has inline demo */}
+          {/* Write Post - featured, spans 2 cols, has inline demo */}
           <div className="lg:col-span-2 relative bg-surface border border-primary/25 rounded-card p-6 overflow-hidden group hover:border-primary/40 transition-colors">
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/[0.03] rounded-full blur-3xl pointer-events-none" />
@@ -371,7 +371,7 @@ export default function Landing() {
             </Link>
           </div>
 
-          {/* Starter — featured */}
+          {/* Starter - featured */}
           <div className="relative bg-surface border border-primary/30 rounded-card p-6 space-y-5 overflow-hidden">
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
             <div>

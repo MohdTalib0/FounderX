@@ -101,7 +101,7 @@ export default function Dashboard() {
     load()
   }, [user])
 
-  // Count distinct days with posts this week — dots light up Mon→Wed→Fri in order
+  // Count distinct days with posts this week - dots light up Mon→Wed→Fri in order
   // regardless of which actual days the user generated on
   const distinctDaysThisWeek = new Set(
     postedDays.map(d => d.toDateString())
@@ -114,7 +114,7 @@ export default function Dashboard() {
     weekCount === 2 ? '2 of 3, almost there' :
     '3 of 3 · week complete ✓'
 
-  // Last week count — for continuity below the tracker
+  // Last week count - for continuity below the tracker
   const { mon: thisWeekMon } = getWeekDots()
   const lastWeekStart = new Date(thisWeekMon); lastWeekStart.setDate(thisWeekMon.getDate() - 7)
   const lastWeekCount = Math.min(
@@ -126,7 +126,7 @@ export default function Dashboard() {
     3
   )
 
-  // Best variation insight — only show after 5+ copied posts
+  // Best variation insight - only show after 5+ copied posts
   const copiedPosts = allPosts.filter(p => p.was_copied && p.selected_variation)
   const variationCounts = copiedPosts.reduce<Record<string, number>>((acc, p) => {
     const v = p.selected_variation!
@@ -136,7 +136,7 @@ export default function Dashboard() {
   const bestVariation = Object.entries(variationCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null
   const showInsight = copiedPosts.length >= 5 && bestVariation !== null
 
-  // Persona refresh — show at 10/20/30/40 post milestones
+  // Persona refresh - show at 10/20/30/40 post milestones
   const showPersonaPrompt = !dismissPersonaPrompt && allPosts.length > 0 && allPosts.length % 10 === 0
 
   // ─── Today's Next Step ────────────────────────────────────────────────────
@@ -173,7 +173,7 @@ export default function Dashboard() {
       <div>
         <h1 className="text-page text-text">
           {isFirstVisit
-            ? `Great start, ${firstName} — now post this today.`
+            ? `Great start, ${firstName}. Now post this today.`
             : `${greeting}, ${firstName}.`}
         </h1>
         {company && !isFirstVisit && (
@@ -184,13 +184,13 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* Today's Next Step — persistent action strip */}
+      {/* Today's Next Step - persistent action strip */}
       {nextStep && (
         <div className="flex items-center justify-between gap-3 bg-primary/[0.05] border border-primary/20 rounded-card px-4 py-3">
           <p className="text-sm text-text">
             {nextStep.type === 'rate' && 'How did that post land? A quick rating improves your next one.'}
-            {nextStep.type === 'copy' && 'Your post is ready — copy it and paste on LinkedIn.'}
-            {nextStep.type === 'generate' && "Today's your posting day — keep the streak going."}
+            {nextStep.type === 'copy' && 'Your post is ready. Copy it and paste on LinkedIn.'}
+            {nextStep.type === 'generate' && "Today's your posting day. Keep the streak going."}
           </p>
           <Link
             to={
@@ -400,7 +400,7 @@ export default function Dashboard() {
         )
       })()}
 
-      {/* Founder Scoreboard — outcome stats, shown after 3+ posts */}
+      {/* Founder Scoreboard - outcome stats, shown after 3+ posts */}
       {!loading && allPosts.length >= 3 && (() => {
         const totalPosts = allPosts.length
         const publishedCount = allPosts.filter(p => p.is_published).length
@@ -417,17 +417,17 @@ export default function Dashboard() {
         const stats = [
           {
             label: 'Published',
-            value: publishedCount > 0 ? String(publishedCount) : '—',
+            value: publishedCount > 0 ? String(publishedCount) : '-',
             sub: publishedCount > 0 ? `of ${totalPosts} generated` : 'mark posts as published',
           },
           {
             label: 'Copy rate',
-            value: copiedCount > 0 ? `${copyRate}%` : '—',
+            value: copiedCount > 0 ? `${copyRate}%` : '-',
             sub: copiedCount > 0 ? `${copiedCount} post${copiedCount !== 1 ? 's' : ''} copied` : 'copy posts to track',
           },
           {
             label: 'Avg rating',
-            value: avgRating ?? '—',
+            value: avgRating ?? '-',
             sub: avgRating ? `from ${ratedPosts.length} rated` : 'rate posts to track',
           },
         ]
@@ -465,7 +465,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Persona refresh prompt — shown at 10/20/30... post milestones */}
+      {/* Persona refresh prompt - shown at 10/20/30... post milestones */}
       {showPersonaPrompt && (
         <div className="relative bg-surface border border-primary/20 rounded-card px-4 py-3 flex items-start justify-between gap-3">
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
@@ -493,7 +493,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Weekly tracker + Quick actions — side by side */}
+      {/* Weekly tracker + Quick actions - side by side */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
         {/* Weekly tracker */}
@@ -547,7 +547,7 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* Quick actions — stacked */}
+        {/* Quick actions - stacked */}
         <div className="space-y-2">
           {[
             { to: '/dashboard/write', icon: PenLine, label: 'Write Post', sub: '3 variations in your voice' },
@@ -587,7 +587,7 @@ export default function Dashboard() {
                 'font-semibold',
                 bestVariation === 'bold' ? 'text-amber-400' :
                 bestVariation === 'controversial' ? 'text-red-400' : 'text-emerald-400'
-              )}>{bestVariation}</span> posts get copied most — keep going.
+              )}>{bestVariation}</span> posts get copied most. Keep going.
             </p>
           )}
 

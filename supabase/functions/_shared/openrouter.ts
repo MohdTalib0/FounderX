@@ -15,7 +15,7 @@ const MODELS = {
   fallback: 'openai/gpt-4o-mini',
 }
 
-const TIMEOUT_MS = 25_000 // 25 s — well under Supabase's 150 s wall-clock limit
+const TIMEOUT_MS = 25_000 // 25 s - well under Supabase's 150 s wall-clock limit
 
 async function fetchWithTimeout(url: string, init: RequestInit): Promise<Response> {
   const controller = new AbortController()

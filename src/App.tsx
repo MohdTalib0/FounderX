@@ -3,14 +3,14 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/auth'
 
-// Eager — needed on first paint
+// Eager - needed on first paint
 import Landing from '@/pages/Landing'
 import AuthGuard from '@/components/guards/AuthGuard'
 import OnboardingGuard from '@/components/guards/OnboardingGuard'
 import Toaster from '@/components/ui/Toaster'
 import LoadingScreen from '@/components/ui/LoadingScreen'
 
-// Lazy — loaded on demand
+// Lazy - loaded on demand
 const ForIndividuals = lazy(() => import('@/pages/ForIndividuals'))
 const Pricing = lazy(() => import('@/pages/Pricing'))
 const Login = lazy(() => import('@/pages/auth/Login'))

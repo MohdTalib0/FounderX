@@ -80,7 +80,7 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      {/* Usage meter — free (12) and starter (80) only */}
+      {/* Usage meter - free (12) and starter (80) only */}
       {(profile?.plan === 'free' || profile?.plan === 'starter') && (() => {
         const postsUsed = profile.posts_this_month ?? 0
         const limit = profile.plan === 'starter' ? 80 : 12
@@ -99,7 +99,7 @@ export default function Sidebar() {
         )
       })()}
 
-      {/* Upgrade nudge — passive single-line, full wall only shows on limit-hit in Write */}
+      {/* Upgrade nudge - passive single-line, full wall only shows on limit-hit in Write */}
       {(profile?.plan === 'free' || profile?.plan === 'starter') && (() => {
         const limit = profile.plan === 'free' ? 12 : 80
         const remaining = Math.max(0, limit - (profile.posts_this_month ?? 0))

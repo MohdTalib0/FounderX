@@ -67,7 +67,7 @@ function QuoteCardInner({ text, founderName, companyName, variation, size }: Quo
         pointerEvents: 'none',
       }} />
 
-      {/* Quote mark — SVG so it renders consistently regardless of font availability */}
+      {/* Quote mark - SVG so it renders consistently regardless of font availability */}
       <svg
         width={s(72)} height={s(56)}
         viewBox="0 0 72 56"
@@ -171,7 +171,7 @@ interface QuoteCardModalProps {
   onClose: () => void
 }
 
-// Full export resolution — always 1080px
+// Full export resolution - always 1080px
 const EXPORT_SIZE = 1080
 
 export function QuoteCardModal({ text, founderName, companyName, variation, onClose }: QuoteCardModalProps) {
@@ -209,7 +209,7 @@ export function QuoteCardModal({ text, founderName, companyName, variation, onCl
 
   return createPortal(
     <>
-      {/* Off-screen full-res card for capture only — never visible */}
+      {/* Off-screen full-res card for capture only - never visible */}
       <div style={{ position: 'fixed', top: -9999, left: -9999, zIndex: -1, pointerEvents: 'none' }}>
         <div ref={captureRef}>
           <QuoteCardInner
@@ -219,7 +219,7 @@ export function QuoteCardModal({ text, founderName, companyName, variation, onCl
         </div>
       </div>
 
-      {/* Modal — portalled to body so no parent stacking context interferes */}
+      {/* Modal - portalled to body so no parent stacking context interferes */}
       <div
         className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
         onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
@@ -239,7 +239,7 @@ export function QuoteCardModal({ text, founderName, companyName, variation, onCl
             </button>
           </div>
 
-          {/* Preview — fills available width, measured on mount */}
+          {/* Preview - fills available width, measured on mount */}
           <div className="px-5">
             <div className="rounded-[10px] overflow-hidden border border-border" ref={previewContainerRef}>
               <QuoteCardInner

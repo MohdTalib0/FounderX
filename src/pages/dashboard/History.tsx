@@ -67,7 +67,7 @@ export default function History() {
     { value: 'remixes', label: 'Remixes' },
   ]
 
-  // 48h rating nudge — posts published 24-72h ago with no rating
+  // 48h rating nudge - posts published 24-72h ago with no rating
   const now = Date.now()
   const awaitingRating = items
     .filter((i): i is { type: 'post'; data: GeneratedPost; created_at: string } => i.type === 'post')
@@ -78,7 +78,7 @@ export default function History() {
     })
     .slice(0, 1)[0] ?? null
 
-  // Aggregate stats — only show after there's enough data
+  // Aggregate stats - only show after there's enough data
   const posts = items.filter(i => i.type === 'post') as { type: 'post'; data: GeneratedPost; created_at: string }[]
   const totalPosts = posts.length
   const copiedPosts = posts.filter(p => p.data.was_copied).length
@@ -123,13 +123,13 @@ export default function History() {
         </div>
       )}
 
-      {/* Aggregate stats — shown after 5+ posts */}
+      {/* Aggregate stats - shown after 5+ posts */}
       {!loading && showStats && (
         <div className="grid grid-cols-3 gap-3">
           {[
             { label: 'Posts generated', value: String(totalPosts) },
             { label: 'Copy rate', value: `${copyRate}%` },
-            { label: 'Top variation', value: topVariation ? topVariation.charAt(0).toUpperCase() + topVariation.slice(1) : '—' },
+            { label: 'Top variation', value: topVariation ? topVariation.charAt(0).toUpperCase() + topVariation.slice(1) : '-' },
           ].map(({ label, value }) => (
             <div key={label} className="bg-surface border border-border rounded-card px-4 py-3 text-center">
               <p className="text-lg font-bold text-text tabular-nums">{value}</p>

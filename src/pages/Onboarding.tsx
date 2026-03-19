@@ -386,7 +386,7 @@ export default function Onboarding() {
             </div>
           </motion.div>
 
-          {/* Persona card — identity moment */}
+          {/* Persona card - identity moment */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -421,7 +421,7 @@ export default function Onboarding() {
             )}
           </motion.div>
 
-          {/* First post — dominant action block */}
+          {/* First post - dominant action block */}
           {typewriterDone && firstPost && (
             <motion.div
               initial={{ opacity: 0, y: 12 }}
@@ -448,7 +448,7 @@ export default function Onboarding() {
                   size="lg"
                 >
                   {copied ? (
-                    <><Check className="w-4 h-4" /> Copied — paste on LinkedIn now</>
+                    <><Check className="w-4 h-4" /> Copied! Paste on LinkedIn now</>
                   ) : (
                     <><Copy className="w-4 h-4" /> Copy and post now</>
                   )}

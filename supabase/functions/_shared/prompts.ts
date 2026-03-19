@@ -1,5 +1,4 @@
-// Shared prompt builders and parsers for Supabase Edge Functions
-// Mirrors src/lib/ai/prompts.ts — keep in sync
+// Shared prompt builders and parsers for all edge functions
 
 export interface CompanyContext {
   name: string
@@ -22,7 +21,7 @@ export function buildBrandContext(company: CompanyContext, extras?: {
   performanceSummary?: string
 }): string {
   const toneMap: Record<string, string> = {
-    builder: 'casual, direct, technical when needed — raw progress over polish',
+    builder: 'casual, direct, technical when needed. Raw progress over polish',
     storyteller: 'narrative-driven, warm, turns experiences into lessons',
     analyst: 'structured, data-informed, framework-first',
     contrarian: 'bold, opinionated, challenges conventional wisdom respectfully',
@@ -34,7 +33,7 @@ export function buildBrandContext(company: CompanyContext, extras?: {
 
 FOUNDER PERSONA: ${company.persona_statement ?? 'A founder building in public'}
 PERSONALITY TYPE: ${company.founder_personality}
-COMPANY: ${company.name} — ${company.description}
+COMPANY: ${company.name}: ${company.description}
 TARGET AUDIENCE: ${company.target_audience}
 INDUSTRY: ${company.industry.join(', ')}
 STAGE: ${company.stage}
@@ -48,9 +47,9 @@ ${extras?.performanceSummary ? `\nCONTENT SIGNAL HISTORY:\n${extras.performanceS
 
 Rules:
 - Write as this founder, first person, not as an AI assistant
-- Sound human — contractions, occasional imperfect grammar is fine
+- Sound human. Contractions, occasional imperfect grammar is fine
 - NEVER use: "In today's world", "As a founder", "Game-changer", "Dive into", "Leverage", "Delve"
-- NEVER use em dashes (—). Use commas, periods, or colons instead
+- NEVER use em dashes. Use commas, periods, or colons instead
 - LinkedIn posts only: short paragraphs (1-3 lines max), line breaks between paragraphs, max 3000 chars`
 }
 
@@ -70,7 +69,7 @@ export function buildPersonaPrompt(data: {
 2. Exactly 3 content pillars (topic categories for their LinkedIn posts)
 
 Founder info:
-- Company: ${data.name} — ${data.description}
+- Company: ${data.name}: ${data.description}
 - Audience: ${data.target_audience}
 - Industry: ${data.industry.join(', ')}
 - Stage: ${data.stage}
@@ -84,9 +83,9 @@ Return EXACTLY this format, nothing else:
 </persona>
 
 <pillars>
-[Pillar 1 — 2-4 words, e.g. "Build in public"]
-[Pillar 2 — 2-4 words]
-[Pillar 3 — 2-4 words]
+[Pillar 1, 2-4 words, e.g. "Build in public"]
+[Pillar 2, 2-4 words]
+[Pillar 3, 2-4 words]
 </pillars>`
 }
 
@@ -97,21 +96,21 @@ export function buildPostPrompt(topic: string): string {
 Return EXACTLY this format, no other text:
 
 <safe>
-[Hook line — professional, builds authority]
+[Hook line: professional, builds authority]
 
-[Body — 130-180 words, safe take, ends with insight or CTA]
+[Body: 130-180 words, safe take, ends with insight or CTA]
 </safe>
 
 <bold>
-[Hook line — stronger opinion, clear stance]
+[Hook line: stronger opinion, clear stance]
 
-[Body — 130-180 words, takes a side, might polarize slightly]
+[Body: 130-180 words, takes a side, might polarize slightly]
 </bold>
 
 <controversial>
-[Hook line — challenges a common belief]
+[Hook line: challenges a common belief]
 
-[Body — 130-180 words, starts a debate, respectfully provocative]
+[Body: 130-180 words, starts a debate, respectfully provocative]
 </controversial>
 
 Rules:
@@ -133,7 +132,7 @@ export function buildRefinePrompt(
     too_formal: 'Use contractions. Cut corporate words. Write like a person texting a smart friend. Keep the ideas, lose the stiffness.',
     too_generic: `Make it more specific to this founder. Reference their company (${companyName}), their stage (${stage}), their actual experience. Replace any claim that could apply to anyone with something only this founder could say.`,
     too_long: 'Cut to under 120 words. Keep the hook, keep the single best insight, cut everything else. No filler.',
-    too_ai: `This post sounds AI-generated. Rewrite it so it sounds unmistakably human. Specific fixes: remove all transitional phrases like "In conclusion", "It\'s important to note", "This is a reminder that". Add one rough edge — an unfinished thought, a specific number that\'s oddly precise, a sentence fragment used intentionally. Use the founder\'s company name (${companyName}) and a real detail that feels lived-in. Vary sentence length dramatically. Make it sound like a person who types fast and knows exactly what they mean.`,
+    too_ai: `This post sounds AI-generated. Rewrite it so it sounds unmistakably human. Specific fixes: remove all transitional phrases like "In conclusion", "It\'s important to note", "This is a reminder that". Add one rough edge: an unfinished thought, a specific number that\'s oddly precise, a sentence fragment used intentionally. Use the founder\'s company name (${companyName}) and a real detail that feels lived-in. Vary sentence length dramatically. Make it sound like a person who types fast and knows exactly what they mean.`,
   }
 
   return `Refine this LinkedIn post. The founder says it feels: "${refinement.replace('_', ' ')}"
@@ -174,7 +173,7 @@ Return EXACTLY this format:
 Rules:
 - NEVER start with "Great post!", "Love this!", "This is so true", or any praise opener
 - NEVER mention the commenter's company by name
-- Reference something specific from the post — a word, a claim, a number
+- Reference something specific from the post: a word, a claim, a number
 - Max 80 words per comment
 - Sound like a thoughtful person, not a marketing bot`
 }
@@ -182,7 +181,7 @@ Rules:
 // ─── Rewrite Draft ──────────────────────────────────────────────────────────
 export function buildRewritePrompt(draft: string): string {
   return `Rewrite this founder's rough draft into a clean, postable LinkedIn post.
-Preserve their core idea and voice — improve structure and clarity only.
+Preserve their core idea and voice. Improve structure and clarity only.
 
 DRAFT:
 """
@@ -192,11 +191,11 @@ ${draft}
 Return EXACTLY this format:
 
 <hooks>
-[Hook option 1 — direct story opener]
+[Hook option 1: direct story opener]
 ||
-[Hook option 2 — bold claim or insight]
+[Hook option 2: bold claim or insight]
 ||
-[Hook option 3 — question or counterintuitive take]
+[Hook option 3: question or counterintuitive take]
 </hooks>
 
 <rewritten>
@@ -204,7 +203,7 @@ Return EXACTLY this format:
 </rewritten>
 
 Rules:
-- Keep the founder's ideas and intent — don't change what they're saying, only how they say it
+- Keep the founder's ideas and intent. Don't change what they're saying, only how they say it
 - The rewritten post should use Hook option 1 as its opening line
 - User can swap to Hook option 2 or 3 without regenerating the body`
 }
@@ -261,7 +260,7 @@ ${sourcePost}
 """
 
 FOUNDER PERSONA: ${personaStatement}
-COMPANY: ${companyName} — ${description}
+COMPANY: ${companyName}: ${description}
 
 Return EXACTLY this format, nothing else:
 
@@ -269,7 +268,7 @@ Return EXACTLY this format, nothing else:
 Structure: [e.g. "Problem → Stakes → Twist → Lesson"]
 Hook type: [e.g. "Counterintuitive claim"]
 Tone: [e.g. "Vulnerable + authoritative"]
-Why it works: [1 sentence — what makes it scroll-stopping]
+Why it works: [1 sentence, what makes it scroll-stopping]
 </analysis>
 
 <adapted>
@@ -282,7 +281,7 @@ Rules:
 - The adapted version must use the SAME structure as the original
 - Replace every concrete detail (numbers, company names, situations) with the founder's own context
 - The result should not be recognisable as derivative of the original
-- Do NOT start with "I" — vary the opening`
+- Do NOT start with "I". Vary the opening`
 }
 
 export function parseRemix(content: string) {

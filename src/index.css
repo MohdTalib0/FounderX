@@ -26,7 +26,7 @@
 
   /* Focus strategy:
      - Buttons/links: ring via component-level focus-visible:ring-* classes
-     - Inputs/textareas: border-color change only (no ring — cleaner in dense forms)
+     - Inputs/textareas: border-color change only (no ring - cleaner in dense forms)
      - Everything else: suppress browser default, component handles it
   */
   :focus-visible {
@@ -40,7 +40,7 @@
     /* border-border-focus applied via component className */
   }
 
-  /* Custom scrollbar — refined */
+  /* Custom scrollbar - refined */
   ::-webkit-scrollbar {
     width: 5px;
     height: 5px;
@@ -75,7 +75,7 @@
     animation: shimmer 1.8s ease-in-out infinite;
   }
 
-  /* Section label — used across many components */
+  /* Section label - used across many components */
   .section-label {
     @apply text-[11px] font-medium text-text-muted uppercase tracking-widest;
   }

@@ -133,9 +133,9 @@ export default function Engage() {
               <p className="text-xs text-text-muted">Paste any post, get 3 comments in seconds.</p>
               {complete && (
                 <div className="mt-2 pt-2.5 border-t border-success/20 space-y-1">
-                  <p className="text-xs font-medium text-success">Week complete — great engagement habit!</p>
+                  <p className="text-xs font-medium text-success">Week complete. Great engagement habit!</p>
                   <p className="text-xs text-text-subtle">
-                    Keep going for bonus reach — every extra comment compounds your visibility.
+                    Keep going for bonus reach. Every extra comment compounds your visibility.
                   </p>
                 </div>
               )}
@@ -145,7 +145,7 @@ export default function Engage() {
       )}
 
       <div className="space-y-3">
-        {/* Post text — primary */}
+        {/* Post text - primary */}
         <Textarea
           label="Paste the post text"
           rows={6}
@@ -166,18 +166,18 @@ export default function Engage() {
           {generating ? 'Generating...' : 'Generate Comments →'}
         </Button>
 
-        {/* LinkedIn URL — truly optional, styled as metadata not a field */}
+        {/* LinkedIn URL - truly optional, styled as metadata not a field */}
         <div className="pt-2">
           <input
             type="url"
-            placeholder="LinkedIn post URL (optional — for tracking only)"
+            placeholder="LinkedIn post URL (optional, for tracking only)"
             value={linkedinUrl}
             onChange={e => setLinkedinUrl(e.target.value)}
             className="w-full bg-transparent text-xs text-text-muted placeholder:text-text-subtle border-0 border-b border-border/50 pb-1 focus:outline-none focus:border-border-focus transition-colors"
           />
           {linkedinUrl.trim() && !urlIsLinkedIn && (
             <p className="text-xs text-text-subtle mt-1">
-              We can't read post content from URLs — paste the text above.
+              We can't read post content from URLs. Paste the text above.
             </p>
           )}
         </div>

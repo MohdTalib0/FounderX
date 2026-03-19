@@ -38,11 +38,11 @@ export default function Signup() {
       setError(error.message)
       return
     }
-    // If session exists immediately, email confirmation is disabled — go straight to onboarding
+    // If session exists immediately, email confirmation is disabled - go straight to onboarding
     if (authData.session) {
       navigate('/onboarding')
     } else {
-      // Email confirmation is required — show a message
+      // Email confirmation is required - show a message
       setEmailSent(true)
     }
   }

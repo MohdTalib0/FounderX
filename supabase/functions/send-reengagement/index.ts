@@ -5,7 +5,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const TOPIC_TEMPLATES = [
   (p: string) => `${p}: the thing nobody warned me about`,
-  (p: string) => `An honest look at ${p.toLowerCase()} — what's actually working`,
+  (p: string) => `An honest look at ${p.toLowerCase()}: what's actually working`,
   (p: string) => `What I wish I knew about ${p.toLowerCase()} 6 months ago`,
   (p: string) => `The hardest part of ${p.toLowerCase()} right now`,
   (p: string) => `A recent ${p.toLowerCase()} lesson that changed how I think`,
@@ -78,7 +78,7 @@ function wrap(inner: string, baseUrl: string): string {
 </html>`
 }
 
-// ─── T+24h — first post nudge ─────────────────────────────────────────────────
+// ─── T+24h - first post nudge ─────────────────────────────────────────────────
 
 function make24h(
   firstName: string,
@@ -118,7 +118,7 @@ function make24h(
   }
 }
 
-// ─── T+72h — re-engagement nudge ─────────────────────────────────────────────
+// ─── T+72h - re-engagement nudge ─────────────────────────────────────────────
 
 function make72h(
   firstName: string,
@@ -128,7 +128,7 @@ function make72h(
   const topicUrl = `${baseUrl}/dashboard/write?topic=${encodeURIComponent(topic)}`
 
   return {
-    subject: `It's been a few days, ${firstName} — here's a post idea`,
+    subject: `It's been a few days, ${firstName}. Here's a post idea`,
     html: wrap(`
       <h2 style="margin:0 0 14px;font-size:20px;font-weight:700;color:#18181B;line-height:1.3;">Back on track, ${firstName}.</h2>
       <p style="margin:0 0 14px;font-size:14px;color:#52525B;line-height:1.7;">LinkedIn rewards consistency. Every quiet day is a day your future users, investors, and hires don't find you.</p>
@@ -136,12 +136,12 @@ function make72h(
       ${topicPill(topic)}
       <p style="margin:0;font-size:12px;color:#A1A1AA;">3 variations, in under 3 minutes. Pick the one that feels right.</p>
       ${btn('Generate this post', topicUrl)}
-      <p style="margin:22px 0 0;font-size:12px;color:#A1A1AA;line-height:1.6;">The founders who show up consistently win. Your persona is ready — now let it work.</p>
+      <p style="margin:22px 0 0;font-size:12px;color:#A1A1AA;line-height:1.6;">The founders who show up consistently win. Your persona is ready, now let it work.</p>
     `, baseUrl),
   }
 }
 
-// ─── Weekly Monday — 3 topic ideas ───────────────────────────────────────────
+// ─── Weekly Monday - 3 topic ideas ───────────────────────────────────────────
 
 function makeWeekly(
   firstName: string,
@@ -179,7 +179,7 @@ function makeWeekly(
         ${topicsHtml}
       </table>
       ${btn('Start writing', `${baseUrl}/dashboard`)}
-      <p style="margin:20px 0 0;font-size:12px;color:#A1A1AA;line-height:1.6;">3 posts this week: Mon, Wed, Fri. Your persona handles the voice — you just pick the topic.</p>
+      <p style="margin:20px 0 0;font-size:12px;color:#A1A1AA;line-height:1.6;">3 posts this week: Mon, Wed, Fri. Your persona handles the voice, you just pick the topic.</p>
     `, baseUrl),
   }
 }
@@ -229,10 +229,10 @@ serve(async (req) => {
     return new Response('ok')
   }
 
-  // Authenticate — fail closed: if secret is unset, refuse all requests
+  // Authenticate - fail closed: if secret is unset, refuse all requests
   const cronSecret = Deno.env.get('CRON_SECRET')
   if (!cronSecret) {
-    console.error('CRON_SECRET env var is not set — refusing request')
+    console.error('CRON_SECRET env var is not set - refusing request')
     return json({ error: 'Server misconfiguration' }, 500)
   }
   if (req.headers.get('x-cron-secret') !== cronSecret) {
@@ -255,7 +255,7 @@ serve(async (req) => {
   const baseUrl    = Deno.env.get('APP_URL')    ?? 'https://founderx.app'
   const fromAddr   = Deno.env.get('EMAIL_FROM')  ?? 'FounderX <team@founderx.app>'
 
-  // Service role — needed to read all users, bypasses RLS
+  // Service role - needed to read all users, bypasses RLS
   const supabase = createClient(
     Deno.env.get('SUPABASE_URL')!,
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
@@ -322,7 +322,7 @@ serve(async (req) => {
     })
 
   } else {
-    // weekly — all onboarded users who haven't opted out
+    // weekly - all onboarded users who haven't opted out
     const { data } = await supabase
       .from('profiles')
       .select('id, email, full_name, created_at, email_notifications, companies(name, persona_statement, content_pillars)')
@@ -333,7 +333,7 @@ serve(async (req) => {
 
   if (!candidates.length) return json({ sent: 0, eligible: 0 })
 
-  // ── 2. Deduplicate — skip anyone who got this email recently ───────────────
+  // ── 2. Deduplicate - skip anyone who got this email recently ───────────────
 
   const dedupeWindow = type === 'weekly' ? 6 * 24 * HOUR : 7 * 24 * HOUR
   const dedupeSince  = new Date(now - dedupeWindow).toISOString()
