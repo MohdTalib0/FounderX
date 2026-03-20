@@ -22,7 +22,10 @@
       "Bash(sed -i \"s/profile?.email ?? ''—''/profile?.email ?? ''-''/g\" src/pages/dashboard/Settings.tsx)",
       "Bash(sed -i \"s/Upgrade to Pro — $19\\\\/month/Upgrade to Pro · $19\\\\/month/\" src/pages/dashboard/Settings.tsx)",
       "Bash(sed -i \"s/Built from your answers — shapes every post from here./Built from your answers, shapes every post from here./\" src/pages/Onboarding.tsx)",
-      "Bash(sed -i \"s/Your first post — ready to copy/Your first post, ready to copy/\" src/pages/Onboarding.tsx)"
+      "Bash(sed -i \"s/Your first post — ready to copy/Your first post, ready to copy/\" src/pages/Onboarding.tsx)",
+      "WebFetch(domain:openrouter.ai)",
+      "WebFetch(domain:costgoat.com)",
+      "WebSearch"
     ]
   }
 }

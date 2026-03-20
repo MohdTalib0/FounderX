@@ -25,6 +25,7 @@ const Remix = lazy(() => import('@/pages/dashboard/Remix'))
 const Engage = lazy(() => import('@/pages/dashboard/Engage'))
 const History = lazy(() => import('@/pages/dashboard/History'))
 const Settings = lazy(() => import('@/pages/dashboard/Settings'))
+const Upgrade = lazy(() => import('@/pages/dashboard/Upgrade'))
 
 export default function App() {
   const { setUser, setSession, setInitialized, fetchProfile, fetchCompany } = useAuthStore()
@@ -88,6 +89,7 @@ export default function App() {
             <Route path="engage" element={<Engage />} />
             <Route path="history" element={<History />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="upgrade" element={<Upgrade />} />
           </Route>
 
           {/* Fallback */}

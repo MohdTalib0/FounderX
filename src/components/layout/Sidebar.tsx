@@ -108,7 +108,7 @@ export default function Sidebar() {
             <p className="text-xs text-text-muted mb-1">
               {remaining === 0 ? 'Monthly limit reached.' : `${remaining} of ${limit} posts left.`}
             </p>
-            <Link to="/pricing" className="text-xs font-semibold text-primary hover:text-primary-hover transition-colors">
+            <Link to="/dashboard/upgrade" className="text-xs font-semibold text-primary hover:text-primary-hover transition-colors">
               Upgrade to Pro →
             </Link>
           </div>

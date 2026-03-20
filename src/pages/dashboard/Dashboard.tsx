@@ -451,7 +451,7 @@ export default function Dashboard() {
       {/* Persona pill strip */}
       {company?.persona_statement && (
         <div className="bg-surface border border-border rounded-card px-4 py-3 space-y-2">
-          <p className="text-xs text-text-muted font-medium uppercase tracking-wide">Your founder brand</p>
+          <p className="text-xs text-text-muted font-medium uppercase tracking-wide">{company.is_individual ? 'Your personal brand' : 'Your founder brand'}</p>
           <p className="text-sm text-text leading-snug">{company.persona_statement}</p>
           {company.content_pillars && company.content_pillars.length > 0 && (
             <div className="flex flex-wrap gap-1.5 pt-0.5">
@@ -575,7 +575,10 @@ export default function Dashboard() {
       {!loading && recentPosts.length > 0 && (
         <div>
           <div className="flex items-center justify-between mb-3">
-            <p className="section-label">Recent</p>
+            <div className="flex items-center gap-2">
+              <p className="section-label">Recent</p>
+              <span className="text-[11px] text-text-subtle">last 3</span>
+            </div>
             <Link to="/dashboard/history" className="text-xs text-primary hover:text-primary-hover transition-colors">
               View all →
             </Link>
@@ -615,6 +618,13 @@ export default function Dashboard() {
                     </p>
                   </div>
                   <div className="flex items-center gap-1.5 shrink-0">
+                    <Link
+                      to={`/dashboard/write?postId=${post.id}`}
+                      title="Open in Write"
+                      className="p-1.5 text-text-muted hover:text-text hover:bg-surface-hover rounded-lg transition-colors"
+                    >
+                      <PenLine className="w-3.5 h-3.5" />
+                    </Link>
                     <button
                       onClick={() => setQuoteCard({ text, variation: variation as 'safe' | 'bold' | 'controversial' })}
                       title="Get quote card"

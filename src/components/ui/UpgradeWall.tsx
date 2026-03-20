@@ -77,7 +77,7 @@ export default function UpgradeWall({
       )}
       {!isFullAccess && (
         <Link
-          to="/pricing"
+          to="/dashboard/upgrade"
           className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-hover transition-colors"
         >
           Upgrade to Pro
