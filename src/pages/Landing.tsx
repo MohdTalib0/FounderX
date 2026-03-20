@@ -468,7 +468,7 @@ export default function Landing() {
             </div>
             <span className="text-sm font-semibold text-text-muted">FounderX</span>
           </div>
-          <p className="text-xs text-text-subtle">2025 FounderX. All rights reserved.</p>
+          <p className="text-xs text-text-subtle">2026 FounderX. All rights reserved.</p>
         </div>
       </footer>
     </div>
