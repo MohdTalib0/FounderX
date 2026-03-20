@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Zap, ArrowLeft } from 'lucide-react'
+import { Zap, ArrowLeft, Eye, EyeOff } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
@@ -17,6 +17,7 @@ type FormData = z.infer<typeof schema>
 export default function Login() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState(
     searchParams.get('error') === 'invalid_link'
       ? 'This confirmation link is invalid or has already been used. Sign in below.'
@@ -77,9 +78,14 @@ export default function Login() {
             />
             <Input
               label="Password"
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               placeholder="••••••••"
               error={errors.password?.message}
+              suffix={
+                <button type="button" onClick={() => setShowPassword(v => !v)} className="text-text-muted hover:text-text transition-colors">
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              }
               {...register('password')}
             />
 
