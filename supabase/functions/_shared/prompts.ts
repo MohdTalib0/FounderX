@@ -12,6 +12,15 @@ export interface CompanyContext {
   content_pillars?: string[] | null
   keywords?: string[] | null
   tone?: string
+  is_individual?: boolean
+}
+
+// Stage values are reused for individual role encoding
+const INDIVIDUAL_ROLE_MAP: Record<string, string> = {
+  idea: 'Founder',
+  live: 'Consultant',
+  scale: 'Executive',
+  mvp: 'Creator',
 }
 
 // ─── Brand Context Block ────────────────────────────────────────────────────
@@ -33,10 +42,16 @@ export function buildBrandContext(company: CompanyContext, extras?: {
 
 FOUNDER PERSONA: ${company.persona_statement ?? 'A founder building in public'}
 PERSONALITY TYPE: ${company.founder_personality}
-COMPANY: ${company.name}: ${company.description}
+${company.is_individual
+  ? `PERSONAL BRAND: ${company.name} (individual, not a company). About: ${company.description}`
+  : `COMPANY: ${company.name}: ${company.description}`
+}
 TARGET AUDIENCE: ${company.target_audience}
 INDUSTRY: ${company.industry.join(', ')}
-STAGE: ${company.stage}
+${company.is_individual
+  ? `ROLE: ${INDIVIDUAL_ROLE_MAP[company.stage] ?? company.stage}`
+  : `STAGE: ${company.stage}`
+}
 PRIMARY GOAL: ${company.founder_goal.replace('_', ' ')}
 VOICE: ${tone}
 ${company.tone ? `PREFERRED TONE: ${company.tone}` : ''}
@@ -48,6 +63,7 @@ ${extras?.performanceSummary ? `\nCONTENT SIGNAL HISTORY:\n${extras.performanceS
 
 Rules:
 - Write as this founder, first person, not as an AI assistant
+- Write like a real person sharing something they actually experienced, not like a content template
 - Sound human. Contractions, occasional imperfect grammar is fine
 - NEVER use: "In today's world", "As a founder", "Game-changer", "Dive into", "Leverage", "Delve"
 - NEVER use em dashes. Use commas, periods, or colons instead
@@ -64,16 +80,29 @@ export function buildPersonaPrompt(data: {
   founder_goal: string
   founder_personality: string
   keywords?: string[]
+  is_individual?: boolean
 }): string {
-  return `A founder just completed onboarding for a LinkedIn brand tool. Based on their info, generate:
-1. A one-sentence founder persona statement (their brand identity)
+  const roleOrStage = data.is_individual
+    ? `Role: ${INDIVIDUAL_ROLE_MAP[data.stage] ?? data.stage}`
+    : `Stage: ${data.stage}`
+
+  const subjectLine = data.is_individual
+    ? `- Name: ${data.name} (individual, building personal brand)\n- About: ${data.description}`
+    : `- Company: ${data.name}: ${data.description}`
+
+  const intro = data.is_individual
+    ? 'An individual professional just completed onboarding for a LinkedIn personal brand tool.'
+    : 'A founder just completed onboarding for a LinkedIn brand tool.'
+
+  return `${intro} Based on their info, generate:
+1. A one-sentence personal brand statement (their brand identity)
 2. Exactly 3 content pillars (topic categories for their LinkedIn posts)
 
-Founder info:
-- Company: ${data.name}: ${data.description}
+Info:
+${subjectLine}
 - Audience: ${data.target_audience}
 - Industry: ${data.industry.join(', ')}
-- Stage: ${data.stage}
+- ${roleOrStage}
 - Goal: ${data.founder_goal.replace('_', ' ')}
 - Personality: ${data.founder_personality}
 ${data.keywords?.length ? `- Keywords: ${data.keywords.join(', ')}` : ''}
@@ -121,9 +150,9 @@ DEBATE:
 [Body: 130-180 words]
 
 HARD RULES:
+- Each variation MUST be 130-180 words. Count them. Do NOT submit under 130 words.
 - Each variation MUST include at least ONE real specific detail: a number, a situation, a mistake, or a concrete moment
-- Each variation MUST reference the founder's company or context explicitly
-- If the post could apply to any founder, it is INVALID
+- Each variation MUST feel specific to this founder's context, product, or journey. Generic posts are INVALID.
 - Write EXACTLY 3 variations. Not 2. Not 4.
 
 STYLE RULES:

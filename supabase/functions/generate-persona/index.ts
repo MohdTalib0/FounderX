@@ -64,6 +64,7 @@ serve(async (req) => {
       founder_goal: company.founder_goal,
       founder_personality: company.founder_personality,
       keywords: company.keywords ?? [],
+      is_individual: company.is_individual ?? false,
     })
 
     const raw = await complete(
