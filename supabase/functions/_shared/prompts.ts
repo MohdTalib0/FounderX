@@ -39,6 +39,7 @@ INDUSTRY: ${company.industry.join(', ')}
 STAGE: ${company.stage}
 PRIMARY GOAL: ${company.founder_goal.replace('_', ' ')}
 VOICE: ${tone}
+${company.tone ? `PREFERRED TONE: ${company.tone}` : ''}
 ${company.keywords?.length ? `BRAND KEYWORDS: ${company.keywords.join(', ')}` : ''}
 ${company.content_pillars?.length ? `CONTENT PILLARS: ${company.content_pillars.join(', ')}` : ''}
 ${extras?.postStructure ? `POST STRUCTURE THIS TIME: ${extras.postStructure}` : ''}
@@ -91,34 +92,53 @@ Return EXACTLY this format, nothing else:
 
 // ─── Post Generation (3 variations) ────────────────────────────────────────
 export function buildPostPrompt(topic: string): string {
-  return `Write 3 LinkedIn post variations about this topic: "${topic}"
+  return `Using the founder context above, write EXACTLY 3 LinkedIn post variations about this topic: "${topic}"
 
-Return EXACTLY this format, no other text:
+You MUST include ALL THREE sections: SAFE, BOLD, and DEBATE.
+If any section is missing, the response is invalid.
 
-<safe>
-[Hook line: professional, builds authority]
+VARIATION RULE:
+- SAFE = educational, authority-building, no controversy
+- BOLD = strong opinion, takes a clear side, slightly polarizing
+- DEBATE = challenges a widely-held belief, some readers will disagree
+Each variation must feel fundamentally different in angle, not just wording.
 
-[Body: 130-180 words, safe take, ends with insight or CTA]
-</safe>
+Return EXACTLY this format:
 
-<bold>
-[Hook line: stronger opinion, clear stance]
+SAFE:
+[Hook line]
 
-[Body: 130-180 words, takes a side, might polarize slightly]
-</bold>
+[Body: 130-180 words]
 
-<controversial>
-[Hook line: challenges a common belief]
+BOLD:
+[Hook line]
 
-[Body: 130-180 words, starts a debate, respectfully provocative]
-</controversial>
+[Body: 130-180 words]
 
-Rules:
-- Each variation must start with a scroll-stopping first line (the hook)
+DEBATE:
+[Hook line]
+
+[Body: 130-180 words]
+
+HARD RULES:
+- Each variation MUST include at least ONE real specific detail: a number, a situation, a mistake, or a concrete moment
+- Each variation MUST reference the founder's company or context explicitly
+- If the post could apply to any founder, it is INVALID
+- Write EXACTLY 3 variations. Not 2. Not 4.
+
+STYLE RULES:
 - Short paragraphs, 1-3 lines each, blank line between paragraphs
-- No bullet points unless it genuinely needs a list
-- End with a question or a strong closing line
-- Do NOT use the same opening words across variations`
+- NEVER start with: "I still remember", "The truth is", "When I started", "In the early days"
+- No vague advice like "consistency is key" or "authenticity matters"
+- Do NOT repeat opening phrases across variations
+- Do NOT reuse the same story, example, or situation across variations
+- End each variation with a question or strong closing line
+
+DEBATE RULE:
+- Must take a stance that some people will disagree with
+- Must NOT be neutral
+- Bad output example: "Everyone has different opinions on growth" (neutral, INVALID)
+- Good output example: "Most growth advice is wrong for early-stage founders" (takes a stance)`
 }
 
 // ─── Refine Post ────────────────────────────────────────────────────────────
@@ -214,6 +234,16 @@ export function parseTag(content: string, tag: string): string {
   return match?.[0]?.replace(`<${tag}>`, '').replace(`</${tag}>`, '').trim() ?? ''
 }
 
+// Label-based parser for post variations (more reliable than XML with open-source models)
+export function parseSection(content: string, label: string): string {
+  // Normalize: strip markdown markers from label lines only (e.g. **SAFE:** -> SAFE:)
+  const normalized = content.replace(/\*{1,2}([A-Za-z]+):\*{0,2}/g, '$1:')
+  // Case-insensitive match so "Debate:" and "DEBATE:" both work
+  const regex = new RegExp(`(?:^|\\n)${label}:\\s*([\\s\\S]*?)(?=\\n[A-Za-z]+:|$)`, 'i')
+  const match = normalized.match(regex)
+  return match?.[1]?.trim() ?? ''
+}
+
 export function parsePersona(content: string) {
   return {
     persona_statement: parseTag(content, 'persona'),
@@ -227,9 +257,9 @@ export function parsePersona(content: string) {
 
 export function parsePostVariations(content: string) {
   return {
-    variation_safe: parseTag(content, 'safe'),
-    variation_bold: parseTag(content, 'bold'),
-    variation_controversial: parseTag(content, 'controversial'),
+    variation_safe: parseSection(content, 'SAFE'),
+    variation_bold: parseSection(content, 'BOLD'),
+    variation_controversial: parseSection(content, 'DEBATE'),
   }
 }
 

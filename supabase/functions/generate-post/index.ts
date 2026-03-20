@@ -6,11 +6,25 @@ import {
   buildBrandContext,
   buildPostPrompt,
   parsePostVariations,
+  parseSection,
   POST_STRUCTURES,
   HOOK_TYPES,
   pickRotation,
 } from '../_shared/prompts.ts'
 
+
+// ─── Output quality heuristics ───────────────────────────────────────────────
+
+function hasSpecificity(text: string): boolean {
+  return /\d/.test(text) || (text.length > 120 && text.split('\n').length >= 3)
+}
+
+function isStrongDebate(text: string): boolean {
+  return (
+    /most|wrong|don't|stop|overrated|myth|problem/i.test(text) &&
+    !/it depends|sometimes|varies|different people/i.test(text)
+  )
+}
 
 // ─── Performance summary builder ─────────────────────────────────────────────
 
@@ -97,22 +111,9 @@ serve(async (req) => {
       })
     }
 
-    // Run all three DB queries in parallel - none depend on each other
-    const [usageRes, companyRes, postsRes] = await Promise.all([
-      supabase.rpc('increment_usage', { p_field: 'posts' }),
-      supabase.from('companies').select('*').eq('id', company_id).eq('user_id', user.id).single(),
-      supabase.from('generated_posts')
-        .select('post_structure, hook_type, selected_variation, was_copied, performance_rating')
-        .eq('user_id', user.id).order('created_at', { ascending: false }).limit(50),
-    ])
-
-    if (usageRes.error) throw new Error(usageRes.error.message)
-    if (!usageRes.data.allowed) {
-      return new Response(
-        JSON.stringify({ error: 'limit_reached', limit: usageRes.data.limit }),
-        { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
-    }
+    // Validate company first - must exist before charging usage or fetching history
+    const companyRes = await supabase
+      .from('companies').select('*').eq('id', company_id).eq('user_id', user.id).single()
 
     const company = companyRes.data
     if (companyRes.error || !company) {
@@ -120,6 +121,21 @@ serve(async (req) => {
         status: 404,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
+    }
+
+    // Company valid - charge usage and fetch post history in parallel
+    const [usageRes, postsRes] = await Promise.all([
+      supabase.rpc('increment_usage', { p_field: 'posts' }),
+      supabase.from('generated_posts')
+        .select('post_structure, hook_type, selected_variation, was_copied, performance_rating')
+        .eq('user_id', user.id).order('created_at', { ascending: false }).limit(50),
+    ])
+    if (usageRes.error) throw new Error(usageRes.error.message)
+    if (!usageRes.data.allowed) {
+      return new Response(
+        JSON.stringify({ error: 'limit_reached', limit: usageRes.data.limit }),
+        { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
     }
 
     const recentPosts = postsRes.data
@@ -140,12 +156,34 @@ serve(async (req) => {
         { role: 'system', content: buildBrandContext(company, { postStructure, hookType, performanceSummary }) },
         { role: 'user', content: buildPostPrompt(topic) },
       ],
-      { temperature: 0.75, max_tokens: 900 }
+      { temperature: 0.75, max_tokens: 1200 }
     )
 
-    const variations = parsePostVariations(raw)
+    let variations = parsePostVariations(raw)
     if (!variations.variation_safe || !variations.variation_bold) {
       throw new Error('AI returned incomplete variations')
+    }
+
+    // Retry debate if: missing, too short, not specific, or not taking a real stance
+    const debateWeak = !variations.variation_controversial ||
+      variations.variation_controversial.length < 50 ||
+      !hasSpecificity(variations.variation_controversial) ||
+      !isStrongDebate(variations.variation_controversial)
+
+    if (debateWeak) {
+      const retryRaw = await complete(
+        [
+          { role: 'system', content: buildBrandContext(company, { postStructure, hookType }) },
+          { role: 'user', content: buildPostPrompt(topic) },
+          { role: 'assistant', content: raw },
+          { role: 'user', content: 'You failed to generate the DEBATE section. Generate ONLY the DEBATE section now. It must take a clear stance that some people will disagree with. NOT neutral. Start with DEBATE:' },
+        ],
+        { temperature: 0.9, max_tokens: 350 }
+      )
+      const retryDebate = parseSection(retryRaw, 'DEBATE')
+      if (retryDebate && retryDebate.length >= 50 && hasSpecificity(retryDebate) && isStrongDebate(retryDebate)) {
+        variations = { ...variations, variation_controversial: retryDebate }
+      }
     }
 
     // Persist - single source of truth, frontend only patches (copy/rate/publish)
