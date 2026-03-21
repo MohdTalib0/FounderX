@@ -20,7 +20,7 @@ export default function Landing() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 text-xs font-medium text-text-muted border border-border rounded-full px-3.5 py-1.5 mb-8 bg-surface/60">
             <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse shrink-0" />
-            Free beta — 40+ founders posting weekly
+            Free beta · 40+ founders posting weekly
           </div>
 
           <h1 className="text-[40px] sm:text-[58px] lg:text-[68px] font-bold leading-[1.05] tracking-[-0.03em] mb-6">
@@ -168,7 +168,7 @@ export default function Landing() {
               {
                 step: '1',
                 title: 'Build your voice once',
-                body: 'Four questions. FounderX builds a founder persona that shapes every post you generate — forever. You never brief the AI twice.',
+                body: 'Four questions. FounderX builds a founder persona that shapes every post you generate, forever. You never brief the AI twice.',
                 detail: '2 minutes. Never repeated.',
                 icon: Sparkles,
                 accent: 'bg-violet-500/[0.08] border-violet-500/20 text-violet-400',
