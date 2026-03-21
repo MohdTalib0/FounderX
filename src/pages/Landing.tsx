@@ -1,516 +1,753 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Copy, Check, PenLine, RefreshCw, MessageSquare, Sparkles, Zap } from 'lucide-react'
+import { ArrowRight, Copy, Check, PenLine, RefreshCw, MessageSquare, Sparkles, ArrowUpRight, Shield, Zap } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import PublicHeader from '@/components/layout/PublicHeader'
+import PublicFooter from '@/components/layout/PublicFooter'
 import { cn } from '@/lib/utils'
 
 export default function Landing() {
   return (
     <div className="min-h-screen bg-background text-text overflow-x-hidden">
-
       <PublicHeader />
 
-      {/* ── 1. Hero ──────────────────────────────────────────────────────────── */}
-      <section className="relative max-w-5xl mx-auto px-6 pt-20 pb-12">
-        <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[260px] bg-primary/[0.05] rounded-full blur-3xl" />
-        </div>
+      {/* ── Hero ─────────────────────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden">
+        {/* Subtle radial glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/[0.07] rounded-full blur-[100px] -z-10 pointer-events-none" />
 
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-          <div className="flex-1 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 border border-primary/25 bg-primary/[0.06] text-primary text-xs font-medium px-3 py-1.5 rounded-pill mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-              Free beta · first 50 founders
-            </div>
-
-            <h1 className="text-4xl sm:text-5xl font-bold leading-[1.1] tracking-tight mb-5">
-              LinkedIn posts that<br />
-              actually sound<br />
-              <span className="text-primary">like you.</span>
-            </h1>
-
-            <p className="text-base text-text-muted leading-relaxed mb-3 max-w-md mx-auto lg:mx-0">
-              You tried posting before. It didn't land. Not because you had nothing to say,
-              but because the posts didn't sound like you.
-            </p>
-            <p className="text-base text-text-muted leading-relaxed mb-2 max-w-md mx-auto lg:mx-0">
-              FounderX builds your voice first, then writes every post from it.
-              Works for founders, consultants, executives, and creators.
-              Blank page to published in under 3 minutes.
-            </p>
-            <p className="text-sm mb-8 max-w-md mx-auto lg:mx-0">
-              <Link to="/for-individuals" className="text-primary hover:text-primary-hover transition-colors">
-                Not a startup? Personal brand mode →
-              </Link>
-            </p>
-
-            <div className="flex flex-row items-center lg:items-start justify-center lg:justify-start gap-4 mb-4 flex-wrap">
-              <Link to="/signup">
-                <Button size="lg" className="px-7">
-                  Start free in 2 minutes
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-              <Link to="/login" className="text-sm text-text-muted hover:text-text transition-colors">
-                Already have an account →
-              </Link>
-            </div>
-
-            <p className="text-xs text-text-subtle">
-              No credit card · 2-minute setup · Cancel anytime
-            </p>
+        <div className="max-w-4xl mx-auto px-5 pt-16 sm:pt-24 pb-12 text-center">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 text-xs font-medium text-text-muted border border-border rounded-full px-3.5 py-1.5 mb-8 bg-surface/60">
+            <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse shrink-0" />
+            Free beta — 40+ founders posting weekly
           </div>
 
-          <div className="flex-1 w-full max-w-sm lg:max-w-none">
-            <ProductDemoCard />
+          <h1 className="text-[40px] sm:text-[58px] lg:text-[68px] font-bold leading-[1.05] tracking-[-0.03em] mb-6">
+            Post on LinkedIn.<br />
+            <span className="text-primary">Sound like yourself.</span>
+          </h1>
+
+          <p className="text-base sm:text-lg text-text-muted leading-relaxed max-w-xl mx-auto mb-10">
+            FounderX builds your voice first, then writes every post from it.
+            Three variations. Under three minutes. No blank pages.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-5">
+            <Link to="/signup">
+              <Button size="lg" className="px-8 gap-2">
+                Start free in 2 minutes
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+            <Link to="/login" className="text-sm text-text-muted hover:text-text transition-colors">
+              Already have an account
+            </Link>
+          </div>
+
+          <div className="flex items-center justify-center gap-5">
+            <span className="flex items-center gap-1.5 text-xs text-text-subtle">
+              <Shield className="w-3.5 h-3.5" /> No credit card
+            </span>
+            <span className="w-px h-3 bg-border" />
+            <span className="flex items-center gap-1.5 text-xs text-text-subtle">
+              <Check className="w-3.5 h-3.5" /> Cancel anytime
+            </span>
           </div>
         </div>
-      </section>
 
-      {/* ── 2. Stats bar ─────────────────────────────────────────────────────── */}
-      <section className="max-w-5xl mx-auto px-6 py-10">
-        <div className="border-y border-border py-7">
-          <div className="grid grid-cols-3 gap-4 text-center">
-            {[
-              { value: '< 3 min', label: 'From open to first post copied' },
-              { value: '3x/week', label: 'Posting habit the product is built around' },
-              { value: '40+', label: 'Founders and creators already in the beta' },
-            ].map(({ value, label }) => (
-              <div key={label}>
-                <p className="text-xl font-bold text-text">{value}</p>
-                <p className="text-xs text-text-muted mt-1 leading-snug">{label}</p>
+        {/* App preview */}
+        <div className="px-4 sm:px-6 lg:px-10 max-w-7xl mx-auto">
+          <div className="relative rounded-t-2xl border border-border border-b-0 overflow-hidden shadow-[0_-8px_60px_rgba(99,102,241,0.1)] bg-surface">
+            {/* Window chrome */}
+            <div className="flex items-center gap-2 px-5 py-3.5 border-b border-border bg-surface-elevated shrink-0">
+              <div className="flex gap-1.5">
+                <div className="w-3 h-3 rounded-full bg-border" />
+                <div className="w-3 h-3 rounded-full bg-border" />
+                <div className="w-3 h-3 rounded-full bg-border" />
               </div>
-            ))}
+              <div className="flex-1 flex justify-center">
+                <div className="flex items-center gap-2 text-xs text-text-subtle bg-background border border-border rounded-full px-4 py-1">
+                  <div className="w-2 h-2 rounded-full bg-success" />
+                  founderx.app
+                </div>
+              </div>
+            </div>
+            <HeroAppPreview />
           </div>
         </div>
       </section>
 
-      {/* ── 3. Problem ───────────────────────────────────────────────────────── */}
-      <section className="max-w-5xl mx-auto px-6 py-10">
-        <div className="text-center mb-10">
-          <p className="text-xs font-semibold text-primary tracking-widest uppercase mb-3">Sound familiar?</p>
-          <h2 className="text-2xl font-bold tracking-tight">Three things kill it every time.</h2>
+      {/* ── Featured testimonial ─────────────────────────────────────────────── */}
+      <section className="border-y border-border bg-surface">
+        <div className="max-w-4xl mx-auto px-5 py-10">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+            <div className="flex items-center gap-3 shrink-0">
+              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary">A</div>
+              <div>
+                <p className="text-sm font-semibold text-text">Alex R.</p>
+                <p className="text-xs text-text-muted">Seed-stage SaaS founder</p>
+              </div>
+            </div>
+            <div className="hidden sm:block w-px h-10 bg-border shrink-0" />
+            <p className="text-[15px] text-text leading-relaxed italic flex-1">
+              "I posted twice in 2023, got 8 likes each time, and quit. I've now posted every week for 6 weeks.
+              Two investors reached out. I didn't change. My process did."
+            </p>
+            <div className="flex gap-0.5 shrink-0 hidden sm:flex">
+              {[1,2,3,4,5].map(i => (
+                <svg key={i} className="w-3.5 h-3.5 text-amber-400 fill-amber-400" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── The problem ──────────────────────────────────────────────────────── */}
+      <section className="max-w-7xl mx-auto px-5 py-20 sm:py-28">
+        <div className="max-w-2xl mb-14">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight mb-5">
+            You know what to post about.<br />That's not the problem.
+          </h2>
+          <p className="text-base text-text-muted leading-relaxed">
+            The problem is the blank page. The post that could apply to any founder on earth.
+            The AI draft that sounds like a press release. You've tried. It hasn't stuck.
+            Not because you're not interesting. You've been writing without a system.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
             {
-              emoji: '💭',
-              color: 'from-violet-500/[0.06] to-transparent border-violet-500/20 hover:border-violet-500/40',
-              iconBg: 'bg-violet-500/10 text-violet-400',
-              title: '"What do I even write about?"',
-              body: 'You open a blank box. Nothing comes. You close it. Tell yourself you\'ll do it tomorrow.',
+              num: '01',
+              title: 'The blank page',
+              body: 'You open the editor. Nothing comes. You close it. Tell yourself you\'ll post tomorrow. Tomorrow never comes.',
+              color: 'text-violet-400',
+              bg: 'bg-violet-500/[0.04] border-violet-500/15',
             },
             {
-              emoji: '🤦',
-              color: 'from-amber-500/[0.06] to-transparent border-amber-500/20 hover:border-amber-500/40',
-              iconBg: 'bg-amber-500/10 text-amber-400',
-              title: '"This sounds generic. Not me."',
-              body: 'The post you write could apply to any founder on earth. You delete it and feel worse than before.',
+              num: '02',
+              title: 'Generic AI output',
+              body: '"As a founder, leveraging authenticity is key to building community." That\'s not you. That\'s nobody.',
+              color: 'text-amber-400',
+              bg: 'bg-amber-500/[0.04] border-amber-500/15',
             },
             {
-              emoji: '😤',
-              color: 'from-red-500/[0.06] to-transparent border-red-500/20 hover:border-red-500/40',
-              iconBg: 'bg-red-500/10 text-red-400',
+              num: '03',
               title: 'You quit. Again.',
-              body: 'Three posts, no traction, no system. You decide LinkedIn isn\'t worth it and stop trying.',
+              body: 'Three posts. No traction. No system. You decide LinkedIn isn\'t worth it. For the third time this year.',
+              color: 'text-red-400',
+              bg: 'bg-red-500/[0.04] border-red-500/15',
             },
-          ].map(({ emoji, color, iconBg, title, body }) => (
-            <div
-              key={title}
-              className={cn(
-                'rounded-card border p-6 bg-gradient-to-b transition-all duration-200 space-y-4',
-                color
-              )}
-            >
-              <div className={cn('w-11 h-11 rounded-xl flex items-center justify-center text-2xl', iconBg)}>
-                {emoji}
-              </div>
-              <div>
-                <h3 className="font-semibold text-text leading-snug mb-2">{title}</h3>
-                <p className="text-sm text-text-muted leading-relaxed">{body}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-8 text-center">
-          <p className="text-sm text-text-muted max-w-lg mx-auto">
-            FounderX fixes all three. Topic suggestions from your pillars, posts written in your voice,
-            fast enough to actually stick.
-          </p>
-        </div>
-      </section>
-
-      {/* ── 4. How it works ──────────────────────────────────────────────────── */}
-      <section id="how-it-works" className="max-w-5xl mx-auto px-6 py-16">
-        <h2 className="text-xl font-semibold text-center mb-10">How it works</h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 relative">
-          {/* Connector line - desktop only */}
-          <div className="hidden sm:block absolute top-8 left-[calc(16.67%+1rem)] right-[calc(16.67%+1rem)] h-px bg-gradient-to-r from-border via-primary/30 to-border" />
-
-          {[
-            {
-              step: 1,
-              title: 'Build your voice',
-              body: '4 questions, 2 minutes. FounderX creates your founder persona and content pillars used in every post forever.',
-              icon: Sparkles,
-            },
-            {
-              step: 2,
-              title: 'Get 3 variations',
-              body: 'Type a topic or pick from your pillars. Safe, Bold, Controversial posts, all in your voice. Pick one.',
-              icon: PenLine,
-            },
-            {
-              step: 3,
-              title: 'Copy and post',
-              body: 'One click to copy. Paste into LinkedIn. No scheduling, no editing marathons, no second-guessing.',
-              icon: Copy,
-            },
-          ].map(({ step, title, body, icon: Icon }) => (
-            <div key={step} className="relative bg-surface border border-border rounded-card p-5 hover:border-primary/30 transition-colors group">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="relative w-9 h-9 rounded-full bg-surface border-2 border-border group-hover:border-primary/40 flex items-center justify-center transition-colors shrink-0 z-10">
-                  <span className="text-xs font-bold text-text-muted group-hover:text-primary transition-colors">{step}</span>
-                </div>
-                <Icon className="w-4 h-4 text-text-subtle group-hover:text-primary transition-colors" />
-              </div>
-              <h3 className="font-semibold text-text mb-1.5">{title}</h3>
+          ].map(({ num, title, body, color, bg }) => (
+            <div key={num} className={cn('rounded-2xl border p-7', bg)}>
+              <p className={cn('text-xs font-bold tracking-widest mb-5', color)}>{num}</p>
+              <h3 className="font-semibold text-text mb-2.5">{title}</h3>
               <p className="text-sm text-text-muted leading-relaxed">{body}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── 5. Features bento ────────────────────────────────────────────────── */}
-      <section className="max-w-5xl mx-auto px-6 py-10">
-        <div className="text-center mb-10">
-          <h2 className="text-xl font-semibold">Everything you need to show up.</h2>
-          <p className="text-sm text-text-muted mt-2">Four tools. One habit.</p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-
-          {/* Write Post - featured, spans 2 cols, has inline demo */}
-          <div className="lg:col-span-2 relative bg-surface border border-primary/25 rounded-card p-6 overflow-hidden group hover:border-primary/40 transition-colors">
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/[0.03] rounded-full blur-3xl pointer-events-none" />
-
-            <div className="flex items-start justify-between mb-5">
-              <div>
-                <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-3">
-                  <PenLine className="w-5 h-5 text-primary" />
-                </div>
-                <p className="text-[10px] font-bold tracking-widest text-text-subtle uppercase mb-1">Write Post</p>
-                <h3 className="text-lg font-bold text-text">3 variations, in your voice.</h3>
-                <p className="text-sm text-text-muted mt-1 max-w-xs">
-                  Every post comes from your persona. Pick Safe, Bold, or Controversial. One click to copy.
-                </p>
-              </div>
-            </div>
-
-            {/* Mini demo */}
-            <div className="space-y-2">
-              {[
-                { label: 'SAFE', color: 'text-emerald-400 border-emerald-500/20 bg-emerald-500/[0.06]', text: 'Nobody told me launching an MVP would mean watching users ignore everything you built.' },
-                { label: 'BOLD', color: 'text-amber-400 border-amber-500/20 bg-amber-500/[0.08]', text: 'Most founders lie about their launch. I won\'t. We shipped to 200 users and got 3 replies.', active: true },
-                { label: 'HOT TAKE', color: 'text-red-400 border-red-500/20 bg-red-500/[0.06]', text: 'The advice to "launch fast" is ruining early-stage startups. Here\'s the uncomfortable truth.' },
-              ].map(({ label, color, text, active }) => (
-                <div key={label} className={cn(
-                  'rounded-lg border px-3 py-2 flex items-start gap-2.5',
-                  active ? 'border-primary/30 bg-primary/[0.05]' : 'border-border bg-background'
-                )}>
-                  <span className={cn('text-[9px] font-bold px-1.5 py-0.5 rounded border shrink-0 mt-0.5', color)}>{label}</span>
-                  <p className="text-[11px] text-text-muted leading-relaxed line-clamp-1">{text}</p>
-                  {active && <Copy className="w-3 h-3 text-primary shrink-0 mt-0.5 ml-auto" />}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Founder Persona */}
-          <div className="relative bg-surface border border-border rounded-card p-6 overflow-hidden hover:border-primary/25 transition-colors group">
-            <div className="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center mb-3">
-              <Sparkles className="w-5 h-5 text-violet-400" />
-            </div>
-            <p className="text-[10px] font-bold tracking-widest text-text-subtle uppercase mb-1">Your Persona</p>
-            <h3 className="font-bold text-text mb-2">Your voice, built once.</h3>
-            <p className="text-sm text-text-muted leading-relaxed mb-4">
-              Set up in 2 minutes. Used in every post, comment, and rewrite forever.
+      {/* ── How it works ─────────────────────────────────────────────────────── */}
+      <section className="bg-surface border-y border-border">
+        <div className="max-w-7xl mx-auto px-5 py-20 sm:py-28">
+          <div className="max-w-xl mb-14">
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight mb-4">
+              Three steps. Under three minutes.
+            </h2>
+            <p className="text-base text-text-muted leading-relaxed">
+              Built around one habit: posting consistently without it consuming your morning.
             </p>
-            {/* Content pillar chips */}
-            <div className="flex flex-wrap gap-1.5">
-              {['Build in public', 'Lessons learned', 'Contrarian takes'].map(p => (
-                <span key={p} className="text-[10px] font-medium px-2 py-1 rounded-full border border-primary/20 bg-primary/[0.06] text-primary">
-                  {p}
-                </span>
-              ))}
-            </div>
           </div>
 
-          {/* Rewrite Draft */}
-          <div className="relative bg-surface border border-border rounded-card p-6 overflow-hidden hover:border-amber-500/25 transition-colors group">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-3">
-              <RefreshCw className="w-5 h-5 text-amber-400" />
-            </div>
-            <p className="text-[10px] font-bold tracking-widest text-text-subtle uppercase mb-1">Rewrite Draft</p>
-            <h3 className="font-bold text-text mb-2">Rough notes to real post.</h3>
-            <p className="text-sm text-text-muted leading-relaxed mb-4">
-              Paste a brain dump. FounderX turns your messy ideas into a structured post that still sounds like you.
-            </p>
-            {/* Before/after snippet */}
-            <div className="space-y-2">
-              <div className="rounded-lg border border-border bg-background px-3 py-2">
-                <p className="text-[10px] text-text-subtle mb-1">ROUGH</p>
-                <p className="text-[11px] text-text-muted italic">"so yesterday customer call and they basically said the whole product is wrong..."</p>
-              </div>
-              <div className="text-center text-text-subtle text-xs">↓</div>
-              <div className="rounded-lg border border-amber-500/20 bg-amber-500/[0.04] px-3 py-2">
-                <p className="text-[10px] text-amber-400 mb-1">POLISHED</p>
-                <p className="text-[11px] text-text-muted">"A customer call yesterday made me rethink our entire product direction."</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Comment Suggestions */}
-          <div className="relative bg-surface border border-border rounded-card p-6 overflow-hidden hover:border-sky-500/25 transition-colors group">
-            <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center mb-3">
-              <MessageSquare className="w-5 h-5 text-sky-400" />
-            </div>
-            <p className="text-[10px] font-bold tracking-widest text-text-subtle uppercase mb-1">Comment Suggestions</p>
-            <h3 className="font-bold text-text mb-2">Engage without the cringe.</h3>
-            <p className="text-sm text-text-muted leading-relaxed mb-4">
-              3 smart comments on any post. Never "Great insight!" spam.
-            </p>
-            {/* Comment type badges */}
-            <div className="space-y-2">
-              {[
-                { label: 'Insightful', color: 'border-sky-500/20 bg-sky-500/[0.06] text-sky-400' },
-                { label: 'Curious', color: 'border-violet-500/20 bg-violet-500/[0.06] text-violet-400' },
-                { label: 'Bold take', color: 'border-red-500/20 bg-red-500/[0.06] text-red-400' },
-              ].map(({ label, color }) => (
-                <div key={label} className={cn('rounded-lg border px-3 py-1.5 text-[11px] font-medium', color)}>
-                  {label}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+            {[
+              {
+                step: '1',
+                title: 'Build your voice once',
+                body: 'Four questions. FounderX builds a founder persona that shapes every post you generate — forever. You never brief the AI twice.',
+                detail: '2 minutes. Never repeated.',
+                icon: Sparkles,
+                accent: 'bg-violet-500/[0.08] border-violet-500/20 text-violet-400',
+              },
+              {
+                step: '2',
+                title: 'Pick a topic. Get 3 versions.',
+                body: 'Type any topic or pick from your content pillars. Three post variations arrive in your voice: safe, bold, and controversial.',
+                detail: '10 to 15 seconds.',
+                icon: PenLine,
+                accent: 'bg-primary/[0.08] border-primary/20 text-primary',
+              },
+              {
+                step: '3',
+                title: 'Copy and post.',
+                body: 'One click to copy. Paste into LinkedIn. If nothing fits, tap a refinement chip and get a new version instantly.',
+                detail: 'Done.',
+                icon: Copy,
+                accent: 'bg-emerald-500/[0.08] border-emerald-500/20 text-emerald-400',
+              },
+            ].map(({ step, title, body, detail, icon: Icon, accent }) => (
+              <div key={step} className="flex flex-col gap-4">
+                <div className={cn('w-10 h-10 rounded-xl border flex items-center justify-center shrink-0', accent)}>
+                  <Icon className="w-4.5 h-4.5" />
                 </div>
-              ))}
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ── 6. Testimonial ───────────────────────────────────────────────────── */}
-      <section className="max-w-3xl mx-auto px-6 py-10">
-        <div className="relative bg-surface border border-border rounded-card p-8 text-center overflow-hidden">
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-          <div className="text-5xl text-primary/20 font-serif leading-none mb-4 select-none">"</div>
-          <div className="flex justify-center gap-0.5 mb-5">
-            {[1,2,3,4,5].map(i => (
-              <svg key={i} className="w-4 h-4 text-amber-400 fill-amber-400" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
+                <div>
+                  <p className="text-xs font-semibold text-text-subtle mb-2">Step {step}</p>
+                  <h3 className="font-semibold text-text mb-2">{title}</h3>
+                  <p className="text-sm text-text-muted leading-relaxed mb-3">{body}</p>
+                  <p className="text-xs text-text-subtle font-medium">{detail}</p>
+                </div>
+              </div>
             ))}
           </div>
-          <p className="text-base text-text leading-relaxed max-w-xl mx-auto">
-            I posted twice in 2023, got 8 likes each time, and quit. I've now posted every week
-            for 6 weeks. Two investors reached out from my posts. I didn't change. My process did.
-          </p>
-          <div className="mt-6 flex items-center justify-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary">A</div>
-            <div className="text-left">
-              <p className="text-sm font-semibold text-text">Alex R.</p>
-              <p className="text-xs text-text-muted">Seed-stage SaaS founder</p>
+        </div>
+      </section>
+
+      {/* ── Features bento ───────────────────────────────────────────────────── */}
+      <section className="max-w-7xl mx-auto px-5 py-20 sm:py-28">
+        <div className="max-w-xl mb-14">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight mb-4">
+            Four tools. One posting habit.
+          </h2>
+          <p className="text-base text-text-muted">Everything you need to show up on LinkedIn consistently.</p>
+        </div>
+
+        <div className="space-y-4">
+          {/* Write Post — featured, full width */}
+          <div className="relative bg-surface border border-primary/20 rounded-2xl overflow-hidden">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+            <div className="grid grid-cols-1 lg:grid-cols-2">
+              <div className="p-8 lg:p-10 lg:border-r border-border flex flex-col justify-between gap-8">
+                <div>
+                  <div className="inline-flex items-center gap-2 text-xs font-semibold text-primary border border-primary/20 bg-primary/[0.06] px-3 py-1 rounded-full mb-6">
+                    <PenLine className="w-3.5 h-3.5" />
+                    Write Post
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-text mb-3 leading-snug">
+                    Three versions. One topic. Your voice.
+                  </h3>
+                  <p className="text-sm text-text-muted leading-relaxed">
+                    Every post comes from your persona, not a template. Pick Safe for authority-building,
+                    Bold for a strong take, or Spicy when you want to start a conversation.
+                  </p>
+                </div>
+                <ul className="space-y-2.5">
+                  {['Persona-trained output', '3 variations per topic', 'Refine with one tap', 'Never the same structure twice'].map(f => (
+                    <li key={f} className="flex items-center gap-2.5 text-sm text-text-muted">
+                      <Check className="w-3.5 h-3.5 text-primary shrink-0" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="p-6 flex items-center justify-center bg-background/50 min-h-[280px]">
+                <WritePostDemo />
+              </div>
+            </div>
+          </div>
+
+          {/* Rewrite + Engage row */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Rewrite Draft */}
+            <div className="bg-surface border border-border rounded-2xl p-8 flex flex-col gap-6 hover:border-amber-500/25 transition-colors">
+              <div>
+                <div className="inline-flex items-center gap-2 text-xs font-semibold text-amber-400 border border-amber-500/20 bg-amber-500/[0.06] px-3 py-1 rounded-full mb-5">
+                  <RefreshCw className="w-3.5 h-3.5" />
+                  Rewrite Draft
+                </div>
+                <h3 className="font-bold text-text mb-2">Rough idea. Real post.</h3>
+                <p className="text-sm text-text-muted leading-relaxed">
+                  Paste a brain dump. FounderX rewrites it into a clean LinkedIn post with three hook options.
+                  Your ideas, better structure.
+                </p>
+              </div>
+              <div className="space-y-2">
+                <div className="rounded-xl border border-border bg-background px-3.5 py-3">
+                  <p className="text-[10px] text-text-subtle mb-1.5 font-semibold uppercase tracking-wider">Your rough draft</p>
+                  <p className="text-[11px] text-text-muted italic leading-relaxed">"had a bad customer call today, they said the product direction is completely wrong..."</p>
+                </div>
+                <div className="flex items-center justify-center py-0.5">
+                  <div className="text-[10px] text-text-subtle px-3 py-1 border border-border rounded-full bg-surface">rewriting</div>
+                </div>
+                <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.04] px-3.5 py-3">
+                  <p className="text-[10px] text-amber-400 mb-1.5 font-semibold uppercase tracking-wider">Clean post</p>
+                  <p className="text-[11px] text-text-muted leading-relaxed">"A customer call made me rethink our entire direction. Here's what they said, and why they're right."</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Get Comments */}
+            <div className="bg-surface border border-border rounded-2xl p-8 flex flex-col gap-6 hover:border-sky-500/25 transition-colors">
+              <div>
+                <div className="inline-flex items-center gap-2 text-xs font-semibold text-sky-400 border border-sky-500/20 bg-sky-500/[0.06] px-3 py-1 rounded-full mb-5">
+                  <MessageSquare className="w-3.5 h-3.5" />
+                  Get Comments
+                </div>
+                <h3 className="font-bold text-text mb-2">Engage without the cringe.</h3>
+                <p className="text-sm text-text-muted leading-relaxed">
+                  Paste any post. Get three specific, smart comments in your voice.
+                  No "Great insight!" No generic praise.
+                </p>
+              </div>
+              <div className="space-y-2">
+                {[
+                  { type: 'Insightful', text: 'The 90-day window you mention aligns with what I saw at my last company. The founders who survived were the ones who...', color: 'text-sky-400 border-sky-500/20 bg-sky-500/[0.04]' },
+                  { type: 'Bold take', text: 'I\'d push back on one thing: the "launch fast" advice made sense in 2015. Now it just gives you users who don\'t care.', color: 'text-red-400 border-red-500/20 bg-red-500/[0.04]' },
+                ].map(({ type, text, color }) => (
+                  <div key={type} className={cn('rounded-xl border px-3.5 py-3', color)}>
+                    <p className="text-[10px] font-semibold mb-1 uppercase tracking-wider opacity-70">{type}</p>
+                    <p className="text-[11px] text-text-muted leading-relaxed">{text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Persona strip */}
+          <div className="bg-surface border border-border rounded-2xl p-8 hover:border-violet-500/20 transition-colors">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+              <div className="flex items-center gap-3 shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-violet-500/[0.1] border border-violet-500/20 flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-violet-400" />
+                </div>
+                <div>
+                  <p className="font-semibold text-text text-sm">Founder Persona</p>
+                  <p className="text-xs text-text-muted">Built once. Used forever.</p>
+                </div>
+              </div>
+              <div className="flex-1">
+                <p className="text-sm text-text-muted leading-relaxed">
+                  Four onboarding questions create your persona and content pillars.
+                  Every post, rewrite, and comment pulls from it. You never brief the AI twice.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-1.5 sm:justify-end shrink-0">
+                {['Build in public', 'Hard lessons', 'Contrarian takes'].map(p => (
+                  <span key={p} className="text-[11px] font-medium px-2.5 py-1 rounded-full border border-primary/20 bg-primary/[0.06] text-primary whitespace-nowrap">
+                    {p}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── 7. Pricing ───────────────────────────────────────────────────────── */}
-      <section className="max-w-5xl mx-auto px-6 py-16">
-        <div className="text-center mb-10">
-          <h2 className="text-xl font-semibold">Start free. Upgrade when you're posting.</h2>
-          <p className="text-sm text-text-muted mt-2">
+      {/* ── Testimonials ─────────────────────────────────────────────────────── */}
+      <section className="bg-surface border-y border-border">
+        <div className="max-w-7xl mx-auto px-5 py-20 sm:py-28">
+          <div className="max-w-xl mb-14">
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight mb-4">
+              Founders who stopped making excuses.
+            </h2>
+            <p className="text-base text-text-muted">
+              They all had the same problem. One of them is probably you.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              {
+                initial: 'A',
+                name: 'Alex R.',
+                role: 'Seed-stage SaaS founder',
+                quote: 'I posted twice in 2023, got 8 likes each time, and quit. I\'ve now posted every week for 6 weeks. Two investors reached out. I didn\'t change. My process did.',
+              },
+              {
+                initial: 'S',
+                name: 'Sara M.',
+                role: 'B2B fintech co-founder',
+                quote: 'Every AI tool I tried made me sound like a LinkedIn influencer. FounderX actually sounds like me. My team recognized my voice in the first post I showed them.',
+              },
+              {
+                initial: 'J',
+                name: 'James K.',
+                role: 'Dev tools founder',
+                quote: 'I used to spend 90 minutes on a post and never publish it. Now I spend 3 minutes and hit post. The consistency alone has changed how people perceive me.',
+              },
+            ].map(({ initial, name, role, quote }) => (
+              <div key={name} className="bg-background border border-border rounded-2xl p-7 flex flex-col gap-6">
+                <div className="flex gap-0.5">
+                  {[1,2,3,4,5].map(i => (
+                    <svg key={i} className="w-3.5 h-3.5 text-amber-400 fill-amber-400" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-sm text-text leading-relaxed flex-1 italic">"{quote}"</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full bg-primary/15 flex items-center justify-center text-xs font-bold text-primary shrink-0">
+                    {initial}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-text">{name}</p>
+                    <p className="text-xs text-text-muted">{role}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Who it's for ─────────────────────────────────────────────────────── */}
+      <section className="max-w-7xl mx-auto px-5 py-20 sm:py-28">
+        <div className="max-w-xl mb-14">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight mb-4">
+            Built for two kinds of people.
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="bg-surface border border-border rounded-2xl p-8 flex flex-col gap-5">
+            <div className="w-10 h-10 rounded-xl bg-primary/[0.08] border border-primary/20 flex items-center justify-center">
+              <Zap className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-text mb-2">Founders building companies</h3>
+              <p className="text-sm text-text-muted leading-relaxed mb-5">
+                Pre-revenue or post-launch, your LinkedIn presence matters.
+                Investors research you. Early users follow you. Potential hires watch you.
+                FounderX helps you post without it consuming hours you don't have.
+              </p>
+              <ul className="space-y-2 mb-6">
+                {['Pre-seed to Series A', 'Solo founders and co-founders', 'Technical and non-technical'].map(item => (
+                  <li key={item} className="flex items-center gap-2 text-sm text-text-muted">
+                    <span className="w-1 h-1 rounded-full bg-primary shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <Link to="/signup" className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary-hover transition-colors mt-auto">
+              Start as a founder <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="bg-surface border border-border rounded-2xl p-8 flex flex-col gap-5">
+            <div className="w-10 h-10 rounded-xl bg-violet-500/[0.08] border border-violet-500/20 flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-violet-400" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-text mb-2">Individuals building a brand</h3>
+              <p className="text-sm text-text-muted leading-relaxed mb-5">
+                Consultants, executives, creators, and professionals who know LinkedIn
+                matters but haven't cracked the consistency problem. Personal brand mode
+                is built for you. No startup required.
+              </p>
+              <ul className="space-y-2 mb-6">
+                {['Consultants and freelancers', 'Corporate executives', 'Domain experts and creators'].map(item => (
+                  <li key={item} className="flex items-center gap-2 text-sm text-text-muted">
+                    <span className="w-1 h-1 rounded-full bg-violet-400 shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <Link to="/for-individuals" className="inline-flex items-center gap-1.5 text-sm font-medium text-text-muted hover:text-text transition-colors mt-auto">
+              Personal brand mode <ArrowUpRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Stats ────────────────────────────────────────────────────────────── */}
+      <section className="border-y border-border bg-surface">
+        <div className="max-w-4xl mx-auto px-5 py-14">
+          <div className="grid grid-cols-3 gap-8 text-center">
+            {[
+              { value: '< 3 min', label: 'From open to first post copied' },
+              { value: '3x/week', label: 'Posting rhythm the product is built around' },
+              { value: '40+', label: 'Founders in the beta' },
+            ].map(({ value, label }) => (
+              <div key={label}>
+                <p className="text-2xl sm:text-3xl font-bold text-text tracking-tight">{value}</p>
+                <p className="text-xs text-text-muted mt-2 leading-snug">{label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Pricing teaser ───────────────────────────────────────────────────── */}
+      <section className="max-w-7xl mx-auto px-5 py-20 sm:py-28">
+        <div className="max-w-xl mb-14">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight mb-4">
+            Start free. Upgrade when you're posting.
+          </h2>
+          <p className="text-base text-text-muted">
             No credit card required.{' '}
             <Link to="/pricing" className="text-primary hover:text-primary-hover transition-colors">
-              See full comparison →
+              See full comparison
             </Link>
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {/* Free */}
-          <div className="bg-surface border border-border rounded-card p-6 space-y-5">
+          <div className="bg-surface border border-border rounded-2xl p-7 flex flex-col gap-6">
             <div>
-              <p className="font-semibold text-text">Free</p>
-              <div className="flex items-baseline gap-0.5 mt-1">
-                <p className="text-3xl font-bold text-text">$0</p>
+              <p className="font-semibold text-text mb-3">Free</p>
+              <div className="flex items-baseline gap-1">
+                <p className="text-4xl font-bold text-text">$0</p>
               </div>
               <p className="text-xs text-text-muted mt-2">For founders just starting out.</p>
             </div>
-            <ul className="space-y-2.5">
-              {[
-                { text: '12 posts / month', sub: 'Enough for 3×/week your first month' },
-                { text: '15 comment suggestions', sub: null },
-                { text: '5 draft rewrites', sub: null },
-                { text: 'Founder persona', sub: '1 generation' },
-                { text: 'Content history', sub: 'Last 30 days' },
-              ].map(({ text, sub }) => (
-                <li key={text} className="flex items-start gap-2.5">
-                  <Check className="w-3.5 h-3.5 text-success shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-sm text-text-muted">{text}</p>
-                    {sub && <p className="text-xs text-text-subtle mt-0.5">{sub}</p>}
-                  </div>
+            <ul className="space-y-2.5 flex-1">
+              {['12 posts / month', '15 comment suggestions', '5 draft rewrites', 'Founder persona', '30-day history'].map(f => (
+                <li key={f} className="flex items-center gap-2.5 text-sm text-text-muted">
+                  <Check className="w-3.5 h-3.5 text-success shrink-0" />
+                  {f}
                 </li>
               ))}
             </ul>
-            <Link to="/signup" className="block">
+            <Link to="/signup">
               <Button variant="secondary" className="w-full">Start free</Button>
             </Link>
           </div>
 
-          {/* Starter - featured */}
-          <div className="relative bg-surface border border-primary/30 rounded-card p-6 space-y-5 overflow-hidden">
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+          {/* Starter — featured */}
+          <div className="relative bg-surface border border-primary/30 rounded-2xl p-7 flex flex-col gap-6 overflow-hidden shadow-[0_4px_32px_rgba(99,102,241,0.1)]">
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary/60 via-primary to-primary/60" />
             <div>
-              <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center justify-between mb-3">
                 <p className="font-semibold text-primary">Starter</p>
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-pill border border-primary/30 bg-primary/[0.08] text-primary">
-                  Most popular
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-primary/25 bg-primary/[0.08] text-primary tracking-widest uppercase">
+                  Popular
                 </span>
               </div>
-              <div className="flex items-baseline gap-0.5 mt-1">
-                <p className="text-3xl font-bold text-text">$9</p>
-                <p className="text-sm text-text-muted">/month</p>
+              <div className="flex items-baseline gap-1">
+                <p className="text-4xl font-bold text-text">$9</p>
+                <p className="text-sm text-text-muted">/mo</p>
               </div>
               <p className="text-xs text-text-muted mt-2">For founders building the habit.</p>
             </div>
-            <ul className="space-y-2.5">
-              {[
-                { text: '80 posts / month', sub: 'Daily posting, with plenty to spare' },
-                { text: '100 comment suggestions', sub: null },
-                { text: '40 draft rewrites', sub: null },
-                { text: 'Founder persona', sub: 'Regenerate anytime' },
-                { text: 'Content history', sub: 'Last 90 days' },
-              ].map(({ text, sub }) => (
-                <li key={text} className="flex items-start gap-2.5">
-                  <Check className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-sm text-text-muted">{text}</p>
-                    {sub && <p className="text-xs text-text-subtle mt-0.5">{sub}</p>}
-                  </div>
+            <ul className="space-y-2.5 flex-1">
+              {['80 posts / month', '100 comment suggestions', '40 draft rewrites', 'Persona regeneration', '90-day history'].map(f => (
+                <li key={f} className="flex items-center gap-2.5 text-sm text-text-muted">
+                  <Check className="w-3.5 h-3.5 text-primary shrink-0" />
+                  {f}
                 </li>
               ))}
             </ul>
-            <Link to="/signup" className="block">
-              <Button className="w-full">Get Starter</Button>
+            <Link to="/signup">
+              <Button className="w-full gap-1.5">
+                Get Starter <ArrowRight className="w-3.5 h-3.5" />
+              </Button>
             </Link>
           </div>
 
           {/* Pro */}
-          <div className="bg-surface border border-border rounded-card p-6 space-y-5">
+          <div className="bg-surface border border-border rounded-2xl p-7 flex flex-col gap-6">
             <div>
-              <p className="font-semibold text-text">Pro</p>
-              <div className="flex items-baseline gap-0.5 mt-1">
-                <p className="text-3xl font-bold text-text">$19</p>
-                <p className="text-sm text-text-muted">/month</p>
+              <p className="font-semibold text-text mb-3">Pro</p>
+              <div className="flex items-baseline gap-1">
+                <p className="text-4xl font-bold text-text">$19</p>
+                <p className="text-sm text-text-muted">/mo</p>
               </div>
               <p className="text-xs text-text-muted mt-2">For founders posting consistently.</p>
             </div>
-            <ul className="space-y-2.5">
-              {[
-                { text: 'Unlimited posts', sub: null },
-                { text: 'Unlimited comments', sub: null },
-                { text: 'Unlimited rewrites', sub: null },
-                { text: 'Founder persona', sub: 'Regenerate anytime' },
-                { text: 'Full content history', sub: null },
-                { text: 'Priority AI', sub: 'Faster responses' },
-                { text: 'Performance insights', sub: 'AI learns what works for you' },
-              ].map(({ text, sub }) => (
-                <li key={text} className="flex items-start gap-2.5">
-                  <Check className="w-3.5 h-3.5 text-success shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-sm text-text-muted">{text}</p>
-                    {sub && <p className="text-xs text-text-subtle mt-0.5">{sub}</p>}
-                  </div>
+            <ul className="space-y-2.5 flex-1">
+              {['Unlimited posts', 'Unlimited comments and rewrites', 'Persona regeneration', 'Full history', 'Priority AI', 'Performance insights'].map(f => (
+                <li key={f} className="flex items-center gap-2.5 text-sm text-text-muted">
+                  <Check className="w-3.5 h-3.5 text-success shrink-0" />
+                  {f}
                 </li>
               ))}
             </ul>
-            <Link to="/signup" className="block">
+            <Link to="/signup">
               <Button variant="secondary" className="w-full">Get Pro</Button>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ── 8. Final CTA ─────────────────────────────────────────────────────── */}
-      <section className="max-w-xl mx-auto px-6 pb-28 text-center">
-        <h2 className="text-2xl font-bold tracking-tight mb-3">One habit. Your voice. Starting today.</h2>
-        <p className="text-sm text-text-muted mb-8">
-          3 minutes a day. No blank pages. No sounding like everyone else.
-        </p>
-        <Link to="/signup">
-          <Button size="lg" className="px-8">
-            Start free in 2 minutes
-            <ArrowRight className="w-4 h-4" />
-          </Button>
-        </Link>
+      {/* ── Final CTA ────────────────────────────────────────────────────────── */}
+      <section className="bg-surface border-t border-border">
+        <div className="max-w-3xl mx-auto px-5 py-24 text-center">
+          <h2 className="text-3xl sm:text-[44px] font-bold tracking-tight leading-tight mb-5">
+            Your voice exists.<br />
+            It just needs a system.
+          </h2>
+          <p className="text-base text-text-muted max-w-md mx-auto mb-10 leading-relaxed">
+            Two minutes to set up. Three minutes to your first post.
+            No blank pages. No generic AI. Just you, posting.
+          </p>
+          <Link to="/signup">
+            <Button size="lg" className="px-8 gap-2">
+              Start free in 2 minutes
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </Link>
+          <div className="flex items-center justify-center gap-5 mt-5">
+            <span className="flex items-center gap-1.5 text-xs text-text-subtle">
+              <Shield className="w-3 h-3" /> No credit card
+            </span>
+            <span className="flex items-center gap-1.5 text-xs text-text-subtle">
+              <Check className="w-3 h-3" /> Cancel anytime
+            </span>
+          </div>
+        </div>
       </section>
 
-      {/* ── Footer ───────────────────────────────────────────────────────────── */}
-      <footer className="border-t border-border">
-        <div className="max-w-5xl mx-auto px-6 py-6 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-primary-gradient rounded-md flex items-center justify-center">
-              <Zap className="w-3.5 h-3.5 text-white" />
+      <PublicFooter />
+    </div>
+  )
+}
+
+// ── Hero App Preview ──────────────────────────────────────────────────────────
+
+function HeroAppPreview() {
+  const [active, setActive] = useState<'safe' | 'bold' | 'spicy'>('bold')
+
+  const posts = {
+    safe: {
+      badge: 'SAFE',
+      badgeColor: 'text-emerald-400 border-emerald-500/20 bg-emerald-500/[0.06]',
+      text: 'Nobody told me launching an MVP would mean watching users ignore features you spent months on.\n\nWe shipped to 200 early users last quarter. Most opened once and left. Three came back every single day.\n\nWe killed everything the 197 ignored. We built more of what the 3 loved. Now we have 40 paying users.\n\nThe product that works looks nothing like the one we launched. What were your biggest wrong assumptions?',
+    },
+    bold: {
+      badge: 'BOLD',
+      badgeColor: 'text-amber-400 border-amber-500/20 bg-amber-500/[0.08]',
+      text: 'Most founders lie about their launch. I won\'t.\n\nWe shipped to 200 users and got 3 replies. The product was wrong. The positioning was wrong. We almost shut it down at month two.\n\nSix months later: $8k MRR, growing 20% week over week.\n\nThe difference wasn\'t the idea. It was being willing to be completely wrong about the first version and starting over.',
+    },
+    spicy: {
+      badge: 'SPICY',
+      badgeColor: 'text-red-400 border-red-500/20 bg-red-500/[0.06]',
+      text: 'The "launch fast and learn" advice is ruining early-stage startups.\n\nYou end up with 200 users who feel like beta testers, a reputation for shipping broken things, and a dataset of people who don\'t care about the problem.\n\nThe founders who win aren\'t the ones who launched fastest. They\'re the ones who found three people who couldn\'t live without what they built.\n\nSlow down. Find those three people first.',
+    },
+  }
+
+  const current = posts[active]
+
+  return (
+    <div className="flex min-h-[480px]">
+      {/* Sidebar */}
+      <div className="hidden lg:flex w-[220px] shrink-0 border-r border-border flex-col bg-surface">
+        <div className="px-3 py-4 space-y-0.5">
+          {[
+            { label: 'Home', isActive: false },
+            { label: 'Write Post', isActive: true },
+            { label: 'Rewrite Draft', isActive: false },
+            { label: 'Get Comments', isActive: false },
+            { label: 'History', isActive: false },
+          ].map(({ label, isActive }) => (
+            <div
+              key={label}
+              className={cn(
+                'px-3 py-1.5 rounded-[6px] text-xs',
+                isActive ? 'bg-primary/[0.08] text-text font-medium' : 'text-text-muted'
+              )}
+            >
+              {label}
             </div>
-            <span className="text-sm font-semibold text-text-muted">FounderX</span>
+          ))}
+        </div>
+        <div className="px-3 mt-2 border-t border-border pt-4">
+          <p className="text-[10px] text-text-subtle uppercase tracking-widest mb-2 font-medium px-1">Recent</p>
+          {['Why we almost quit last month', 'Our first $1k MRR moment', 'What users actually want'].map((t, i) => (
+            <div key={t} className={cn('px-2 py-1.5 rounded-[6px] text-[11px] mb-0.5 truncate', i === 0 ? 'text-text bg-surface-hover' : 'text-text-muted')}>
+              {t}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Main */}
+      <div className="flex-1 flex flex-col p-5 gap-4 bg-background min-w-0">
+        <div className="flex gap-2">
+          <div className="flex-1 bg-surface border border-border rounded-input px-4 py-2.5 text-xs text-text-muted">
+            Why we almost quit last month...
           </div>
-          <p className="text-xs text-text-subtle">2026 FounderX. All rights reserved.</p>
+          <div className="shrink-0 bg-primary-gradient text-white text-xs font-semibold px-4 py-2.5 rounded-btn flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5" /> Generate
+          </div>
         </div>
-      </footer>
+
+        <div className="flex gap-1 bg-surface border border-border rounded-[10px] p-1 w-fit">
+          {(['safe', 'bold', 'spicy'] as const).map(v => (
+            <button
+              key={v}
+              onClick={() => setActive(v)}
+              className={cn(
+                'text-[11px] font-semibold px-4 py-1.5 rounded-[7px] transition-all capitalize',
+                active === v ? 'bg-background text-text shadow-card' : 'text-text-muted hover:text-text'
+              )}
+            >
+              {v}
+            </button>
+          ))}
+        </div>
+
+        <div className="rounded-[10px] border border-primary/20 bg-surface p-5 flex-1">
+          <div className="flex items-center justify-between mb-4">
+            <span className={cn('text-[10px] font-bold px-2 py-1 rounded-[5px] border', current.badgeColor)}>
+              {current.badge}
+            </span>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1.5 text-[11px] text-text-muted border border-border rounded-btn px-3 py-1">
+                <PenLine className="w-3 h-3" /> Adjust
+              </div>
+              <div className="flex items-center gap-1.5 text-[11px] text-white bg-primary-gradient rounded-btn px-3 py-1 font-medium">
+                <Copy className="w-3 h-3" /> Copy
+              </div>
+            </div>
+          </div>
+          <p className="text-[13px] text-text leading-relaxed whitespace-pre-line">
+            {current.text}
+          </p>
+        </div>
+
+        <div className="flex items-center justify-between text-[11px] text-text-subtle border-t border-border pt-3">
+          <div className="flex items-center gap-1.5">
+            <div className="w-1.5 h-1.5 rounded-full bg-success" />
+            Written in your founder voice
+          </div>
+          <span>3 variations generated</span>
+        </div>
+      </div>
     </div>
   )
 }
 
-// ── Product Demo Card ─────────────────────────────────────────────────────────
+// ── Write Post Demo ───────────────────────────────────────────────────────────
 
-function ProductDemoCard() {
+function WritePostDemo() {
   return (
-    <div className="bg-surface border border-border rounded-card shadow-card-hover overflow-hidden">
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-surface-elevated">
-        <div className="flex gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-border" />
-          <div className="w-2.5 h-2.5 rounded-full bg-border" />
-          <div className="w-2.5 h-2.5 rounded-full bg-border" />
+    <div className="w-full max-w-sm space-y-2">
+      <div className="bg-surface border border-border rounded-input px-3 py-2 text-xs text-text-subtle">
+        Lessons from 6 months of building in public...
+      </div>
+      {[
+        {
+          badge: 'SAFE',
+          color: 'text-emerald-400 border-emerald-500/20 bg-emerald-500/[0.04]',
+          text: 'Six months of building in public taught me more about my customers than any research sprint.',
+        },
+        {
+          badge: 'BOLD',
+          color: 'text-amber-400 border-amber-500/20 bg-amber-500/[0.06]',
+          text: 'Building in public is the most underrated customer development strategy. Here\'s why I haven\'t missed a week.',
+        },
+        {
+          badge: 'SPICY',
+          color: 'text-red-400 border-red-500/20 bg-red-500/[0.04]',
+          text: 'Most "build in public" content is just humble bragging. Here\'s what it actually looks like when things aren\'t working.',
+        },
+      ].map(({ badge, color, text }) => (
+        <div key={badge} className={cn('rounded-[8px] border px-3 py-2.5', color)}>
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-[10px] font-bold">{badge}</span>
+            <span className="text-[10px] text-text-subtle flex items-center gap-1">
+              <Copy className="w-2.5 h-2.5" /> Copy
+            </span>
+          </div>
+          <p className="text-[11px] text-text-muted leading-relaxed">{text}</p>
         </div>
-        <p className="text-xs text-text-subtle ml-1">Write Post · FounderX</p>
-      </div>
-
-      <div className="p-4 space-y-3">
-        <div className="bg-background border border-border rounded-input px-3 py-2 text-xs text-text-subtle">
-          Why we almost quit last month...
-        </div>
-        <DemoVariation badge="SAFE"         badgeColor="text-emerald-400 bg-emerald-500/[0.08] border-emerald-500/20" text="Nobody told me that launching an MVP would mean watching users ignore features you spent 3 months building. Here's what changed everything." active={false} />
-        <DemoVariation badge="BOLD"         badgeColor="text-amber-400 bg-amber-500/[0.08] border-amber-500/20"   text="Most founders lie about their launch. I won't. We shipped to 200 users and got 3 replies. This is what we learned the hard way." active />
-        <DemoVariation badge="CONTROVERSIAL" badgeColor="text-red-400 bg-red-500/[0.08] border-red-500/20"        text="The advice to 'launch fast and learn' is ruining early-stage startups. Here's the uncomfortable truth nobody talks about." active={false} />
-      </div>
-    </div>
-  )
-}
-
-function DemoVariation({ badge, badgeColor, text, active }: {
-  badge: string; badgeColor: string; text: string; active: boolean
-}) {
-  return (
-    <div className={`rounded-[8px] border p-3 space-y-2 ${active ? 'border-primary/40 bg-primary/[0.06]' : 'border-border bg-background'}`}>
-      <div className="flex items-center justify-between">
-        <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded border ${badgeColor}`}>{badge}</span>
-        {active && <div className="flex items-center gap-1 text-[10px] text-primary"><Copy className="w-3 h-3" />Copy</div>}
-      </div>
-      <p className="text-[11px] text-text-muted leading-relaxed line-clamp-3">{text}</p>
+      ))}
     </div>
   )
 }

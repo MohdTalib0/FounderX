@@ -82,26 +82,26 @@ const PERSONALITIES = [
   },
 ]
 
-// ─── Progress Bar ─────────────────────────────────────────────────────────────
+// ─── Progress Dots ────────────────────────────────────────────────────────────
 
-function ProgressBar({ step }: { step: Step }) {
+function ProgressDots({ step }: { step: Step }) {
   if (step === 0) return null
   const stepNum = typeof step === 'number' ? step : 4
-  const pct = (stepNum / 4) * 100
 
   return (
-    <div className="w-full mb-8">
-      <div className="flex justify-between text-xs text-text-muted mb-2">
-        <span>Step {stepNum} of 4</span>
-      </div>
-      <div className="h-1 bg-surface-hover rounded-full overflow-hidden">
+    <div className="flex items-center justify-center gap-2 mb-8">
+      {[1, 2, 3, 4].map(n => (
         <motion.div
-          className="h-full bg-primary rounded-full"
+          key={n}
           initial={false}
-          animate={{ width: `${pct}%` }}
-          transition={{ duration: 0.3, ease: 'easeOut' }}
+          animate={{ width: n === stepNum ? 20 : 6 }}
+          transition={{ duration: 0.25, ease: 'easeOut' }}
+          className={cn(
+            'h-1.5 rounded-full',
+            n < stepNum ? 'bg-success' : n === stepNum ? 'bg-primary' : 'bg-surface-hover'
+          )}
         />
-      </div>
+      ))}
     </div>
   )
 }
@@ -497,7 +497,7 @@ export default function Onboarding() {
           <span className="text-xl font-bold text-text">FounderX</span>
         </div>
 
-        <ProgressBar step={step as Step} />
+        <ProgressDots step={step as Step} />
 
         <AnimatePresence mode="wait">
           {step === 0 && (
@@ -577,34 +577,34 @@ function StepZero({ onSelect }: { onSelect: (mode: Mode) => void }) {
       className="space-y-8"
     >
       <div className="text-center">
-        <h1 className="text-[22px] font-semibold text-text tracking-tight">Who are you building a brand for?</h1>
+        <h1 className="text-2xl font-bold text-text tracking-tight">Who are you building a brand for?</h1>
         <p className="text-text-muted mt-1.5 text-sm">This shapes every post we write for you.</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <button
           onClick={() => onSelect('brand')}
-          className="flex flex-col items-center gap-3 p-6 rounded-card border border-border bg-surface hover:border-primary/50 hover:bg-primary/[0.03] transition-all group text-center"
+          className="flex flex-col items-center gap-4 py-7 px-4 rounded-card border border-border bg-surface hover:border-primary/50 hover:bg-primary/[0.03] active:scale-[0.98] transition-all group text-center"
         >
-          <div className="w-10 h-10 rounded-xl bg-surface-hover border border-border flex items-center justify-center group-hover:border-primary/30 group-hover:bg-primary/[0.06] transition-all">
+          <div className="w-12 h-12 rounded-xl bg-surface-hover border border-border flex items-center justify-center group-hover:border-primary/30 group-hover:bg-primary/[0.06] transition-all">
             <Building2 className="w-5 h-5 text-text-muted group-hover:text-primary transition-colors" />
           </div>
           <div>
             <p className="text-sm font-semibold text-text">My company</p>
-            <p className="text-xs text-text-muted mt-0.5 leading-snug">Posting as a startup or business</p>
+            <p className="text-xs text-text-muted mt-1 leading-snug">Startup or business</p>
           </div>
         </button>
 
         <button
           onClick={() => onSelect('individual')}
-          className="flex flex-col items-center gap-3 p-6 rounded-card border border-border bg-surface hover:border-primary/50 hover:bg-primary/[0.03] transition-all group text-center"
+          className="flex flex-col items-center gap-4 py-7 px-4 rounded-card border border-border bg-surface hover:border-primary/50 hover:bg-primary/[0.03] active:scale-[0.98] transition-all group text-center"
         >
-          <div className="w-10 h-10 rounded-xl bg-surface-hover border border-border flex items-center justify-center group-hover:border-primary/30 group-hover:bg-primary/[0.06] transition-all">
+          <div className="w-12 h-12 rounded-xl bg-surface-hover border border-border flex items-center justify-center group-hover:border-primary/30 group-hover:bg-primary/[0.06] transition-all">
             <User className="w-5 h-5 text-text-muted group-hover:text-primary transition-colors" />
           </div>
           <div>
             <p className="text-sm font-semibold text-text">Myself</p>
-            <p className="text-xs text-text-muted mt-0.5 leading-snug">Posting as a person, consultant, or creator</p>
+            <p className="text-xs text-text-muted mt-1 leading-snug">Consultant or creator</p>
           </div>
         </button>
       </div>
@@ -630,7 +630,7 @@ function StepOne({
   return (
     <motion.div {...stepVariants} transition={{ duration: 0.2 }} className="space-y-6">
       <div>
-        <h1 className="text-[22px] font-semibold text-text tracking-tight">
+        <h1 className="text-2xl font-bold text-text">
           {isIndividual ? "Let's build your personal brand." : "Let's build your founder brand."}
         </h1>
         <p className="text-text-muted mt-1 text-sm">Takes about 2 minutes.</p>
@@ -648,7 +648,7 @@ function StepOne({
             value={form.name}
             onChange={e => update('name', e.target.value)}
             onKeyDown={e => e.key === 'Enter' && canContinue && onNext()}
-            className="w-full bg-surface border border-border rounded-input px-4 py-2.5 text-text placeholder:text-text-subtle text-sm focus:outline-none focus:border-border-focus focus:shadow-input-focus hover:border-border-hover transition-colors"
+            className="w-full bg-surface border border-border rounded-input px-4 py-3 text-text placeholder:text-text-subtle text-sm focus:outline-none focus:border-border-focus focus:shadow-input-focus hover:border-border-hover transition-colors"
           />
         </div>
 
@@ -666,7 +666,7 @@ function StepOne({
             value={form.description}
             onChange={e => update('description', e.target.value)}
             onKeyDown={e => e.key === 'Enter' && canContinue && onNext()}
-            className="w-full bg-surface border border-border rounded-input px-4 py-2.5 text-text placeholder:text-text-subtle text-sm focus:outline-none focus:border-border-focus focus:shadow-input-focus hover:border-border-hover transition-colors"
+            className="w-full bg-surface border border-border rounded-input px-4 py-3 text-text placeholder:text-text-subtle text-sm focus:outline-none focus:border-border-focus focus:shadow-input-focus hover:border-border-hover transition-colors"
           />
         </div>
       </div>
@@ -701,29 +701,29 @@ function StepTwo({
   return (
     <motion.div {...stepVariants} transition={{ duration: 0.2 }} className="space-y-6">
       <div>
-        <h1 className="text-[22px] font-semibold text-text tracking-tight">
+        <h1 className="text-2xl font-bold text-text">
           {isIndividual ? 'What best describes you?' : 'Where are you right now?'}
         </h1>
       </div>
 
-      {/* Stage / Role */}
-      <div className="grid grid-cols-4 gap-2">
+      {/* Stage / Role — 2 cols on mobile, 4 on sm+ */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         {slots.map(s => (
           <button
             key={s.value}
             onClick={() => update('stage', s.value)}
             className={cn(
-              'flex flex-col items-center gap-1 p-3 rounded-card border text-center transition-all',
+              'flex flex-col items-center gap-1.5 py-4 px-3 rounded-card border text-center transition-all active:scale-[0.97]',
               form.stage === s.value
                 ? 'border-primary bg-primary/10 text-primary'
                 : 'border-border bg-surface text-text-muted hover:border-border-hover hover:bg-surface-hover'
             )}
           >
-            <span className={cn('mb-0.5', form.stage === s.value ? 'text-primary' : 'text-text-muted')}>
+            <span className={cn(form.stage === s.value ? 'text-primary' : 'text-text-muted')}>
               {s.icon}
             </span>
-            <span className="text-xs font-medium text-text">{s.label}</span>
-            <span className="text-[10px] text-text-muted">{s.sub}</span>
+            <span className="text-xs font-semibold text-text">{s.label}</span>
+            <span className="text-[10px] text-text-muted leading-tight">{s.sub}</span>
           </button>
         ))}
       </div>
@@ -737,7 +737,7 @@ function StepTwo({
               key={ind}
               onClick={() => toggleIndustry(ind)}
               className={cn(
-                'text-sm px-3 py-1.5 rounded-full border transition-all',
+                'text-sm px-3 py-2 rounded-full border transition-all active:scale-[0.97]',
                 form.industry.includes(ind)
                   ? 'border-primary bg-primary/10 text-primary'
                   : 'border-border bg-surface text-text-muted hover:border-border-hover hover:text-text'
@@ -750,9 +750,12 @@ function StepTwo({
       </div>
 
       <div className="flex gap-3">
-        <Button variant="ghost" onClick={onBack} size="lg">
-          Back
-        </Button>
+        <button
+          onClick={onBack}
+          className="flex items-center gap-1 px-3 py-3 text-sm text-text-muted hover:text-text transition-colors"
+        >
+          <ChevronRight className="w-4 h-4 rotate-180" /> Back
+        </button>
         <Button onClick={onNext} disabled={!canContinue} className="flex-1" size="lg">
           Continue <ChevronRight className="w-4 h-4" />
         </Button>
@@ -781,7 +784,7 @@ function StepThree({
   return (
     <motion.div {...stepVariants} transition={{ duration: 0.2 }} className="space-y-6">
       <div>
-        <h1 className="text-[22px] font-semibold text-text tracking-tight">
+        <h1 className="text-2xl font-bold text-text">
           {isIndividual ? 'Who do you want to reach?' : 'Who are you building for?'}
         </h1>
       </div>
@@ -799,7 +802,7 @@ function StepThree({
               : 'e.g. B2B marketers at 50-500 person companies'}
             value={form.target_audience}
             onChange={e => update('target_audience', e.target.value)}
-            className="w-full bg-surface border border-border rounded-input px-4 py-2.5 text-text placeholder:text-text-subtle text-sm focus:outline-none focus:border-border-focus focus:shadow-input-focus hover:border-border-hover transition-colors"
+            className="w-full bg-surface border border-border rounded-input px-4 py-3 text-text placeholder:text-text-subtle text-sm focus:outline-none focus:border-border-focus focus:shadow-input-focus hover:border-border-hover transition-colors"
           />
         </div>
 
@@ -811,14 +814,14 @@ function StepThree({
                 key={g.value}
                 onClick={() => update('founder_goal', g.value)}
                 className={cn(
-                  'w-full flex items-center gap-3 px-4 py-3 rounded-card border text-sm text-left transition-all',
+                  'w-full flex items-center gap-3 px-4 py-3.5 rounded-card border text-sm text-left transition-all active:scale-[0.99]',
                   form.founder_goal === g.value
                     ? 'border-primary bg-primary/10 text-text'
                     : 'border-border bg-surface text-text-muted hover:border-border-hover hover:bg-surface-hover hover:text-text'
                 )}
               >
                 <div className={cn(
-                  'w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0',
+                  'w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors',
                   form.founder_goal === g.value ? 'border-primary' : 'border-border'
                 )}>
                   {form.founder_goal === g.value && (
@@ -833,9 +836,12 @@ function StepThree({
       </div>
 
       <div className="flex gap-3">
-        <Button variant="ghost" onClick={onBack} size="lg">
-          Back
-        </Button>
+        <button
+          onClick={onBack}
+          className="flex items-center gap-1 px-3 py-3 text-sm text-text-muted hover:text-text transition-colors"
+        >
+          <ChevronRight className="w-4 h-4 rotate-180" /> Back
+        </button>
         <Button onClick={onNext} disabled={!canContinue} className="flex-1" size="lg">
           Continue <ChevronRight className="w-4 h-4" />
         </Button>
@@ -866,7 +872,7 @@ function StepFour({
   return (
     <motion.div {...stepVariants} transition={{ duration: 0.2 }} className="space-y-6">
       <div>
-        <h1 className="text-[22px] font-semibold text-text tracking-tight">
+        <h1 className="text-2xl font-bold text-text">
           {mode === 'individual' ? "What's your posting style?" : 'Which founder are you?'}
         </h1>
         <p className="text-text-muted mt-1 text-sm">This shapes how every post sounds.</p>
@@ -879,18 +885,18 @@ function StepFour({
             key={p.value}
             onClick={() => update('founder_personality', p.value)}
             className={cn(
-              'flex flex-col gap-2 p-4 rounded-card border text-left transition-all',
+              'flex flex-col gap-2.5 p-4 rounded-card border text-left transition-all active:scale-[0.97]',
               form.founder_personality === p.value
                 ? 'border-primary bg-primary/10'
                 : 'border-border bg-surface hover:border-border-hover hover:bg-surface-hover'
             )}
           >
-            <span className={cn('mb-0.5', form.founder_personality === p.value ? 'text-primary' : 'text-text-muted')}>
+            <span className={cn(form.founder_personality === p.value ? 'text-primary' : 'text-text-muted')}>
               {p.icon}
             </span>
             <div>
               <p className={cn(
-                'text-sm font-medium',
+                'text-sm font-semibold',
                 form.founder_personality === p.value ? 'text-primary' : 'text-text'
               )}>
                 {p.label}
@@ -911,7 +917,7 @@ function StepFour({
           placeholder="e.g. transparent, scrappy, user-obsessed"
           value={form.keywords}
           onChange={e => update('keywords', e.target.value)}
-          className="w-full bg-surface border border-border rounded-input px-4 py-2.5 text-text placeholder:text-text-subtle text-sm focus:outline-none focus:border-border-focus focus:shadow-input-focus hover:border-border-hover transition-colors"
+          className="w-full bg-surface border border-border rounded-input px-4 py-3 text-text placeholder:text-text-subtle text-sm focus:outline-none focus:border-border-focus focus:shadow-input-focus hover:border-border-hover transition-colors"
         />
         <p className="text-xs text-text-muted">Comma-separated words that define your brand voice</p>
       </div>
@@ -923,9 +929,12 @@ function StepFour({
       )}
 
       <div className="flex gap-3">
-        <Button variant="ghost" onClick={onBack} size="lg">
-          Back
-        </Button>
+        <button
+          onClick={onBack}
+          className="flex items-center gap-1 px-3 py-3 text-sm text-text-muted hover:text-text transition-colors"
+        >
+          <ChevronRight className="w-4 h-4 rotate-180" /> Back
+        </button>
         <Button onClick={onFinish} disabled={!canContinue} className="flex-1" size="lg">
           {mode === 'individual' ? 'Create my personal brand →' : 'Create my founder brand →'}
         </Button>

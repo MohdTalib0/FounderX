@@ -17,15 +17,15 @@ export default {
         page: ['22px', { lineHeight: '1.25', fontWeight: '600', letterSpacing: '-0.015em' }],
       },
       colors: {
-        background: '#0A0A0A',
+        background: 'var(--color-bg)',
         surface: {
-          DEFAULT: '#141414',
-          hover:   '#1C1C1C',
-          elevated:'#181818',
+          DEFAULT: 'var(--color-surface)',
+          hover:   'var(--color-surface-hover)',
+          elevated:'var(--color-surface-elevated)',
         },
         border: {
-          DEFAULT: '#262626',
-          hover:   '#333333',
+          DEFAULT: 'var(--color-border)',
+          hover:   'var(--color-border-hover)',
           focus:   '#6366F1',
         },
         primary: {
@@ -46,9 +46,9 @@ export default {
           muted:   '#EF444414',
         },
         text: {
-          DEFAULT: '#EDEDED',
-          muted:   '#8C8C8C',
-          subtle:  '#555555',
+          DEFAULT: 'var(--color-text)',
+          muted:   'var(--color-text-muted)',
+          subtle:  'var(--color-text-subtle)',
         },
       },
       boxShadow: {

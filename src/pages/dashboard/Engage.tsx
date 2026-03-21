@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Check } from 'lucide-react'
 import { toast } from '@/store/toast'
 import { useAuthStore } from '@/store/auth'
 import { supabase } from '@/lib/supabase'
@@ -14,10 +15,34 @@ interface CommentResults {
   bold: string
 }
 
-const COMMENT_META = [
-  { key: 'insightful' as const, label: 'Insightful', desc: 'Adds a perspective or data point' },
-  { key: 'curious'    as const, label: 'Curious',    desc: 'Asks a thoughtful question' },
-  { key: 'bold'       as const, label: 'Bold',        desc: 'Strong take or respectful disagreement' },
+const COMMENT_META: {
+  key: keyof CommentResults
+  label: string
+  desc: string
+  accent: string
+  badge: string
+}[] = [
+  {
+    key: 'insightful',
+    label: 'Insightful',
+    desc: 'Adds a perspective or data point',
+    accent: 'border-l-sky-500/50',
+    badge: 'text-sky-400 bg-sky-500/[0.08] border-sky-500/20',
+  },
+  {
+    key: 'curious',
+    label: 'Curious',
+    desc: 'Asks a thoughtful question',
+    accent: 'border-l-violet-500/50',
+    badge: 'text-violet-400 bg-violet-500/[0.08] border-violet-500/20',
+  },
+  {
+    key: 'bold',
+    label: 'Bold',
+    desc: 'Strong take or respectful disagreement',
+    accent: 'border-l-amber-500/50',
+    badge: 'text-amber-400 bg-amber-500/[0.08] border-amber-500/20',
+  },
 ]
 
 const COMMENT_GOAL = 5
@@ -89,63 +114,67 @@ export default function Engage() {
   }
 
   const urlIsLinkedIn = linkedinUrl.trim() && isLinkedInPostUrl(linkedinUrl)
+  const displayCount = Math.min(weeklyCount, COMMENT_GOAL)
+  const goalComplete = displayCount >= COMMENT_GOAL
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-3xl mx-auto space-y-5">
+
+      {/* Page header */}
       <div>
-        <h1 className="text-page text-text">Get Comment Suggestions</h1>
-        <p className="text-sm text-text-muted mt-0.5">Paste any post text, get 3 ready-to-use comments</p>
+        <h1 className="text-xl font-bold text-text">Get Comment Suggestions</h1>
+        <p className="text-sm text-text-muted mt-0.5">Paste any post, get 3 ready-to-use comments in seconds</p>
       </div>
 
+      {/* ─── Weekly goal tracker ───────────────────────────────────────── */}
       {goalLoading ? (
-        <div className="skeleton h-20 rounded-card" />
+        <div className="skeleton h-[72px] rounded-card" />
       ) : (
-        (() => {
-          const displayCount = Math.min(weeklyCount, COMMENT_GOAL)
-          const complete = displayCount >= COMMENT_GOAL
-          return (
-            <div className={cn(
-              'bg-surface border rounded-card px-4 py-3',
-              complete ? 'border-success/20' : 'border-border'
+        <div className={cn(
+          'bg-surface border rounded-card px-4 py-3.5',
+          goalComplete ? 'border-success/25' : 'border-border'
+        )}>
+          <div className="flex items-center justify-between mb-2.5">
+            <p className="text-sm font-medium text-text">
+              {goalComplete ? 'Weekly goal hit!' : `Comment on ${COMMENT_GOAL} posts this week`}
+            </p>
+            <span className={cn(
+              'text-xs font-semibold',
+              goalComplete ? 'text-success' : 'text-text-muted'
             )}>
-              <p className="text-sm font-medium text-text mb-2">
-                Comment on {COMMENT_GOAL} posts this week
+              {displayCount}/{COMMENT_GOAL}
+            </span>
+          </div>
+
+          {/* Circle tracker */}
+          <div className="flex items-center gap-2">
+            {Array.from({ length: COMMENT_GOAL }).map((_, i) => {
+              const done = i < displayCount
+              return (
+                <div
+                  key={i}
+                  className={cn(
+                    'w-7 h-7 rounded-full flex items-center justify-center transition-all shrink-0',
+                    done
+                      ? 'bg-success shadow-[0_0_0_3px_rgba(34,197,94,0.12)]'
+                      : 'border-2 border-border'
+                  )}
+                >
+                  {done && <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />}
+                </div>
+              )
+            })}
+            {goalComplete && (
+              <p className="text-xs text-success font-medium ml-1">
+                Keep going. Every extra comment compounds visibility.
               </p>
-              <div className="flex items-center gap-2 mb-2">
-                <div className="flex items-center gap-1">
-                  {Array.from({ length: COMMENT_GOAL }).map((_, i) => (
-                    <div
-                      key={i}
-                      className={cn(
-                        'w-8 h-1.5 rounded-full',
-                        i < displayCount ? 'bg-primary' : 'bg-border'
-                      )}
-                    />
-                  ))}
-                </div>
-                <span className={cn(
-                  'text-xs font-medium',
-                  complete ? 'text-success' : 'text-text-muted'
-                )}>
-                  {complete ? `${COMMENT_GOAL}/${COMMENT_GOAL} ✓ Week complete!` : `${displayCount}/${COMMENT_GOAL} done`}
-                </span>
-              </div>
-              <p className="text-xs text-text-muted">Paste any post, get 3 comments in seconds.</p>
-              {complete && (
-                <div className="mt-2 pt-2.5 border-t border-success/20 space-y-1">
-                  <p className="text-xs font-medium text-success">Week complete. Great engagement habit!</p>
-                  <p className="text-xs text-text-subtle">
-                    Keep going for bonus reach. Every extra comment compounds your visibility.
-                  </p>
-                </div>
-              )}
-            </div>
-          )
-        })()
+            )}
+          </div>
+        </div>
       )}
 
+      {/* ─── Input ─────────────────────────────────────────────────────── */}
       <div className="space-y-3">
-        {/* Post text - primary */}
         <Textarea
           label="Paste the post text"
           rows={6}
@@ -163,51 +192,66 @@ export default function Engage() {
           size="lg"
           className="w-full"
         >
-          {generating ? 'Generating...' : 'Generate Comments →'}
+          {generating ? 'Generating...' : 'Generate 3 Comments'}
         </Button>
 
-        {/* LinkedIn URL - truly optional, styled as metadata not a field */}
-        <div className="pt-2">
+        {/* LinkedIn URL — truly optional metadata */}
+        <div className="pt-1">
           <input
             type="url"
             placeholder="LinkedIn post URL (optional, for tracking only)"
             value={linkedinUrl}
             onChange={e => setLinkedinUrl(e.target.value)}
-            className="w-full bg-transparent text-xs text-text-muted placeholder:text-text-subtle border-0 border-b border-border/50 pb-1 focus:outline-none focus:border-border-focus transition-colors"
+            className="w-full bg-transparent text-xs text-text-muted placeholder:text-text-subtle border-0 border-b border-border/50 pb-1.5 focus:outline-none focus:border-border-focus transition-colors"
           />
           {linkedinUrl.trim() && !urlIsLinkedIn && (
-            <p className="text-xs text-text-subtle mt-1">
+            <p className="text-[11px] text-text-subtle mt-1">
               We can't read post content from URLs. Paste the text above.
             </p>
           )}
         </div>
       </div>
 
-      {/* Results */}
+      {/* ─── Results ───────────────────────────────────────────────────── */}
       {results && (
-        <div className="space-y-4">
-          {COMMENT_META.map(({ key, label, desc }) => {
+        <div className="space-y-3">
+          {COMMENT_META.map(({ key, label, desc, accent, badge }) => {
             const text = results[key]
             if (!text) return null
 
             return (
-              <div key={key} className="bg-surface border border-border rounded-card overflow-hidden">
+              <div
+                key={key}
+                className={cn(
+                  'bg-surface border border-border border-l-4 rounded-card overflow-hidden',
+                  accent
+                )}
+              >
                 {/* Header */}
-                <div className="px-4 pt-4 pb-2 flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-semibold text-text">{label}</p>
-                    <p className="text-xs text-text-muted mt-0.5">{desc}</p>
-                  </div>
-                  <CopyButton text={text} size="sm" label="Copy to edit" />
+                <div className="flex items-center gap-2 px-4 pt-3.5 pb-2">
+                  <span className={cn(
+                    'text-[11px] font-bold px-2 py-0.5 rounded border tracking-widest uppercase',
+                    badge
+                  )}>
+                    {label}
+                  </span>
+                  <span className="text-xs text-text-subtle hidden sm:block">{desc}</span>
                 </div>
-                {/* Body */}
-                <p className="text-sm text-text leading-relaxed px-4 pb-4">{text}</p>
+
+                {/* Comment text */}
+                <p className="text-sm text-text leading-relaxed px-4 pb-3">{text}</p>
+
+                {/* Action bar */}
+                <div className="flex items-center justify-between px-4 py-2.5 border-t border-border">
+                  <p className="text-[11px] text-text-subtle">Edit before posting</p>
+                  <CopyButton text={text} label="Copy to edit" />
+                </div>
               </div>
             )
           })}
 
-          <p className="text-xs text-text-muted text-center pb-2">
-            These are starting points. Edit them to make them feel personal.
+          <p className="text-[11px] text-text-subtle text-center pt-1">
+            These are starting points. Make them yours before posting.
           </p>
         </div>
       )}

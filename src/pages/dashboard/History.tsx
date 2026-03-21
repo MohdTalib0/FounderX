@@ -3,7 +3,6 @@ import { FileText, MessageSquare, RefreshCw, Shuffle, Star, ChevronDown, Chevron
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/auth'
 import CopyButton from '@/components/ui/CopyButton'
-import Badge from '@/components/ui/Badge'
 import { QuoteCardModal } from '@/components/ui/QuoteCard'
 import { cn, truncate } from '@/lib/utils'
 import type { GeneratedPost, CommentSuggestion, DraftRewrite, RemixedPost } from '@/types/database'
@@ -11,10 +10,22 @@ import type { GeneratedPost, CommentSuggestion, DraftRewrite, RemixedPost } from
 type Filter = 'all' | 'posts' | 'comments' | 'rewrites' | 'remixes'
 
 type HistoryItem =
-  | { type: 'post'; data: GeneratedPost; created_at: string }
+  | { type: 'post';    data: GeneratedPost;     created_at: string }
   | { type: 'comment'; data: CommentSuggestion; created_at: string }
-  | { type: 'rewrite'; data: DraftRewrite; created_at: string }
-  | { type: 'remix'; data: RemixedPost; created_at: string }
+  | { type: 'rewrite'; data: DraftRewrite;       created_at: string }
+  | { type: 'remix';   data: RemixedPost;        created_at: string }
+
+const VARIATION_ACCENT: Record<string, string> = {
+  safe:          'border-l-emerald-500/50',
+  bold:          'border-l-amber-500/50',
+  controversial: 'border-l-red-500/50',
+}
+
+const VARIATION_BADGE: Record<string, string> = {
+  safe:          'text-emerald-400 bg-emerald-500/[0.08] border-emerald-500/20',
+  bold:          'text-amber-400 bg-amber-500/[0.08] border-amber-500/20',
+  controversial: 'text-red-400 bg-red-500/[0.08] border-red-500/20',
+}
 
 export default function History() {
   const { user, profile, company } = useAuthStore()
@@ -60,25 +71,14 @@ export default function History() {
   })
 
   const FILTERS: { value: Filter; label: string }[] = [
-    { value: 'all', label: 'All' },
-    { value: 'posts', label: 'Posts' },
+    { value: 'all',      label: 'All' },
+    { value: 'posts',    label: 'Posts' },
     { value: 'comments', label: 'Comments' },
     { value: 'rewrites', label: 'Rewrites' },
-    { value: 'remixes', label: 'Remixes' },
+    { value: 'remixes',  label: 'Remixes' },
   ]
 
-  // 48h rating nudge - posts published 24-72h ago with no rating
-  const now = Date.now()
-  const awaitingRating = items
-    .filter((i): i is { type: 'post'; data: GeneratedPost; created_at: string } => i.type === 'post')
-    .filter(i => {
-      if (!i.data.is_published || !i.data.published_at || i.data.performance_rating) return false
-      const hoursAgo = (now - new Date(i.data.published_at).getTime()) / 3_600_000
-      return hoursAgo >= 20 && hoursAgo <= 96
-    })
-    .slice(0, 1)[0] ?? null
-
-  // Aggregate stats - only show after there's enough data
+  // Aggregate stats (posts only, after 5+)
   const posts = items.filter(i => i.type === 'post') as { type: 'post'; data: GeneratedPost; created_at: string }[]
   const totalPosts = posts.length
   const copiedPosts = posts.filter(p => p.data.was_copied).length
@@ -91,30 +91,43 @@ export default function History() {
   const topVariation = Object.entries(varCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null
   const showStats = totalPosts >= 5
 
+  // 48h rating nudge
+  const now = Date.now()
+  const awaitingRating = items
+    .filter((i): i is { type: 'post'; data: GeneratedPost; created_at: string } => i.type === 'post')
+    .filter(i => {
+      if (!i.data.is_published || !i.data.published_at || i.data.performance_rating) return false
+      const hoursAgo = (now - new Date(i.data.published_at).getTime()) / 3_600_000
+      return hoursAgo >= 20 && hoursAgo <= 96
+    })
+    .slice(0, 1)[0] ?? null
+
   return (
-    <div className="max-w-2xl mx-auto space-y-5">
+    <div className="max-w-3xl mx-auto space-y-5">
+
+      {/* Heading */}
       <div>
-        <h1 className="text-page text-text">History</h1>
+        <h1 className="text-xl font-bold text-text">History</h1>
         <p className="text-sm text-text-muted mt-0.5">All your generated content</p>
       </div>
 
-      {/* 48h rating nudge */}
+      {/* Rating nudge */}
       {!loading && awaitingRating && (
-        <div className="bg-surface border border-warning/30 rounded-card px-4 py-3 space-y-2">
-          <p className="text-sm font-semibold text-text">How did your post land?</p>
-          <p className="text-xs text-text-muted leading-snug line-clamp-1">
-            "{awaitingRating.data.topic}"
-          </p>
-          <div className="flex items-center gap-2 pt-0.5">
+        <div className="bg-surface border border-l-4 border-l-amber-500/50 border-amber-500/20 rounded-card px-4 py-3.5 space-y-2.5">
+          <div>
+            <p className="text-sm font-semibold text-text">How did your post land?</p>
+            <p className="text-xs text-text-muted mt-0.5 line-clamp-1">"{awaitingRating.data.topic}"</p>
+          </div>
+          <div className="flex items-center gap-2">
             {([
-              { rating: 3 as const, icon: <TrendingUp className="w-3.5 h-3.5" />, label: 'Great' },
-              { rating: 2 as const, icon: <Minus className="w-3.5 h-3.5" />,      label: 'Ok' },
+              { rating: 3 as const, icon: <TrendingUp className="w-3.5 h-3.5" />,  label: 'Great' },
+              { rating: 2 as const, icon: <Minus className="w-3.5 h-3.5" />,        label: 'Ok' },
               { rating: 1 as const, icon: <TrendingDown className="w-3.5 h-3.5" />, label: 'Quiet' },
             ]).map(({ rating, icon, label }) => (
               <button
                 key={rating}
                 onClick={() => handleRate(awaitingRating.data.id, rating)}
-                className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-btn border border-border hover:border-warning/50 hover:text-warning text-text-muted transition-all"
+                className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-btn border border-border hover:border-amber-500/40 hover:text-amber-400 text-text-muted transition-all"
               >
                 {icon} {label}
               </button>
@@ -123,15 +136,15 @@ export default function History() {
         </div>
       )}
 
-      {/* Aggregate stats - shown after 5+ posts */}
+      {/* Stats */}
       {!loading && showStats && (
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-2">
           {[
             { label: 'Posts generated', value: String(totalPosts) },
-            { label: 'Copy rate', value: `${copyRate}%` },
-            { label: 'Top variation', value: topVariation ? topVariation.charAt(0).toUpperCase() + topVariation.slice(1) : '-' },
+            { label: 'Copy rate',       value: `${copyRate}%` },
+            { label: 'Top variation',   value: topVariation ? topVariation.charAt(0).toUpperCase() + topVariation.slice(1) : '-' },
           ].map(({ label, value }) => (
-            <div key={label} className="bg-surface border border-border rounded-card px-4 py-3 text-center">
+            <div key={label} className="bg-surface border border-border rounded-card px-3 py-3.5 text-center">
               <p className="text-lg font-bold text-text tabular-nums">{value}</p>
               <p className="text-[11px] text-text-muted mt-0.5">{label}</p>
             </div>
@@ -139,17 +152,17 @@ export default function History() {
         </div>
       )}
 
-      {/* Filter tabs */}
-      <div className="flex gap-1 bg-surface border border-border rounded-card p-1 w-fit">
+      {/* Filter chips — scrollable on mobile */}
+      <div className="flex gap-1.5 overflow-x-auto pb-0.5 scrollbar-none">
         {FILTERS.map(f => (
           <button
             key={f.value}
             onClick={() => setFilter(f.value)}
             className={cn(
-              'text-sm px-3 py-1.5 rounded-btn transition-all',
+              'text-xs px-3 py-1.5 rounded-full border whitespace-nowrap shrink-0 transition-all',
               filter === f.value
-                ? 'bg-primary text-white font-medium'
-                : 'text-text-muted hover:text-text'
+                ? 'bg-primary border-primary text-white font-medium'
+                : 'border-border text-text-muted hover:border-border-hover hover:text-text bg-surface'
             )}
           >
             {f.label}
@@ -159,22 +172,22 @@ export default function History() {
 
       {/* Items */}
       {loading ? (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {[1, 2, 3].map(i => (
-            <div key={i} className="bg-surface border border-border rounded-card p-4 animate-pulse h-20" />
+            <div key={i} className="skeleton h-20 rounded-card" />
           ))}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="bg-surface border border-dashed border-border rounded-card p-10 text-center space-y-1">
-          <p className="text-text-muted text-sm font-medium">Nothing here yet.</p>
-          <p className="text-text-muted/60 text-xs">
+        <div className="border border-dashed border-border rounded-card p-10 text-center space-y-1">
+          <p className="text-sm font-medium text-text-muted">Nothing here yet.</p>
+          <p className="text-xs text-text-subtle">
             {filter === 'all'
               ? 'Your generated posts, comments, and rewrites will show up here.'
               : `Your ${filter} will appear here once you generate some.`}
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {filtered.map((item) => (
             <HistoryCard
               key={item.type + '-' + item.data.id}
@@ -201,46 +214,31 @@ export default function History() {
   )
 
   async function handleRate(postId: string, rating: 1 | 2 | 3) {
-    await supabase
-      .from('generated_posts')
-      .update({ performance_rating: rating })
-      .eq('id', postId)
-
-    setItems(prev => prev.map(item => {
-      if (item.type === 'post' && item.data.id === postId) {
-        return { ...item, data: { ...item.data, performance_rating: rating } }
-      }
-      return item
-    }))
+    await supabase.from('generated_posts').update({ performance_rating: rating }).eq('id', postId)
+    setItems(prev => prev.map(item =>
+      item.type === 'post' && item.data.id === postId
+        ? { ...item, data: { ...item.data, performance_rating: rating } }
+        : item
+    ))
   }
 
   async function handleCopied(postId: string, variation: 'safe' | 'bold' | 'controversial') {
-    await supabase
-      .from('generated_posts')
-      .update({ was_copied: true, selected_variation: variation })
-      .eq('id', postId)
-
-    setItems(prev => prev.map(item => {
-      if (item.type === 'post' && item.data.id === postId) {
-        return { ...item, data: { ...item.data, was_copied: true, selected_variation: variation } }
-      }
-      return item
-    }))
+    await supabase.from('generated_posts').update({ was_copied: true, selected_variation: variation }).eq('id', postId)
+    setItems(prev => prev.map(item =>
+      item.type === 'post' && item.data.id === postId
+        ? { ...item, data: { ...item.data, was_copied: true, selected_variation: variation } }
+        : item
+    ))
   }
 
   async function handleMarkPosted(postId: string) {
     const now = new Date().toISOString()
-    await supabase
-      .from('generated_posts')
-      .update({ is_published: true, published_at: now })
-      .eq('id', postId)
-
-    setItems(prev => prev.map(item => {
-      if (item.type === 'post' && item.data.id === postId) {
-        return { ...item, data: { ...item.data, is_published: true, published_at: now } }
-      }
-      return item
-    }))
+    await supabase.from('generated_posts').update({ is_published: true, published_at: now }).eq('id', postId)
+    setItems(prev => prev.map(item =>
+      item.type === 'post' && item.data.id === postId
+        ? { ...item, data: { ...item.data, is_published: true, published_at: now } }
+        : item
+    ))
   }
 }
 
@@ -261,73 +259,79 @@ function HistoryCard({
 }) {
   const [expanded, setExpanded] = useState(false)
   const [showRating, setShowRating] = useState(false)
-  // For posts: which variation tab is active when expanded
   const [activeVariation, setActiveVariation] = useState<'safe' | 'bold' | 'controversial'>('safe')
 
+  // ── Post ────────────────────────────────────────────────────────────────────
   if (item.type === 'post') {
     const post = item.data
     const defaultVariation = (post.selected_variation ?? 'safe') as 'safe' | 'bold' | 'controversial'
 
-    // Collapsed: show the selected (or safe) variation, truncated
     const collapsedText = defaultVariation === 'bold'
       ? post.variation_bold
       : defaultVariation === 'controversial'
       ? post.variation_controversial
       : post.variation_safe
 
-    // Expanded: show whichever tab is selected
     const expandedText = activeVariation === 'bold'
       ? post.variation_bold
       : activeVariation === 'controversial'
       ? post.variation_controversial
       : post.variation_safe
 
-    // The active text (what copy button should copy)
     const activeText = expanded ? expandedText : collapsedText
-    const activeVar = expanded ? activeVariation : defaultVariation
+    const activeVar  = expanded ? activeVariation : defaultVariation
 
-    // Initialise active variation to the one they actually used
     const handleExpand = () => {
       if (!expanded) setActiveVariation(defaultVariation)
       setExpanded(v => !v)
     }
 
+    const ratingIcon = post.performance_rating === 3
+      ? <TrendingUp className="w-3.5 h-3.5 text-success" />
+      : post.performance_rating === 2
+      ? <Minus className="w-3.5 h-3.5 text-text-muted" />
+      : post.performance_rating === 1
+      ? <TrendingDown className="w-3.5 h-3.5 text-text-subtle" />
+      : null
+
     return (
-      <div className="bg-surface border border-border rounded-card overflow-hidden">
+      <div className={cn(
+        'bg-surface border border-border border-l-4 rounded-card overflow-hidden',
+        VARIATION_ACCENT[defaultVariation] ?? 'border-l-border'
+      )}>
         {/* Header */}
-        <div className="flex items-center justify-between gap-3 px-4 pt-4 pb-3">
-          <div className="flex items-center gap-2 flex-wrap">
-            <FileText className="w-3.5 h-3.5 text-text-muted shrink-0" />
-            <span className="text-xs text-text-muted">POST</span>
-            <Badge variant={defaultVariation}>{defaultVariation.toUpperCase()}</Badge>
-            <span className="text-xs text-text-muted">{relativeDate(post.created_at)}</span>
+        <div className="flex items-center justify-between gap-3 px-4 pt-3.5 pb-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <FileText className="w-3.5 h-3.5 text-text-subtle shrink-0" />
+            <span className={cn(
+              'text-[11px] font-bold px-1.5 py-0.5 rounded border tracking-widest uppercase shrink-0',
+              VARIATION_BADGE[defaultVariation] ?? ''
+            )}>
+              {defaultVariation === 'controversial' ? 'Debate' : defaultVariation}
+            </span>
+            <span className="text-xs text-text-subtle shrink-0">{relativeDate(post.created_at)}</span>
             {post.is_published && (
-              <span className="flex items-center gap-1 text-xs text-success">
+              <span className="hidden sm:flex items-center gap-1 text-[11px] text-success shrink-0">
                 <CheckCircle2 className="w-3 h-3" /> Posted
               </span>
             )}
           </div>
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-1 shrink-0">
             <button
               onClick={() => onQuoteCard(activeText, activeVar)}
-              title="Get quote card image"
+              title="Quote card"
               className="p-1.5 text-text-muted hover:text-text hover:bg-surface-hover rounded-lg transition-colors"
             >
               <ImageDown className="w-3.5 h-3.5" />
             </button>
-            <CopyButton
-              text={activeText}
-              size="sm"
-              onCopy={() => onCopied(post.id, activeVar)}
-            />
+            <CopyButton text={activeText} size="sm" onCopy={() => onCopied(post.id, activeVar)} />
           </div>
         </div>
 
-        {/* Body */}
+        {/* Preview / Expanded */}
         {expanded ? (
           <div className="px-4 pb-3 space-y-3">
-            {/* Variation tabs */}
-            <div className="flex gap-1">
+            <div className="flex gap-1.5">
               {(['safe', 'bold', 'controversial'] as const).map(v => (
                 <button
                   key={v}
@@ -339,50 +343,41 @@ function HistoryCard({
                       : 'border-border text-text-muted hover:border-border-hover hover:text-text'
                   )}
                 >
-                  {v}
+                  {v === 'controversial' ? 'Debate' : v}
                 </button>
               ))}
             </div>
-            {/* Full text */}
             <p className="text-sm text-text leading-relaxed whitespace-pre-wrap">{expandedText}</p>
           </div>
         ) : (
-          <div className="px-4 pb-3">
-            <p className="text-sm text-text-muted leading-relaxed">{truncate(collapsedText, 140)}</p>
-          </div>
+          <p className="text-sm text-text-muted leading-relaxed px-4 pb-3">{truncate(collapsedText, 140)}</p>
         )}
 
         {/* Footer */}
-        <div className="px-4 py-2.5 border-t border-border flex items-center justify-between gap-2 flex-wrap">
-          {/* Left: rating + mark as posted */}
-          <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex items-center justify-between gap-2 px-4 py-2.5 border-t border-border flex-wrap gap-y-1.5">
+          <div className="flex items-center gap-3">
             {/* Rating */}
-            {post.performance_rating ? (
-              <div className="flex items-center gap-2">
-                <span className={cn('flex items-center', post.performance_rating === 3 ? 'text-success' : post.performance_rating === 2 ? 'text-text-muted' : 'text-text-subtle')}>
-                  {post.performance_rating === 3 ? <TrendingUp className="w-3.5 h-3.5" /> : post.performance_rating === 2 ? <Minus className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}
-                </span>
+            {post.performance_rating && !showRating ? (
+              <div className="flex items-center gap-1.5">
+                {ratingIcon}
                 <span className="text-xs text-text-muted">
                   {post.performance_rating === 3 ? 'Great' : post.performance_rating === 2 ? 'Ok' : 'Poor'}
                 </span>
-                <button
-                  onClick={() => setShowRating(true)}
-                  className="text-xs text-text-subtle hover:text-text-muted transition-colors"
-                >
+                <button onClick={() => setShowRating(true)} className="text-[11px] text-text-subtle hover:text-text-muted transition-colors">
                   Change
                 </button>
               </div>
             ) : showRating ? (
-              <div className="flex items-center gap-1.5 flex-wrap">
+              <div className="flex items-center gap-1.5">
                 {([
-                  { rating: 3 as const, icon: <TrendingUp className="w-3.5 h-3.5" />,   label: 'Great' },
-                  { rating: 2 as const, icon: <Minus className="w-3.5 h-3.5" />,         label: 'Ok' },
-                  { rating: 1 as const, icon: <TrendingDown className="w-3.5 h-3.5" />,  label: 'Poor' },
+                  { rating: 3 as const, icon: <TrendingUp className="w-3.5 h-3.5" />,  label: 'Great' },
+                  { rating: 2 as const, icon: <Minus className="w-3.5 h-3.5" />,        label: 'Ok' },
+                  { rating: 1 as const, icon: <TrendingDown className="w-3.5 h-3.5" />, label: 'Poor' },
                 ]).map(({ rating, icon, label }) => (
                   <button
                     key={rating}
                     onClick={() => { onRate(post.id, rating); setShowRating(false) }}
-                    className="inline-flex items-center gap-1.5 text-xs px-2 py-1 rounded border border-border text-text-muted hover:border-primary/50 hover:text-primary transition-all"
+                    className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded border border-border text-text-muted hover:border-primary/50 hover:text-primary transition-all"
                   >
                     {icon} {label}
                   </button>
@@ -391,31 +386,29 @@ function HistoryCard({
             ) : (
               <button
                 onClick={() => setShowRating(true)}
-                className="text-xs text-text-subtle hover:text-text-muted transition-colors flex items-center gap-1"
+                className="flex items-center gap-1 text-xs text-text-subtle hover:text-text-muted transition-colors"
               >
                 <Star className="w-3 h-3" /> Rate
               </button>
             )}
 
-            {/* Mark as posted */}
             {!post.is_published && (
               <button
                 onClick={() => onMarkPosted(post.id)}
                 className="text-xs text-text-subtle hover:text-success transition-colors flex items-center gap-1"
               >
-                <CheckCircle2 className="w-3 h-3" /> Mark as posted
+                <CheckCircle2 className="w-3 h-3" /> Mark posted
               </button>
             )}
           </div>
 
-          {/* Expand toggle */}
           <button
             onClick={handleExpand}
-            className="flex items-center gap-1 text-xs text-text-muted hover:text-text transition-colors"
+            className="flex items-center gap-1 text-xs text-text-muted hover:text-text transition-colors shrink-0"
           >
             {expanded
               ? <><ChevronUp className="w-3.5 h-3.5" /> Collapse</>
-              : <><ChevronDown className="w-3.5 h-3.5" /> Show full post</>
+              : <><ChevronDown className="w-3.5 h-3.5" /> Show full</>
             }
           </button>
         </div>
@@ -423,36 +416,38 @@ function HistoryCard({
     )
   }
 
+  // ── Comment ─────────────────────────────────────────────────────────────────
   if (item.type === 'comment') {
     const c = item.data
     const comments = [
-      { label: 'Insightful', text: c.comment_insightful },
-      { label: 'Curious',    text: c.comment_curious },
-      { label: 'Bold',       text: c.comment_bold },
+      { label: 'Insightful', text: c.comment_insightful, badge: 'text-sky-400 bg-sky-500/[0.08] border-sky-500/20' },
+      { label: 'Curious',    text: c.comment_curious,    badge: 'text-violet-400 bg-violet-500/[0.08] border-violet-500/20' },
+      { label: 'Bold',       text: c.comment_bold,       badge: 'text-amber-400 bg-amber-500/[0.08] border-amber-500/20' },
     ]
     const preview = c.comment_insightful
 
     return (
-      <div className="bg-surface border border-border rounded-card overflow-hidden">
-        {/* Header */}
-        <div className="flex items-center justify-between gap-3 px-4 pt-4 pb-3">
+      <div className="bg-surface border border-border border-l-4 border-l-sky-500/50 rounded-card overflow-hidden">
+        <div className="flex items-center justify-between gap-3 px-4 pt-3.5 pb-2">
           <div className="flex items-center gap-2">
-            <MessageSquare className="w-3.5 h-3.5 text-text-muted" />
-            <span className="text-xs text-text-muted">COMMENT</span>
-            <span className="text-xs text-text-muted">{relativeDate(c.created_at)}</span>
+            <MessageSquare className="w-3.5 h-3.5 text-text-subtle shrink-0" />
+            <span className="text-[11px] font-bold uppercase tracking-widest text-sky-400 bg-sky-500/[0.08] border border-sky-500/20 px-1.5 py-0.5 rounded">
+              Comment
+            </span>
+            <span className="text-xs text-text-subtle">{relativeDate(c.created_at)}</span>
           </div>
           <CopyButton text={preview} size="sm" />
         </div>
 
-        {/* Source */}
-        <p className="text-xs text-text-subtle px-4 pb-2">On: "{truncate(c.source_post, 70)}"</p>
+        <p className="text-[11px] text-text-subtle px-4 pb-2">On: "{truncate(c.source_post, 70)}"</p>
 
-        {/* Body */}
         {expanded ? (
           <div className="px-4 pb-3 space-y-3">
-            {comments.map(({ label, text }) => text && (
-              <div key={label} className="space-y-1">
-                <p className="text-xs font-medium text-text-muted">{label}</p>
+            {comments.map(({ label, text, badge }) => text && (
+              <div key={label} className="space-y-1.5">
+                <span className={cn('text-[11px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border', badge)}>
+                  {label}
+                </span>
                 <p className="text-sm text-text leading-relaxed">{text}</p>
                 <CopyButton text={text} size="sm" label="Copy" />
               </div>
@@ -462,7 +457,6 @@ function HistoryCard({
           <p className="text-sm text-text-muted leading-relaxed px-4 pb-3">{truncate(preview, 140)}</p>
         )}
 
-        {/* Footer */}
         <div className="px-4 py-2.5 border-t border-border flex justify-end">
           <button
             onClick={() => setExpanded(v => !v)}
@@ -470,7 +464,7 @@ function HistoryCard({
           >
             {expanded
               ? <><ChevronUp className="w-3.5 h-3.5" /> Collapse</>
-              : <><ChevronDown className="w-3.5 h-3.5" /> Show all 3 comments</>
+              : <><ChevronDown className="w-3.5 h-3.5" /> All 3 comments</>
             }
           </button>
         </div>
@@ -478,32 +472,30 @@ function HistoryCard({
     )
   }
 
+  // ── Rewrite ─────────────────────────────────────────────────────────────────
   if (item.type === 'rewrite') {
     const r = item.data
 
     return (
-      <div className="bg-surface border border-border rounded-card overflow-hidden">
-        {/* Header */}
-        <div className="flex items-center justify-between gap-3 px-4 pt-4 pb-3">
+      <div className="bg-surface border border-border border-l-4 border-l-violet-500/50 rounded-card overflow-hidden">
+        <div className="flex items-center justify-between gap-3 px-4 pt-3.5 pb-2">
           <div className="flex items-center gap-2">
-            <RefreshCw className="w-3.5 h-3.5 text-text-muted" />
-            <span className="text-xs text-text-muted">REWRITE</span>
-            <span className="text-xs text-text-muted">{relativeDate(r.created_at)}</span>
+            <RefreshCw className="w-3.5 h-3.5 text-text-subtle shrink-0" />
+            <span className="text-[11px] font-bold uppercase tracking-widest text-violet-400 bg-violet-500/[0.08] border border-violet-500/20 px-1.5 py-0.5 rounded">
+              Rewrite
+            </span>
+            <span className="text-xs text-text-subtle">{relativeDate(r.created_at)}</span>
           </div>
           <CopyButton text={r.rewritten} size="sm" />
         </div>
 
-        {/* Source */}
-        <p className="text-xs text-text-subtle px-4 pb-2">Draft: "{truncate(r.original_draft, 70)}"</p>
+        <p className="text-[11px] text-text-subtle px-4 pb-2">Draft: "{truncate(r.original_draft, 70)}"</p>
 
-        {/* Body */}
-        {expanded ? (
-          <p className="text-sm text-text leading-relaxed whitespace-pre-wrap px-4 pb-3">{r.rewritten}</p>
-        ) : (
-          <p className="text-sm text-text-muted leading-relaxed px-4 pb-3">{truncate(r.rewritten, 140)}</p>
-        )}
+        {expanded
+          ? <p className="text-sm text-text leading-relaxed whitespace-pre-wrap px-4 pb-3">{r.rewritten}</p>
+          : <p className="text-sm text-text-muted leading-relaxed px-4 pb-3">{truncate(r.rewritten, 140)}</p>
+        }
 
-        {/* Footer */}
         <div className="px-4 py-2.5 border-t border-border flex justify-end">
           <button
             onClick={() => setExpanded(v => !v)}
@@ -511,7 +503,7 @@ function HistoryCard({
           >
             {expanded
               ? <><ChevronUp className="w-3.5 h-3.5" /> Collapse</>
-              : <><ChevronDown className="w-3.5 h-3.5" /> Show full rewrite</>
+              : <><ChevronDown className="w-3.5 h-3.5" /> Show full</>
             }
           </button>
         </div>
@@ -519,35 +511,33 @@ function HistoryCard({
     )
   }
 
+  // ── Remix ───────────────────────────────────────────────────────────────────
   if (item.type === 'remix') {
     const r = item.data
 
     return (
-      <div className="bg-surface border border-border rounded-card overflow-hidden">
-        {/* Header */}
-        <div className="flex items-center justify-between gap-3 px-4 pt-4 pb-3">
-          <div className="flex items-center gap-2">
-            <Shuffle className="w-3.5 h-3.5 text-text-muted" />
-            <span className="text-xs text-text-muted">REMIX</span>
+      <div className="bg-surface border border-border border-l-4 border-l-primary/50 rounded-card overflow-hidden">
+        <div className="flex items-center justify-between gap-3 px-4 pt-3.5 pb-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <Shuffle className="w-3.5 h-3.5 text-text-subtle shrink-0" />
+            <span className="text-[11px] font-bold uppercase tracking-widest text-primary bg-primary/[0.08] border border-primary/20 px-1.5 py-0.5 rounded shrink-0">
+              Remix
+            </span>
             {r.structure && (
-              <span className="text-xs text-text-subtle hidden sm:inline">{r.structure}</span>
+              <span className="text-[11px] text-text-subtle truncate hidden sm:block">{r.structure}</span>
             )}
-            <span className="text-xs text-text-muted">{relativeDate(r.created_at)}</span>
+            <span className="text-xs text-text-subtle shrink-0">{relativeDate(r.created_at)}</span>
           </div>
           <CopyButton text={r.adapted_version} size="sm" />
         </div>
 
-        {/* Source */}
-        <p className="text-xs text-text-subtle px-4 pb-2">Source: "{truncate(r.source_post, 70)}"</p>
+        <p className="text-[11px] text-text-subtle px-4 pb-2">Source: "{truncate(r.source_post, 70)}"</p>
 
-        {/* Body */}
-        {expanded ? (
-          <p className="text-sm text-text leading-relaxed whitespace-pre-wrap px-4 pb-3">{r.adapted_version}</p>
-        ) : (
-          <p className="text-sm text-text-muted leading-relaxed px-4 pb-3">{truncate(r.adapted_version, 140)}</p>
-        )}
+        {expanded
+          ? <p className="text-sm text-text leading-relaxed whitespace-pre-wrap px-4 pb-3">{r.adapted_version}</p>
+          : <p className="text-sm text-text-muted leading-relaxed px-4 pb-3">{truncate(r.adapted_version, 140)}</p>
+        }
 
-        {/* Footer */}
         <div className="px-4 py-2.5 border-t border-border flex justify-end">
           <button
             onClick={() => setExpanded(v => !v)}
@@ -555,7 +545,7 @@ function HistoryCard({
           >
             {expanded
               ? <><ChevronUp className="w-3.5 h-3.5" /> Collapse</>
-              : <><ChevronDown className="w-3.5 h-3.5" /> Show full remix</>
+              : <><ChevronDown className="w-3.5 h-3.5" /> Show full</>
             }
           </button>
         </div>
@@ -573,7 +563,7 @@ function relativeDate(iso: string): string {
   const days = Math.floor(diff / 86_400_000)
   if (days === 0) return 'today'
   if (days === 1) return 'yesterday'
-  if (days < 7) return `${days} days ago`
-  if (days < 30) return `${Math.floor(days / 7)} weeks ago`
+  if (days < 7) return `${days}d ago`
+  if (days < 30) return `${Math.floor(days / 7)}w ago`
   return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }

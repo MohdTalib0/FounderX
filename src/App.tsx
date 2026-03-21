@@ -11,6 +11,8 @@ import Toaster from '@/components/ui/Toaster'
 import LoadingScreen from '@/components/ui/LoadingScreen'
 
 // Lazy - loaded on demand
+const Terms = lazy(() => import('@/pages/Terms'))
+const Contact = lazy(() => import('@/pages/Contact'))
 const ForIndividuals = lazy(() => import('@/pages/ForIndividuals'))
 const Pricing = lazy(() => import('@/pages/Pricing'))
 const Login = lazy(() => import('@/pages/auth/Login'))
@@ -61,6 +63,8 @@ export default function App() {
         <Routes>
           {/* Public */}
           <Route path="/" element={<Landing />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/for-individuals" element={<ForIndividuals />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/login" element={<Login />} />

@@ -1,83 +1,77 @@
-import { Link } from 'react-router-dom'
-import { Check, X, ArrowRight, ChevronDown, Zap } from 'lucide-react'
-import PublicHeader from '@/components/layout/PublicHeader'
 import { useState } from 'react'
-import Button from '@/components/ui/Button'
+import { Link } from 'react-router-dom'
+import { Check, ChevronDown, Zap, ArrowRight, Shield, RefreshCw } from 'lucide-react'
+import PublicHeader from '@/components/layout/PublicHeader'
+import PublicFooter from '@/components/layout/PublicFooter'
 import { cn } from '@/lib/utils'
 
-// ─── Plan definitions ─────────────────────────────────────────────────────────
+// ─── Data ─────────────────────────────────────────────────────────────────────
 
 const PLANS = [
   {
+    key: 'free',
     name: 'Free',
     price: '$0',
     period: '',
-    tagline: 'For founders just starting out.',
-    cta: 'Start free',
+    tagline: 'Try it out.',
+    cta: 'Start for free',
     ctaTo: '/signup',
     featured: false,
     features: [
-      { text: '12 posts / month', note: 'Enough for 3×/week your first month' },
-      { text: '15 comment suggestions', note: null },
-      { text: '5 draft rewrites', note: null },
-      { text: 'Founder persona', note: '1 generation' },
-      { text: 'Content history', note: 'Last 30 days' },
+      '12 posts per month',
+      '15 comment suggestions',
+      '5 draft rewrites',
+      'Founder persona',
+      '30-day content history',
     ],
-    missing: ['Persona regeneration', 'Priority AI', 'Performance insights'],
   },
   {
+    key: 'starter',
     name: 'Starter',
     price: '$9',
-    period: '/month',
-    tagline: 'For founders building the habit.',
+    period: '/mo',
+    tagline: 'Build the habit.',
     cta: 'Get Starter',
     ctaTo: '/signup',
     featured: true,
     badge: 'Most popular',
     features: [
-      { text: '80 posts / month', note: 'Daily posting, with plenty to spare' },
-      { text: '100 comment suggestions', note: null },
-      { text: '40 draft rewrites', note: null },
-      { text: 'Founder persona', note: 'Regenerate anytime' },
-      { text: 'Content history', note: 'Last 90 days' },
+      '80 posts per month',
+      '100 comment suggestions',
+      '40 draft rewrites',
+      'Persona regeneration',
+      '90-day content history',
     ],
-    missing: ['Priority AI', 'Performance insights'],
   },
   {
+    key: 'pro',
     name: 'Pro',
     price: '$19',
-    period: '/month',
-    tagline: 'For founders posting consistently.',
+    period: '/mo',
+    tagline: 'Post without limits.',
     cta: 'Get Pro',
     ctaTo: '/signup',
     featured: false,
     features: [
-      { text: 'Unlimited posts', note: null },
-      { text: 'Unlimited comments', note: null },
-      { text: 'Unlimited rewrites', note: null },
-      { text: 'Founder persona', note: 'Regenerate anytime' },
-      { text: 'Full content history', note: null },
-      { text: 'Priority AI', note: 'Faster responses' },
-      { text: 'Performance insights', note: 'AI learns what works for you' },
+      'Unlimited posts',
+      'Unlimited comments and rewrites',
+      'Persona regeneration',
+      'Full content history',
+      'Priority AI (faster)',
+      'Performance insights',
     ],
-    missing: [],
   },
 ] as const
 
-// ─── Comparison rows ──────────────────────────────────────────────────────────
-
 const COMPARISON = [
-  { label: 'Posts / month',          free: '12',         starter: '80',        pro: 'Unlimited' },
-  { label: 'Comment suggestions',    free: '15',         starter: '100',       pro: 'Unlimited' },
-  { label: 'Draft rewrites',         free: '5',          starter: '40',        pro: 'Unlimited' },
-  { label: 'Founder persona',        free: '1 gen',      starter: 'Regen anytime', pro: 'Regen anytime' },
-  { label: 'Content history',        free: '30 days',    starter: '90 days',   pro: 'Full' },
-  { label: 'Persona regeneration',   free: false,        starter: true,        pro: true },
-  { label: 'Priority AI',            free: false,        starter: false,       pro: true },
-  { label: 'Performance insights',   free: false,        starter: false,       pro: true },
+  { label: 'Posts per month',       free: '12',            starter: '80',             pro: 'Unlimited' },
+  { label: 'Comment suggestions',   free: '15',            starter: '100',            pro: 'Unlimited' },
+  { label: 'Draft rewrites',        free: '5',             starter: '40',             pro: 'Unlimited' },
+  { label: 'Persona regeneration',  free: 'Once',          starter: 'Anytime',        pro: 'Anytime' },
+  { label: 'Content history',       free: '30 days',       starter: '90 days',        pro: 'Full' },
+  { label: 'Priority AI',           free: false,           starter: false,            pro: true },
+  { label: 'Performance insights',  free: false,           starter: false,            pro: true },
 ]
-
-// ─── FAQ ─────────────────────────────────────────────────────────────────────
 
 const FAQ = [
   {
@@ -94,7 +88,7 @@ const FAQ = [
   },
   {
     q: 'What are Performance insights?',
-    a: 'Once you\'ve generated 10+ posts, FounderX tracks which variations you copy most and how you rate them. Pro users get prompts that learn from this. Future posts lean toward what\'s actually working for you.',
+    a: "Once you've generated 10+ posts, FounderX tracks which variations you copy most and how you rate them. Pro users get prompts that learn from this. Future posts lean toward what's actually working for you.",
   },
   {
     q: 'Can I cancel anytime?',
@@ -102,131 +96,162 @@ const FAQ = [
   },
   {
     q: 'Is there an annual plan?',
-    a: "Not yet. Monthly only for now. Annual billing with a discount is on the roadmap.",
+    a: 'Not yet. Monthly only for now. Annual billing with a discount is on the roadmap.',
   },
 ]
 
-// ─── Page ────────────────────────────────────────────────────────────────────
+// ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function Pricing() {
   return (
     <div className="min-h-screen bg-background text-text overflow-x-hidden">
-
       <PublicHeader />
 
       {/* Hero */}
-      <section className="max-w-2xl mx-auto px-6 pt-16 pb-12 text-center">
-        <h1 className="text-4xl font-bold tracking-tight mb-4">
-          Simple pricing,<br />no surprises.
+      <section className="max-w-3xl mx-auto px-5 pt-16 pb-14 text-center">
+        <div className="inline-flex items-center gap-2 mb-6 border border-primary/25 bg-primary/[0.06] text-primary text-xs font-medium px-3 py-1.5 rounded-full">
+          <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+          Beta: free for the first 50 founders
+        </div>
+
+        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-text mb-4 leading-tight">
+          Simple pricing,<br className="hidden sm:block" /> no surprises.
         </h1>
-        <p className="text-base text-text-muted leading-relaxed">
-          Start free. Upgrade when you're posting. Every plan includes the full
-          product. Limits are the only difference.
+        <p className="text-base sm:text-lg text-text-muted leading-relaxed max-w-xl mx-auto">
+          Start free. Upgrade when you're posting consistently.
+          Every plan includes the full product. Limits are the only difference.
         </p>
 
-        {/* Beta banner */}
-        <div className="inline-flex items-center gap-2 mt-6 border border-primary/25 bg-primary/[0.06] text-primary text-xs font-medium px-3 py-1.5 rounded-pill">
-          <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-          Beta: currently free for all first 50 founders
+        <div className="flex items-center justify-center gap-5 mt-8">
+          <div className="flex items-center gap-1.5 text-xs text-text-muted">
+            <Shield className="w-3.5 h-3.5 text-success" />
+            No credit card
+          </div>
+          <div className="w-px h-3 bg-border" />
+          <div className="flex items-center gap-1.5 text-xs text-text-muted">
+            <RefreshCw className="w-3.5 h-3.5 text-text-subtle" />
+            Cancel anytime
+          </div>
         </div>
       </section>
 
-      {/* Plans */}
-      <section className="max-w-5xl mx-auto px-6 pb-16">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start">
-          {PLANS.map((plan) => (
-            <PlanCard key={plan.name} plan={plan} />
-          ))}
+      {/* Plan cards */}
+      <section className="max-w-5xl mx-auto px-5 pb-20">
+        {/* Mobile: stacked, Starter on top via order */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+          {/* Free */}
+          <PlanCard plan={PLANS[0]} />
+
+          {/* Starter — featured, elevated on desktop */}
+          <div className="sm:-mt-4">
+            <PlanCard plan={PLANS[1]} />
+          </div>
+
+          {/* Pro */}
+          <PlanCard plan={PLANS[2]} />
         </div>
+
+        <p className="text-center text-xs text-text-subtle mt-6">
+          Questions? Email{' '}
+          <a href="mailto:hello@founderx.app" className="text-primary hover:text-primary-hover transition-colors">
+            hello@founderx.app
+          </a>
+        </p>
       </section>
 
       {/* Comparison table */}
-      <section className="max-w-4xl mx-auto px-6 pb-20">
-        <h2 className="text-lg font-semibold text-center mb-8">Compare plans</h2>
-        <div className="border border-border rounded-card overflow-hidden">
-          {/* Header row */}
-          <div className="grid grid-cols-4 border-b border-border bg-surface-elevated">
-            <div className="px-5 py-3" />
-            {(['Free', 'Starter', 'Pro'] as const).map((name) => (
-              <div key={name} className={cn(
-                'px-5 py-3 text-center text-sm font-semibold',
-                name === 'Starter' ? 'text-primary' : 'text-text'
-              )}>
-                {name}
-              </div>
-            ))}
-          </div>
+      <section className="max-w-4xl mx-auto px-5 pb-20">
+        <h2 className="text-xl font-bold text-text text-center mb-8">Full comparison</h2>
 
-          {/* Data rows */}
-          {COMPARISON.map((row, i) => (
-            <div
-              key={row.label}
-              className={cn(
-                'grid grid-cols-4 border-b border-border last:border-0',
-                i % 2 === 0 ? 'bg-surface' : 'bg-background'
-              )}
-            >
-              <div className="px-5 py-3 text-sm text-text-muted">{row.label}</div>
-              {(['free', 'starter', 'pro'] as const).map((key) => {
-                const val = row[key]
-                return (
-                  <div key={key} className="px-5 py-3 text-center">
-                    {typeof val === 'boolean' ? (
-                      val
-                        ? <Check className="w-4 h-4 text-success mx-auto" />
-                        : <X className="w-4 h-4 text-text-subtle mx-auto" />
-                    ) : (
-                      <span className={cn(
-                        'text-sm',
-                        key === 'starter' ? 'text-primary font-medium' : 'text-text-muted'
-                      )}>
-                        {val}
-                      </span>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-          ))}
+        <div className="overflow-x-auto rounded-card border border-border">
+          <table className="w-full min-w-[520px] text-sm">
+            <thead>
+              <tr className="border-b border-border bg-surface">
+                <th className="text-left px-5 py-3.5 text-text-muted font-medium w-1/2">Feature</th>
+                {(['Free', 'Starter', 'Pro'] as const).map(name => (
+                  <th key={name} className={cn(
+                    'px-4 py-3.5 font-semibold text-center',
+                    name === 'Starter' ? 'text-primary' : 'text-text'
+                  )}>
+                    {name}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {COMPARISON.map((row, i) => (
+                <tr
+                  key={row.label}
+                  className={cn(
+                    'border-b border-border last:border-0',
+                    i % 2 === 0 ? 'bg-surface' : 'bg-background'
+                  )}
+                >
+                  <td className="px-5 py-3.5 text-text-muted">{row.label}</td>
+                  {(['free', 'starter', 'pro'] as const).map(key => {
+                    const val = row[key]
+                    return (
+                      <td key={key} className="px-4 py-3.5 text-center">
+                        {typeof val === 'boolean' ? (
+                          val ? (
+                            <Check className="w-4 h-4 text-success mx-auto" />
+                          ) : (
+                            <span className="text-text-subtle text-base leading-none">-</span>
+                          )
+                        ) : (
+                          <span className={cn(
+                            key === 'starter' ? 'text-primary font-medium' : 'text-text-muted'
+                          )}>
+                            {val}
+                          </span>
+                        )}
+                      </td>
+                    )
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </section>
 
       {/* FAQ */}
-      <section className="max-w-2xl mx-auto px-6 pb-24">
-        <h2 className="text-lg font-semibold text-center mb-8">Common questions</h2>
-        <div className="space-y-1">
-          {FAQ.map((item) => (
+      <section className="max-w-2xl mx-auto px-5 pb-20">
+        <h2 className="text-xl font-bold text-text text-center mb-8">Common questions</h2>
+        <div className="divide-y divide-border border border-border rounded-card overflow-hidden">
+          {FAQ.map(item => (
             <FAQItem key={item.q} q={item.q} a={item.a} />
           ))}
         </div>
       </section>
 
-      {/* Final nudge */}
-      <section className="max-w-xl mx-auto px-6 pb-24 text-center">
-        <h2 className="text-lg font-semibold mb-3">Ready to start posting?</h2>
-        <p className="text-sm text-text-muted mb-7">
-          Free plan, no card. Upgrade any time when you want more.
-        </p>
-        <Link to="/signup">
-          <Button size="lg" className="px-8">
+      {/* Final CTA */}
+      <section className="max-w-xl mx-auto px-5 pb-24 text-center">
+        <div className="bg-surface border border-border rounded-card p-8 relative overflow-hidden">
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+          <h2 className="text-xl font-bold text-text mb-2">Ready to start posting?</h2>
+          <p className="text-sm text-text-muted mb-6">
+            Free plan, no card needed. Upgrade any time.
+          </p>
+          <Link
+            to="/signup"
+            className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-white font-semibold px-6 py-3 rounded-btn transition-colors text-sm"
+          >
             Start free in 2 minutes
             <ArrowRight className="w-4 h-4" />
-          </Button>
-        </Link>
+          </Link>
+          <div className="flex items-center justify-center gap-5 mt-5">
+            <span className="flex items-center gap-1.5 text-xs text-text-subtle">
+              <Shield className="w-3 h-3" /> No credit card
+            </span>
+            <span className="flex items-center gap-1.5 text-xs text-text-subtle">
+              <RefreshCw className="w-3 h-3" /> Cancel anytime
+            </span>
+          </div>
+        </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border">
-        <div className="max-w-5xl mx-auto px-6 py-6 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-primary-gradient rounded-md flex items-center justify-center">
-              <Zap className="w-3.5 h-3.5 text-white" />
-            </div>
-            <span className="text-sm font-semibold text-text-muted">FounderX</span>
-          </div>
-          <p className="text-xs text-text-subtle">© 2025 FounderX. All rights reserved.</p>
-        </div>
-      </footer>
+      <PublicFooter />
     </div>
   )
 }
@@ -234,69 +259,71 @@ export default function Pricing() {
 // ─── Plan Card ────────────────────────────────────────────────────────────────
 
 function PlanCard({ plan }: { plan: typeof PLANS[number] }) {
-  const { name, price, period, tagline, cta, ctaTo, featured, features, missing } = plan
   const badge = 'badge' in plan ? plan.badge : undefined
 
   return (
     <div className={cn(
-      'relative rounded-card overflow-hidden flex flex-col',
-      featured
-        ? 'bg-surface border border-primary/30'
-        : 'bg-surface border border-border'
+      'relative flex flex-col rounded-card overflow-hidden border transition-all',
+      plan.featured
+        ? 'bg-surface border-primary/30 shadow-[0_4px_32px_rgba(99,102,241,0.12)]'
+        : 'bg-surface border-border'
     )}>
-      {/* Gradient line - only on featured */}
-      {featured && (
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+      {/* Top accent */}
+      {plan.featured ? (
+        <div className="h-1 bg-gradient-to-r from-primary/60 via-primary to-primary/60" />
+      ) : (
+        <div className="h-1 bg-transparent" />
       )}
 
-      <div className="p-6 flex flex-col flex-1 space-y-5">
+      <div className="p-6 flex flex-col flex-1 gap-5">
+
         {/* Header */}
         <div>
-          <div className="flex items-center justify-between mb-1">
-            <p className={cn('font-semibold', featured ? 'text-primary' : 'text-text')}>{name}</p>
+          <div className="flex items-start justify-between mb-3">
+            <p className={cn(
+              'text-sm font-semibold',
+              plan.featured ? 'text-primary' : 'text-text-muted'
+            )}>
+              {plan.name}
+            </p>
             {badge && (
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-pill border border-primary/30 bg-primary/[0.08] text-primary">
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded border border-primary/25 bg-primary/[0.08] text-primary tracking-widest uppercase">
                 {badge}
               </span>
             )}
           </div>
-          <div className="flex items-baseline gap-0.5">
-            <span className="text-3xl font-bold text-text">{price}</span>
-            {period && <span className="text-sm text-text-muted">{period}</span>}
+          <div className="flex items-baseline gap-1">
+            <span className="text-4xl font-bold text-text">{plan.price}</span>
+            {plan.period && <span className="text-sm text-text-muted">{plan.period}</span>}
           </div>
-          <p className="text-xs text-text-muted mt-2">{tagline}</p>
+          <p className="text-xs text-text-muted mt-1.5">{plan.tagline}</p>
         </div>
 
-        {/* Features */}
+        {/* Feature list */}
         <ul className="space-y-2.5 flex-1">
-          {features.map(({ text, note }) => (
-            <li key={text} className="flex items-start gap-2.5">
+          {plan.features.map(f => (
+            <li key={f} className="flex items-start gap-2.5">
               <Check className={cn(
                 'w-3.5 h-3.5 shrink-0 mt-0.5',
-                featured ? 'text-primary' : 'text-success'
+                plan.featured ? 'text-primary' : 'text-success'
               )} />
-              <div>
-                <p className="text-sm text-text-muted">{text}</p>
-                {note && <p className="text-xs text-text-subtle mt-0.5">{note}</p>}
-              </div>
-            </li>
-          ))}
-          {missing.map((m) => (
-            <li key={m} className="flex items-start gap-2.5">
-              <X className="w-3.5 h-3.5 text-text-subtle shrink-0 mt-0.5" />
-              <p className="text-sm text-text-subtle">{m}</p>
+              <span className="text-sm text-text-muted">{f}</span>
             </li>
           ))}
         </ul>
 
         {/* CTA */}
-        <Link to={ctaTo} className="block mt-auto">
-          <Button
-            variant={featured ? 'primary' : 'secondary'}
-            className="w-full"
-          >
-            {cta}
-          </Button>
+        <Link
+          to={plan.ctaTo}
+          className={cn(
+            'flex items-center justify-center gap-1.5 w-full py-3 rounded-btn text-sm font-semibold transition-colors',
+            plan.featured
+              ? 'bg-primary text-white hover:bg-primary-hover'
+              : 'bg-surface-hover border border-border text-text hover:bg-surface hover:border-border-hover'
+          )}
+        >
+          {plan.cta}
+          {plan.featured && <ArrowRight className="w-3.5 h-3.5" />}
         </Link>
       </div>
     </div>
@@ -309,7 +336,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false)
 
   return (
-    <div className="border border-border rounded-card overflow-hidden">
+    <div className="bg-surface">
       <button
         onClick={() => setOpen(v => !v)}
         className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left hover:bg-surface-hover transition-colors"
@@ -321,8 +348,8 @@ function FAQItem({ q, a }: { q: string; a: string }) {
         )} />
       </button>
       {open && (
-        <div className="px-5 pb-4 border-t border-border">
-          <p className="text-sm text-text-muted leading-relaxed pt-3">{a}</p>
+        <div className="px-5 pb-5 border-t border-border">
+          <p className="text-sm text-text-muted leading-relaxed pt-4">{a}</p>
         </div>
       )}
     </div>

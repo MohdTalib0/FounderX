@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Shuffle, ChevronRight, Copy } from 'lucide-react'
+import { Shuffle } from 'lucide-react'
 import { useAuthStore } from '@/store/auth'
 import { remixPost } from '@/lib/ai/client'
 import { toast } from '@/store/toast'
@@ -20,6 +20,7 @@ export default function Remix() {
   const { company } = useAuthStore()
   const [sourcePost, setSourcePost] = useState('')
   const [result, setResult] = useState<RemixResult | null>(null)
+  const [inputCollapsed, setInputCollapsed] = useState(false)
   const [generating, setGenerating] = useState(false)
   const [error, setError] = useState('')
 
@@ -32,6 +33,7 @@ export default function Remix() {
     try {
       const data = await remixPost({ source_post: sourcePost, company_id: company.id })
       setResult(data)
+      setInputCollapsed(true)
     } catch (err: unknown) {
       console.error('Remix error:', err)
       setError('Failed to remix. Please try again.')
@@ -40,118 +42,130 @@ export default function Remix() {
     }
   }
 
+  const handleRestart = () => {
+    setResult(null)
+    setInputCollapsed(false)
+    setError('')
+  }
+
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-3xl mx-auto space-y-5">
+
+      {/* Page header */}
       <div>
-        <h1 className="text-page text-text">Remix a Post</h1>
+        <h1 className="text-xl font-bold text-text">Remix a Post</h1>
         <p className="text-sm text-text-muted mt-0.5">
-          Paste a post that caught your attention. We'll decode what makes it work and rewrite it in your voice.
+          Paste a post that caught your eye. We'll decode what makes it work and rewrite it in your voice.
         </p>
       </div>
 
-      {/* Input */}
-      <div className="space-y-3">
-        <Textarea
-          label="Paste the post"
-          rows={6}
-          placeholder="Paste the LinkedIn post you want to remix here..."
-          value={sourcePost}
-          onChange={e => setSourcePost(e.target.value)}
-        />
+      {/* ─── Input ─────────────────────────────────────────────────────── */}
+      {inputCollapsed ? (
+        <div className="bg-surface border border-border rounded-card px-4 py-3 flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p className="text-[11px] text-text-subtle uppercase tracking-wide font-medium mb-0.5">Source post</p>
+            <p className="text-sm text-text-muted line-clamp-2 leading-relaxed">{sourcePost}</p>
+          </div>
+          <button
+            onClick={handleRestart}
+            className="text-xs font-medium text-primary hover:text-primary-hover shrink-0 transition-colors mt-0.5"
+          >
+            New post
+          </button>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          <Textarea
+            label="Paste the post"
+            rows={6}
+            placeholder="Paste the LinkedIn post you want to remix here..."
+            value={sourcePost}
+            onChange={e => setSourcePost(e.target.value)}
+          />
 
-        {error && <p className="text-sm text-danger">{error}</p>}
+          {error && <p className="text-sm text-danger">{error}</p>}
 
-        <Button
-          onClick={handleGenerate}
-          loading={generating}
-          disabled={!sourcePost.trim() || generating}
-          size="lg"
-          className="w-full"
-        >
-          {generating ? 'Analysing & remixing...' : 'Remix this post'}
-          {!generating && <ChevronRight className="w-4 h-4" />}
-        </Button>
-      </div>
+          <Button
+            onClick={handleGenerate}
+            loading={generating}
+            disabled={!sourcePost.trim() || generating}
+            size="lg"
+            className="w-full"
+          >
+            {generating ? 'Analysing & remixing...' : 'Remix this post'}
+          </Button>
+        </div>
+      )}
 
-      {/* Results */}
+      {/* ─── Results ───────────────────────────────────────────────────── */}
       {result && (
         <div className="space-y-4">
 
           {/* Structure breakdown */}
-          <div className="bg-surface border border-border rounded-card p-5 space-y-4">
-            <div className="flex items-center gap-2">
-              <Shuffle className="w-4 h-4 text-primary" />
-              <p className="text-sm font-semibold text-text">Why this post works</p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <AnalysisChip label="Structure" value={result.structure} color="violet" />
-              <AnalysisChip label="Hook type" value={result.hook_type} color="amber" />
-              <AnalysisChip label="Tone" value={result.tone} color="sky" />
-              <div className="sm:col-span-2">
-                <AnalysisChip label="Why it works" value={result.why_it_works} color="emerald" />
-              </div>
+          <div className="space-y-2">
+            <p className="text-[11px] text-text-subtle uppercase tracking-wide font-medium px-0.5">Why this post works</p>
+            <div className="bg-surface border border-border rounded-card divide-y divide-border overflow-hidden">
+              {[
+                { label: 'Structure',    value: result.structure,    color: 'text-violet-400' },
+                { label: 'Hook type',    value: result.hook_type,    color: 'text-amber-400' },
+                { label: 'Tone',         value: result.tone,         color: 'text-sky-400' },
+                { label: 'Why it works', value: result.why_it_works, color: 'text-emerald-400' },
+              ].map(({ label, value, color }) => (
+                <div key={label} className="flex items-start gap-3 px-4 py-3">
+                  <span className={cn('text-[11px] font-bold uppercase tracking-wide shrink-0 w-20 mt-0.5', color)}>
+                    {label}
+                  </span>
+                  <span className="text-sm text-text-muted leading-snug">{value}</span>
+                </div>
+              ))}
             </div>
           </div>
 
           {/* Adapted version */}
-          <div className="relative bg-surface border border-primary/25 rounded-card overflow-hidden">
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-            <div className="px-5 pt-4 pb-3 flex items-center justify-between border-b border-border">
-              <div className="flex items-center gap-2">
-                <Copy className="w-3.5 h-3.5 text-primary" />
-                <p className="text-sm font-semibold text-text">Your version</p>
+          <div className="space-y-2">
+            <p className="text-[11px] text-text-subtle uppercase tracking-wide font-medium px-0.5">Your version</p>
+            <div className="bg-surface border-l-4 border-l-primary/50 border border-border rounded-card overflow-hidden">
+              <div className="flex items-center justify-between px-4 pt-3 pb-1">
+                <span className="text-[11px] text-text-subtle uppercase tracking-wide font-medium">Adapted</span>
+                <span className="text-[11px] text-text-subtle tabular-nums">{result.adapted_version.length}/3000</span>
               </div>
-              <span className="text-xs text-text-subtle">{result.adapted_version.length}/3000</span>
-            </div>
 
-            <p className="text-sm text-text-muted leading-relaxed whitespace-pre-wrap px-5 py-4">
-              {result.adapted_version}
-            </p>
+              <div className="px-4 pb-3 space-y-2">
+                {(() => {
+                  const lines = result.adapted_version.split('\n')
+                  const hookLine = lines[0] ?? ''
+                  const bodyLines = lines.slice(1).join('\n').trim()
+                  return (
+                    <>
+                      <p className="text-[16px] font-semibold text-text leading-snug">{hookLine}</p>
+                      {bodyLines && (
+                        <p className="text-sm text-text-muted leading-relaxed whitespace-pre-wrap">{bodyLines}</p>
+                      )}
+                    </>
+                  )
+                })()}
+              </div>
 
-            <div className="px-5 pb-5">
-              <CopyButton
-                text={result.adapted_version}
-                onCopy={() => toast.success('Copied! Paste on LinkedIn')}
-                label="Copy your version"
-                className="w-full justify-center"
-                size="sm"
-              />
+              <div className="flex items-center justify-between px-4 py-2.5 border-t border-border">
+                <button
+                  onClick={handleGenerate}
+                  disabled={generating}
+                  className="flex items-center gap-1.5 text-xs font-medium text-text-muted hover:text-text transition-colors disabled:opacity-40"
+                >
+                  <Shuffle className={cn('w-3.5 h-3.5', generating && 'animate-spin')} />
+                  Remix again
+                </button>
+                <CopyButton
+                  text={result.adapted_version}
+                  onCopy={() => toast.success('Copied! Paste on LinkedIn')}
+                  label="Copy post"
+                />
+              </div>
             </div>
           </div>
 
-          {/* Regenerate */}
-          <Button
-            onClick={handleGenerate}
-            loading={generating}
-            disabled={generating}
-            variant="secondary"
-            size="sm"
-            className="w-full"
-          >
-            <Shuffle className="w-3.5 h-3.5" />
-            {generating ? 'Remixing...' : 'Remix again'}
-          </Button>
         </div>
       )}
-    </div>
-  )
-}
-
-// ─── Analysis chip ─────────────────────────────────────────────────────────────
-
-const colorMap = {
-  violet: 'border-violet-500/20 bg-violet-500/[0.06] text-violet-400',
-  amber:  'border-amber-500/20 bg-amber-500/[0.06] text-amber-400',
-  sky:    'border-sky-500/20 bg-sky-500/[0.06] text-sky-400',
-  emerald:'border-emerald-500/20 bg-emerald-500/[0.06] text-emerald-400',
-}
-
-function AnalysisChip({ label, value, color }: { label: string; value: string; color: keyof typeof colorMap }) {
-  return (
-    <div className={cn('rounded-lg border px-3 py-2.5', colorMap[color])}>
-      <p className="text-[10px] font-bold uppercase tracking-wide opacity-70 mb-1">{label}</p>
-      <p className="text-xs leading-relaxed">{value}</p>
     </div>
   )
 }

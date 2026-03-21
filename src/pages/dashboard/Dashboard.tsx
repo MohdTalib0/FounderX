@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, Link, useSearchParams } from 'react-router-dom'
-import { PenLine, RefreshCw, MessageSquare, Shuffle, Clock, ArrowRight, Check, ImageDown, CheckCircle2, Circle, Zap, Lightbulb, Hammer, TrendingUp, Sparkles } from 'lucide-react'
+import {
+  PenLine, RefreshCw, MessageSquare, Shuffle,
+  Clock, ArrowRight, Check, ImageDown, CheckCircle2, Circle,
+  Zap, Lightbulb, Hammer, TrendingUp, Sparkles, Star, Copy,
+} from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/auth'
 import Button from '@/components/ui/Button'
@@ -102,19 +106,12 @@ export default function Dashboard() {
   }, [user])
 
   // Count distinct days with posts this week - dots light up Mon→Wed→Fri in order
-  // regardless of which actual days the user generated on
   const distinctDaysThisWeek = new Set(
     postedDays.map(d => d.toDateString())
   ).size
   const weekCount = Math.min(distinctDaysThisWeek, 3)
 
-  const weekMessage =
-    weekCount === 0 ? 'Start your first post' :
-    weekCount === 1 ? '1 of 3 this week' :
-    weekCount === 2 ? '2 of 3, almost there' :
-    '3 of 3 · week complete ✓'
-
-  // Last week count - for continuity below the tracker
+  // Last week count
   const { mon: thisWeekMon } = getWeekDots()
   const lastWeekStart = new Date(thisWeekMon); lastWeekStart.setDate(thisWeekMon.getDate() - 7)
   const lastWeekCount = Math.min(
@@ -126,7 +123,7 @@ export default function Dashboard() {
     3
   )
 
-  // Best variation insight - only show after 5+ copied posts
+  // Best variation insight
   const copiedPosts = allPosts.filter(p => p.was_copied && p.selected_variation)
   const variationCounts = copiedPosts.reduce<Record<string, number>>((acc, p) => {
     const v = p.selected_variation!
@@ -136,7 +133,7 @@ export default function Dashboard() {
   const bestVariation = Object.entries(variationCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null
   const showInsight = copiedPosts.length >= 5 && bestVariation !== null
 
-  // Persona refresh - show at 10/20/30/40 post milestones
+  // Persona refresh
   const showPersonaPrompt = !dismissPersonaPrompt && allPosts.length > 0 && allPosts.length % 10 === 0
 
   // ─── Today's Next Step ────────────────────────────────────────────────────
@@ -167,13 +164,13 @@ export default function Dashboard() {
   )
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
 
-      {/* Greeting */}
+      {/* ─── Greeting ─────────────────────────────────────────────────────── */}
       <div>
-        <h1 className="text-page text-text">
+        <h1 className="text-xl font-bold text-text">
           {isFirstVisit
-            ? `Great start, ${firstName}. Now post this today.`
+            ? `Great start, ${firstName}. Post this today.`
             : `${greeting}, ${firstName}.`}
         </h1>
         {company && !isFirstVisit && (
@@ -184,28 +181,12 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* Today's Next Step - persistent action strip */}
+      {/* ─── Hero: Next Step card ─────────────────────────────────────────── */}
       {nextStep && (
-        <div className="flex items-center justify-between gap-3 bg-primary/[0.05] border border-primary/20 rounded-card px-4 py-3">
-          <p className="text-sm text-text">
-            {nextStep.type === 'rate' && 'How did that post land? A quick rating improves your next one.'}
-            {nextStep.type === 'copy' && 'Your post is ready. Copy it and paste on LinkedIn.'}
-            {nextStep.type === 'generate' && "Today's your posting day. Keep the streak going."}
-          </p>
-          <Link
-            to={
-              nextStep.type === 'rate' ? '/dashboard/history' :
-              nextStep.type === 'copy' ? `/dashboard/write?postId=${nextStep.postId}` :
-              '/dashboard/write'
-            }
-            className="text-xs font-semibold text-primary hover:text-primary-hover shrink-0 transition-colors whitespace-nowrap"
-          >
-            {nextStep.type === 'rate' ? 'Rate now →' : nextStep.type === 'copy' ? 'Copy post →' : 'Generate →'}
-          </Link>
-        </div>
+        <NextStepCard nextStep={nextStep} />
       )}
 
-      {/* First-visit: surface the actual generated post + clear next step */}
+      {/* ─── First-visit: post checklist ──────────────────────────────────── */}
       {isFirstVisit && !loading && recentPosts.length > 0 && (() => {
         const firstPost = recentPosts[0]
         const posted = firstPost.is_published
@@ -221,7 +202,7 @@ export default function Dashboard() {
         }
 
         return (
-          <div className="relative overflow-hidden rounded-card border border-primary/20 bg-surface space-y-0">
+          <div className="relative overflow-hidden rounded-card border border-primary/20 bg-surface">
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
 
             {/* Steps */}
@@ -229,7 +210,7 @@ export default function Dashboard() {
               {[
                 { n: 1, label: 'Founder brand created', done: true },
                 { n: 2, label: 'First post generated', done: true },
-                { n: 3, label: posted ? 'Posted on LinkedIn ✓' : 'Copy → paste on LinkedIn → mark as posted', done: posted },
+                { n: 3, label: posted ? 'Posted on LinkedIn' : 'Copy → paste on LinkedIn → mark as posted', done: posted },
               ].map(({ n, label, done }) => (
                 <div key={n} className="flex items-center gap-3">
                   <div className={cn(
@@ -271,7 +252,7 @@ export default function Dashboard() {
         )
       })()}
 
-      {/* Weekly plan card (hidden on first visit) */}
+      {/* ─── Weekly plan (hidden on first visit) ──────────────────────────── */}
       {!isFirstVisit && (() => {
         const weeklyTopics = getWeeklyTopics(pillars)
         const todayDay = new Date().getDay()
@@ -290,10 +271,39 @@ export default function Dashboard() {
 
         return (
           <div className="space-y-2">
-            {/* Header */}
+            {/* Header row: label + week tracker circles */}
             <div className="flex items-center justify-between px-0.5">
               <span className="text-xs font-medium text-text-muted tracking-wide uppercase">This week's plan</span>
-              <span className="text-[11px] text-text-subtle">week of {weekLabel}</span>
+              <div className="flex items-center gap-1.5">
+                {/* Compact tracker dots */}
+                {([
+                  { index: 1, label: 'M' },
+                  { index: 2, label: 'W' },
+                  { index: 3, label: 'F' },
+                ] as const).map(({ index, label }) => {
+                  const done = weekCount >= index
+                  return (
+                    <div
+                      key={label}
+                      title={done ? `${['Mon', 'Wed', 'Fri'][index - 1]}: done` : ['Mon', 'Wed', 'Fri'][index - 1]}
+                      className={cn(
+                        'w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold transition-all',
+                        done
+                          ? 'bg-success text-white shadow-[0_0_0_2px_rgba(34,197,94,0.15)]'
+                          : 'border-2 border-border text-text-subtle'
+                      )}
+                    >
+                      {done ? <Check className="w-3 h-3" strokeWidth={3} /> : label}
+                    </div>
+                  )
+                })}
+                <span className={cn(
+                  'text-[11px] ml-1',
+                  weekCount === 3 ? 'text-success font-medium' : 'text-text-subtle'
+                )}>
+                  {weekCount}/3
+                </span>
+              </div>
             </div>
 
             {/* Slots */}
@@ -307,7 +317,7 @@ export default function Dashboard() {
                   <div
                     key={i}
                     className={cn(
-                      'flex items-start gap-3 px-4 py-3.5 transition-colors',
+                      'flex items-start gap-3 px-4 py-4 transition-colors',
                       done ? 'bg-surface-hover/40' :
                       isToday ? 'bg-primary/[0.03]' :
                       'bg-surface'
@@ -358,7 +368,7 @@ export default function Dashboard() {
                       </p>
 
                       {/* Action */}
-                      <div className="mt-2">
+                      <div className="mt-2.5">
                         {done ? (
                           <Link
                             to={`/dashboard/write?topic=${encodeURIComponent(topic)}`}
@@ -381,7 +391,7 @@ export default function Dashboard() {
                             className="inline-flex items-center gap-1 text-[11px] text-text-muted hover:text-text transition-colors"
                           >
                             <ArrowRight className="w-3 h-3" />
-                            Generate
+                            Generate early
                           </Link>
                         )}
                       </div>
@@ -391,16 +401,60 @@ export default function Dashboard() {
               })}
             </div>
 
-            {recentHookTypes.length > 0 && (
-              <p className="text-[11px] text-text-subtle italic px-0.5">
-                AI varied from recent styles: {recentHookTypes.join(' · ')}
+            {/* Week footer */}
+            <div className="flex items-center justify-between px-0.5">
+              {recentHookTypes.length > 0 ? (
+                <p className="text-[11px] text-text-subtle italic">
+                  AI varied from recent styles: {recentHookTypes.join(' · ')}
+                </p>
+              ) : (
+                <span />
+              )}
+              <span className="text-[11px] text-text-subtle">week of {weekLabel}</span>
+            </div>
+
+            {/* Last week continuity */}
+            {lastWeekCount > 0 && (
+              <p className="text-[11px] text-text-subtle px-0.5">
+                Last week: <span className={cn('font-medium', lastWeekCount === 3 ? 'text-success' : 'text-text-muted')}>{lastWeekCount}/3</span>
+                {lastWeekCount === 3 && <span className="text-success"> ✓</span>}
               </p>
             )}
           </div>
         )
       })()}
 
-      {/* Founder Scoreboard - outcome stats, shown after 3+ posts */}
+      {/* ─── Quick actions ────────────────────────────────────────────────── */}
+      {!isFirstVisit && (
+        <div>
+          <p className="section-label mb-2.5">Tools</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {[
+              { to: '/dashboard/write', icon: PenLine, label: 'Write Post', sub: '3 variations in your voice' },
+              { to: '/dashboard/rewrite', icon: RefreshCw, label: 'Rewrite Draft', sub: 'Turn rough thoughts into a post' },
+              { to: '/dashboard/engage', icon: MessageSquare, label: 'Get Comments', sub: 'Engage smarter on LinkedIn' },
+              { to: '/dashboard/remix', icon: Shuffle, label: 'Remix a Post', sub: 'Steal a structure that works' },
+            ].map(({ to, icon: Icon, label, sub }) => (
+              <Link
+                key={to}
+                to={to}
+                className="flex items-center gap-3 bg-surface border border-border rounded-card px-4 py-3.5 hover:border-border-hover hover:bg-surface-hover transition-all duration-100 group min-h-[56px]"
+              >
+                <div className="w-8 h-8 rounded-lg bg-surface-hover group-hover:bg-primary/[0.08] flex items-center justify-center shrink-0 transition-colors">
+                  <Icon className="w-4 h-4 text-text-muted group-hover:text-primary transition-colors" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-text">{label}</p>
+                  <p className="text-xs text-text-muted">{sub}</p>
+                </div>
+                <ArrowRight className="w-3.5 h-3.5 text-text-subtle group-hover:text-text-muted transition-colors shrink-0" />
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ─── Scoreboard ───────────────────────────────────────────────────── */}
       {!loading && allPosts.length >= 3 && (() => {
         const totalPosts = allPosts.length
         const publishedCount = allPosts.filter(p => p.is_published).length
@@ -411,7 +465,6 @@ export default function Dashboard() {
           ? (ratedPosts.reduce((sum, p) => sum + (p.performance_rating ?? 0), 0) / ratedPosts.length).toFixed(1)
           : null
 
-        // Never show all-zero state
         if (publishedCount === 0 && copiedCount === 0 && ratedPosts.length === 0) return null
 
         const stats = [
@@ -423,21 +476,21 @@ export default function Dashboard() {
           {
             label: 'Copy rate',
             value: copiedCount > 0 ? `${copyRate}%` : '-',
-            sub: copiedCount > 0 ? `${copiedCount} post${copiedCount !== 1 ? 's' : ''} copied` : 'copy posts to track',
+            sub: copiedCount > 0 ? `${copiedCount} copied` : 'copy posts to track',
           },
           {
             label: 'Avg rating',
             value: avgRating ?? '-',
-            sub: avgRating ? `from ${ratedPosts.length} rated` : 'rate posts to track',
+            sub: avgRating ? `${ratedPosts.length} rated` : 'rate posts to track',
           },
         ]
 
         return (
           <div>
-            <p className="section-label mb-3">Your record</p>
-            <div className="grid grid-cols-3 gap-3">
+            <p className="section-label mb-2.5">Your record</p>
+            <div className="grid grid-cols-3 gap-2">
               {stats.map(({ label, value, sub }) => (
-                <div key={label} className="bg-surface border border-border rounded-card px-3 py-3 text-center">
+                <div key={label} className="bg-surface border border-border rounded-card px-3 py-3.5 text-center">
                   <p className="text-[22px] font-bold text-text leading-none">{value}</p>
                   <p className="text-[11px] font-medium text-text-muted mt-1">{label}</p>
                   <p className="text-[10px] text-text-subtle mt-0.5 leading-snug">{sub}</p>
@@ -448,138 +501,12 @@ export default function Dashboard() {
         )
       })()}
 
-      {/* Persona pill strip */}
-      {company?.persona_statement && (
-        <div className="bg-surface border border-border rounded-card px-4 py-3 space-y-2">
-          <p className="text-xs text-text-muted font-medium uppercase tracking-wide">{company.is_individual ? 'Your personal brand' : 'Your founder brand'}</p>
-          <p className="text-sm text-text leading-snug">{company.persona_statement}</p>
-          {company.content_pillars && company.content_pillars.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 pt-0.5">
-              {company.content_pillars.map(pillar => (
-                <span key={pillar} className="text-xs px-2 py-0.5 rounded-full bg-primary/[0.08] border border-primary/20 text-primary font-medium">
-                  {pillar}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Persona refresh prompt - shown at 10/20/30... post milestones */}
-      {showPersonaPrompt && (
-        <div className="relative bg-surface border border-primary/20 rounded-card px-4 py-3 flex items-start justify-between gap-3">
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-text">Your brand is evolving</p>
-            <p className="text-xs text-text-muted mt-0.5">
-              You've generated {allPosts.length} posts. Refresh your persona so every new post keeps sounding like you.
-            </p>
-            <button
-              onClick={() => navigate('/dashboard/settings')}
-              className="mt-2 text-xs text-primary hover:text-primary-hover transition-colors font-medium"
-            >
-              Refresh persona →
-            </button>
-          </div>
-          <button
-            onClick={() => setDismissPersonaPrompt(true)}
-            className="text-text-subtle hover:text-text-muted transition-colors shrink-0 mt-0.5"
-            aria-label="Dismiss"
-          >
-            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-      )}
-
-      {/* Weekly tracker + Quick actions - side by side */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-        {/* Weekly tracker */}
-        <div className={cn('bg-surface border border-border rounded-card p-5', weekCount === 3 && 'ring-1 ring-success/20 bg-success/[0.03]')}>
-          <div className="flex items-center justify-between mb-4">
-            <p className="text-sm font-medium text-text flex items-center gap-1.5">
-              {weekCount === 3 ? <><Sparkles className="w-3.5 h-3.5 text-success" /><span className="text-success">Week complete!</span></> : 'This week'}
-            </p>
-            <p className={cn('text-xs', weekCount === 3 ? 'text-success' : 'text-text-muted')}>{weekMessage}</p>
-          </div>
-
-          <div className="flex items-center gap-4">
-            {([
-              { index: 1, label: 'Mon' },
-              { index: 2, label: 'Wed' },
-              { index: 3, label: 'Fri' },
-            ] as const).map(({ index, label }) => {
-              const done = weekCount >= index
-
-              return (
-                <div key={label} className="flex flex-col items-center gap-2 flex-1">
-                  <div className={cn(
-                    'w-9 h-9 rounded-full flex items-center justify-center transition-all',
-                    done
-                      ? 'bg-success shadow-[0_0_0_4px_rgba(34,197,94,0.1)]'
-                      : 'border-2 border-border'
-                  )}>
-                    {done && (
-                      <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                    )}
-                  </div>
-                  <span className={cn(
-                    'text-[11px] font-medium',
-                    done ? 'text-success' : 'text-text-subtle'
-                  )}>
-                    {label}
-                  </span>
-                </div>
-              )
-            })}
-          </div>
-
-          {/* Last week continuity */}
-          {lastWeekCount > 0 && (
-            <p className="text-[11px] text-text-subtle mt-3 pt-3 border-t border-border/60">
-              Last week: <span className={cn('font-medium', lastWeekCount === 3 ? 'text-success' : 'text-text-muted')}>{lastWeekCount}/3</span>
-              {lastWeekCount === 3 && <span className="text-success"> ✓</span>}
-            </p>
-          )}
-        </div>
-
-        {/* Quick actions - stacked */}
-        <div className="space-y-2">
-          {[
-            { to: '/dashboard/write', icon: PenLine, label: 'Write Post', sub: '3 variations in your voice' },
-            { to: '/dashboard/rewrite', icon: RefreshCw, label: 'Had a rough idea?', sub: 'Turn messy thoughts into a post' },
-            { to: '/dashboard/engage', icon: MessageSquare, label: 'Get Comments', sub: 'Engage smarter' },
-            { to: '/dashboard/remix', icon: Shuffle, label: 'Remix a Post', sub: 'Steal a structure that works' },
-          ].map(({ to, icon: Icon, label, sub }) => (
-            <Link
-              key={to}
-              to={to}
-              className="flex items-center gap-3 bg-surface border border-border rounded-card px-4 py-3 hover:border-border-hover hover:bg-surface-hover transition-all duration-100 group"
-            >
-              <Icon className="w-4 h-4 text-text-muted group-hover:text-primary shrink-0 transition-colors" />
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-text">{label}</p>
-                <p className="text-xs text-text-muted">{sub}</p>
-              </div>
-              <ArrowRight className="w-3.5 h-3.5 text-text-subtle group-hover:text-text-muted transition-colors shrink-0" />
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* Recent posts */}
+      {/* ─── Recent posts ─────────────────────────────────────────────────── */}
       {!loading && recentPosts.length > 0 && (
         <div>
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <p className="section-label">Recent</p>
-              <span className="text-[11px] text-text-subtle">last 3</span>
-            </div>
-            <Link to="/dashboard/history" className="text-xs text-primary hover:text-primary-hover transition-colors">
+          <div className="flex items-center justify-between mb-2.5">
+            <p className="section-label">Recent</p>
+            <Link to="/dashboard/history" className="text-xs font-medium text-primary hover:text-primary-hover transition-colors">
               View all →
             </Link>
           </div>
@@ -590,7 +517,7 @@ export default function Dashboard() {
                 'font-semibold',
                 bestVariation === 'bold' ? 'text-amber-400' :
                 bestVariation === 'controversial' ? 'text-red-400' : 'text-emerald-400'
-              )}>{bestVariation}</span> posts get copied most. Keep going.
+              )}>{bestVariation}</span> posts get copied most.
             </p>
           )}
 
@@ -641,7 +568,62 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Loading skeleton */}
+      {/* ─── Persona strip ────────────────────────────────────────────────── */}
+      {company?.persona_statement && (
+        <div className="bg-surface border border-border rounded-card px-4 py-3 space-y-2">
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-text-muted font-medium uppercase tracking-wide">
+              {company.is_individual ? 'Your personal brand' : 'Your founder brand'}
+            </p>
+            <Link
+              to="/dashboard/settings"
+              className="text-[11px] text-text-subtle hover:text-text-muted transition-colors"
+            >
+              Edit
+            </Link>
+          </div>
+          <p className="text-sm text-text leading-snug">{company.persona_statement}</p>
+          {company.content_pillars && company.content_pillars.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 pt-0.5">
+              {company.content_pillars.map(pillar => (
+                <span key={pillar} className="text-xs px-2 py-0.5 rounded-full bg-primary/[0.08] border border-primary/20 text-primary font-medium">
+                  {pillar}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ─── Persona refresh prompt ───────────────────────────────────────── */}
+      {showPersonaPrompt && (
+        <div className="relative bg-surface border border-primary/20 rounded-card px-4 py-3 flex items-start justify-between gap-3">
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-text">Your brand is evolving</p>
+            <p className="text-xs text-text-muted mt-0.5">
+              You've generated {allPosts.length} posts. Refresh your persona to keep sounding like you.
+            </p>
+            <button
+              onClick={() => navigate('/dashboard/settings')}
+              className="mt-2 text-xs text-primary hover:text-primary-hover transition-colors font-medium"
+            >
+              Refresh persona →
+            </button>
+          </div>
+          <button
+            onClick={() => setDismissPersonaPrompt(true)}
+            className="text-text-subtle hover:text-text-muted transition-colors shrink-0 mt-0.5"
+            aria-label="Dismiss"
+          >
+            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      )}
+
+      {/* ─── Loading skeleton ─────────────────────────────────────────────── */}
       {loading && (
         <div className="space-y-2">
           {[1, 2, 3].map(i => (
@@ -650,11 +632,11 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Empty state */}
-      {!loading && recentPosts.length === 0 && (
+      {/* ─── Empty state ──────────────────────────────────────────────────── */}
+      {!loading && recentPosts.length === 0 && !isFirstVisit && (
         <div className="border border-dashed border-border rounded-card p-10 text-center space-y-1.5">
           <p className="text-sm font-medium text-text-muted">Your first post is one click away.</p>
-          <p className="text-xs text-text-subtle">Use the suggestion above, it takes under 3 minutes.</p>
+          <p className="text-xs text-text-subtle">Use the suggestion above. It takes under 3 minutes.</p>
         </div>
       )}
 
@@ -671,6 +653,78 @@ export default function Dashboard() {
   )
 }
 
+// ─── Next Step Hero Card ──────────────────────────────────────────────────────
+
+type NextStepProps = {
+  nextStep: { type: 'rate' } | { type: 'copy'; postId: string } | { type: 'generate' }
+}
+
+function NextStepCard({ nextStep }: NextStepProps) {
+  const navigate = useNavigate()
+
+  const config = {
+    rate: {
+      icon: <Star className="w-5 h-5" />,
+      iconBg: 'bg-amber-500/10 text-amber-400',
+      border: 'border-amber-500/20',
+      bg: 'bg-amber-500/[0.03]',
+      title: 'How did that post land?',
+      desc: 'A quick rating helps FounderX write better posts for you next time.',
+      cta: 'Rate now',
+      href: '/dashboard/history',
+    },
+    copy: {
+      icon: <Copy className="w-5 h-5" />,
+      iconBg: 'bg-primary/10 text-primary',
+      border: 'border-primary/20',
+      bg: 'bg-primary/[0.03]',
+      title: 'Your post is ready to go.',
+      desc: 'Copy it and paste directly on LinkedIn. Takes under 30 seconds.',
+      cta: 'Copy post',
+      href: '',
+    },
+    generate: {
+      icon: <Zap className="w-5 h-5" />,
+      iconBg: 'bg-primary/10 text-primary',
+      border: 'border-primary/20',
+      bg: 'bg-primary/[0.03]',
+      title: "Today's your posting day.",
+      desc: 'Keep the momentum going. 3 variations ready in under a minute.',
+      cta: 'Generate post',
+      href: '/dashboard/write',
+    },
+  }
+
+  const c = config[nextStep.type]
+  const href = nextStep.type === 'copy'
+    ? `/dashboard/write?postId=${(nextStep as { type: 'copy'; postId: string }).postId}`
+    : c.href
+
+  return (
+    <div className={cn('rounded-card border px-4 py-4 flex items-start gap-3.5', c.border, c.bg)}>
+      <div className={cn('w-9 h-9 rounded-lg flex items-center justify-center shrink-0', c.iconBg)}>
+        {c.icon}
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-semibold text-text">{c.title}</p>
+        <p className="text-xs text-text-muted mt-0.5 leading-relaxed">{c.desc}</p>
+        <button
+          onClick={() => navigate(href)}
+          className={cn(
+            'mt-3 inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-btn transition-colors',
+            nextStep.type === 'rate'
+              ? 'bg-amber-500/10 text-amber-400 hover:bg-amber-500/20'
+              : 'bg-primary/10 text-primary hover:bg-primary/20'
+          )}
+        >
+          {c.cta}
+          <ArrowRight className="w-3 h-3" />
+        </button>
+      </div>
+    </div>
+  )
+}
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function StageBadge({ stage, isIndividual = false }: { stage: string; isIndividual?: boolean }) {
@@ -680,7 +734,6 @@ function StageBadge({ stage, isIndividual = false }: { stage: string; isIndividu
     live:  { label: 'Live',  icon: <Zap className="w-3 h-3" />,         className: 'text-emerald-400 bg-emerald-500/[0.08] border-emerald-500/20' },
     scale: { label: 'Scale', icon: <TrendingUp className="w-3 h-3" />,  className: 'text-sky-400 bg-sky-500/[0.08] border-sky-500/20' },
   }
-  // Individual mode: stage values were mapped from roles during onboarding
   const individualMap: Record<string, { label: string; icon: React.ReactNode; className: string }> = {
     idea:  { label: 'Founder',    icon: <Hammer className="w-3 h-3" />,    className: 'text-amber-400 bg-amber-500/[0.08] border-amber-500/20' },
     mvp:   { label: 'Creator',    icon: <Sparkles className="w-3 h-3" />,  className: 'text-violet-400 bg-violet-500/[0.08] border-violet-500/20' },
@@ -698,8 +751,8 @@ function StageBadge({ stage, isIndividual = false }: { stage: string; isIndividu
 
 function VariationBadge({ variation }: { variation: string }) {
   const map: Record<string, { label: string; className: string }> = {
-    safe:          { label: 'Safe',    className: 'text-emerald-400 bg-emerald-500/[0.08] border-emerald-500/20' },
-    bold:          { label: 'Bold',    className: 'text-amber-400 bg-amber-500/[0.08] border-amber-500/20' },
+    safe:          { label: 'Safe',      className: 'text-emerald-400 bg-emerald-500/[0.08] border-emerald-500/20' },
+    bold:          { label: 'Bold',      className: 'text-amber-400 bg-amber-500/[0.08] border-amber-500/20' },
     controversial: { label: 'Bold take', className: 'text-red-400 bg-red-500/[0.08] border-red-500/20' },
   }
   const { label, className } = map[variation] ?? map.safe

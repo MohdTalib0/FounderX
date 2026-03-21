@@ -1,13 +1,12 @@
 import { useState, useRef, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { RefreshCw, ChevronDown, ChevronUp, ChevronRight, Sliders, ImageDown } from 'lucide-react'
+import { RefreshCw, ChevronDown, ChevronUp, Sliders, ImageDown } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/auth'
 import { generatePost, refinePost, regenerateVariation, LimitReachedError } from '@/lib/ai/client'
 import { toast } from '@/store/toast'
 import Button from '@/components/ui/Button'
 import CopyButton from '@/components/ui/CopyButton'
-import Badge from '@/components/ui/Badge'
 import Textarea from '@/components/ui/Textarea'
 import { QuoteCardModal } from '@/components/ui/QuoteCard'
 import UpgradeWall from '@/components/ui/UpgradeWall'
@@ -59,7 +58,7 @@ export default function Write() {
       })
   }, [user])
 
-  // Load an existing post when arriving from Dashboard "Copy post →" next step
+  // Load existing post when arriving from Dashboard "Copy post →" next step
   const postId = searchParams.get('postId')
   useEffect(() => {
     if (!postId || !user) return
@@ -116,7 +115,6 @@ export default function Write() {
       setInputCollapsed(true)
       setSavedPostId(result.id)
 
-      // Scroll to results
       setTimeout(() => {
         resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       }, 80)
@@ -196,7 +194,6 @@ export default function Write() {
       .from('generated_posts')
       .update({ was_copied: true, selected_variation: variation })
       .eq('id', savedPostId)
-    // Unlock progressive disclosure in-session without waiting for a remount
     setProofData(prev => ({ ...prev, copied: prev.copied + 1 }))
   }
 
@@ -217,22 +214,25 @@ export default function Write() {
   // ─── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-3xl mx-auto space-y-5">
+
+      {/* Page header */}
       <div>
-        <h1 className="text-page text-text">Write a Post</h1>
-        <p className="text-sm text-text-muted mt-0.5">Get 3 variations ready to post</p>
+        <h1 className="text-xl font-bold text-text">Write a Post</h1>
+        <p className="text-sm text-text-muted mt-0.5">Get 3 variations ready to paste on LinkedIn</p>
       </div>
 
-      {/* Input section - collapsible after generation */}
+      {/* ─── Input section ─────────────────────────────────────────────── */}
       {inputCollapsed ? (
+        /* Collapsed topic pill */
         <div className="bg-surface border border-border rounded-card px-4 py-3 flex items-center justify-between gap-3">
           <div className="min-w-0">
-            <p className="text-xs text-text-muted mb-0.5">Topic</p>
+            <p className="text-[11px] text-text-subtle uppercase tracking-wide font-medium mb-0.5">Topic</p>
             <p className="text-sm text-text truncate">{topic}</p>
           </div>
           <button
             onClick={() => setInputCollapsed(false)}
-            className="text-xs text-primary hover:text-primary-hover shrink-0 transition-colors"
+            className="text-xs font-medium text-primary hover:text-primary-hover shrink-0 transition-colors"
           >
             Change
           </button>
@@ -254,18 +254,21 @@ export default function Write() {
             }}
           />
 
-          {/* Pillar chips - suggest topic from pillar, not replace with pillar name */}
+          {/* Content pillar chips */}
           {pillars.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {pillars.map(pillar => (
-                <button
-                  key={pillar}
-                  onClick={() => setTopic(`${pillar}: what I've learned so far`)}
-                  className="text-xs px-3 py-1.5 rounded-full border border-border bg-surface text-text-muted hover:border-primary/50 hover:text-primary transition-all"
-                >
-                  {pillar} →
-                </button>
-              ))}
+            <div>
+              <p className="text-[11px] text-text-subtle uppercase tracking-wide font-medium mb-2">Your pillars</p>
+              <div className="flex flex-wrap gap-2">
+                {pillars.map(pillar => (
+                  <button
+                    key={pillar}
+                    onClick={() => setTopic(`${pillar}: what I've learned so far`)}
+                    className="text-xs px-3 py-1.5 rounded-full border border-border bg-surface text-text-muted hover:border-primary/50 hover:text-primary hover:bg-primary/[0.04] transition-all"
+                  >
+                    {pillar}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 
@@ -291,13 +294,12 @@ export default function Write() {
             className="w-full"
           >
             {generating ? 'Generating...' : 'Generate 3 Variations'}
-            {!generating && <ChevronRight className="w-4 h-4" />}
           </Button>
-          <p className="text-xs text-text-muted text-center">↵ Press Enter to generate</p>
+          <p className="text-[11px] text-text-subtle text-center">Press Enter to generate</p>
         </div>
       )}
 
-      {/* Regenerate button when collapsed */}
+      {/* Regenerate when collapsed */}
       {inputCollapsed && (
         <Button
           onClick={() => generate()}
@@ -308,13 +310,13 @@ export default function Write() {
           className="w-full"
         >
           <RefreshCw className="w-3.5 h-3.5" />
-          {generating ? 'Generating...' : 'Generate new variations'}
+          {generating ? 'Generating...' : 'Regenerate all'}
         </Button>
       )}
 
-      {/* Results */}
+      {/* ─── Results ───────────────────────────────────────────────────── */}
       {results && (
-        <div ref={resultsRef} className="space-y-4 scroll-mt-4">
+        <div ref={resultsRef} className="space-y-3 scroll-mt-4">
           {(['safe', 'bold', 'controversial'] as Variation[]).map(variation => (
             <PostCard
               key={variation}
@@ -352,10 +354,38 @@ export default function Write() {
 
 // ─── Post Card ────────────────────────────────────────────────────────────────
 
-const VARIATION_META: Record<Variation, { label: string; emoji: string; desc: string; hint: string }> = {
-  safe:          { label: 'SAFE',          emoji: '🟢', desc: 'Professional · builds authority', hint: 'Builds trust. Best for new audiences.' },
-  bold:          { label: 'BOLD',          emoji: '🟠', desc: 'Opinionated take',                hint: 'Gets more comments. Great for engagement.' },
-  controversial: { label: 'CONTROVERSIAL', emoji: '🔴', desc: 'Starts a debate',                 hint: 'High risk, high reach. Use sparingly.' },
+const VARIATION_META: Record<Variation, {
+  label: string
+  desc: string
+  hint: string
+  accent: string        // left border
+  badge: string         // badge text + bg
+  indicator: string     // dot color
+}> = {
+  safe: {
+    label: 'Safe',
+    desc: 'Professional · builds authority',
+    hint: 'Builds trust. Best for growing a new audience.',
+    accent: 'border-l-emerald-500/50',
+    badge: 'text-emerald-400 bg-emerald-500/[0.08] border-emerald-500/20',
+    indicator: 'bg-emerald-500',
+  },
+  bold: {
+    label: 'Bold',
+    desc: 'Opinionated take',
+    hint: 'Gets more comments. Great for engagement.',
+    accent: 'border-l-amber-500/50',
+    badge: 'text-amber-400 bg-amber-500/[0.08] border-amber-500/20',
+    indicator: 'bg-amber-500',
+  },
+  controversial: {
+    label: 'Debate',
+    desc: 'Starts a conversation',
+    hint: 'High reach. Use sparingly.',
+    accent: 'border-l-red-500/50',
+    badge: 'text-red-400 bg-red-500/[0.08] border-red-500/20',
+    indicator: 'bg-red-500',
+  },
 }
 
 const REFINE_OPTIONS: { value: Refinement; label: string }[] = [
@@ -404,37 +434,45 @@ function PostCard({
   const charCount = text.length
   const isNearLimit = charCount > 2500
 
-  const PREVIEW_CHARS = 220
+  const PREVIEW_CHARS = 240
   const isLong = body.length > PREVIEW_CHARS
 
   return (
     <div className={cn(
-      'bg-surface border border-border rounded-card overflow-hidden transition-all duration-200',
+      'bg-surface border border-border border-l-4 rounded-card overflow-hidden transition-all duration-200',
+      meta.accent,
       isRefining && 'opacity-60 pointer-events-none'
     )}>
-      {/* Header strip */}
-      <div className="flex items-center justify-between gap-3 px-4 pt-4 pb-2">
+
+      {/* ── Header ──────────────────────────────────────────────────── */}
+      <div className="flex items-center justify-between gap-3 px-4 pt-4 pb-3">
         <div className="flex items-center gap-2">
-          <span className="text-sm">{meta.emoji}</span>
-          <Badge variant={variation}>{meta.label}</Badge>
-          <span className="text-xs text-text-muted hidden sm:block">{meta.desc}</span>
+          <span className={cn(
+            'text-[11px] font-bold px-2 py-0.5 rounded border tracking-widest uppercase',
+            meta.badge
+          )}>
+            {meta.label}
+          </span>
+          <span className="text-xs text-text-subtle hidden sm:block">{meta.desc}</span>
         </div>
-        <span className={cn('text-xs tabular-nums', isNearLimit ? 'text-warning' : 'text-text-subtle')}>
+        <span className={cn(
+          'text-[11px] tabular-nums shrink-0',
+          isNearLimit ? 'text-warning font-medium' : 'text-text-subtle'
+        )}>
           {charCount}/3000
         </span>
       </div>
-      <p className="px-4 pb-2 text-[11px] text-text-subtle italic">{meta.hint}</p>
 
-      {/* Content */}
+      {/* ── Content ─────────────────────────────────────────────────── */}
       <div className="px-4 pb-3 space-y-2">
-        {/* Hook line - the scroll-stopper, always prominent */}
-        <p className="text-base font-semibold text-text leading-snug">{hook}</p>
+        {/* Hook — the scroll-stopper */}
+        <p className="text-[16px] font-semibold text-text leading-snug">{hook}</p>
 
         {/* Body */}
         {body && (
           <>
             <p className={cn(
-              'text-sm text-text-muted leading-relaxed whitespace-pre-wrap mt-1',
+              'text-sm text-text-muted leading-relaxed whitespace-pre-wrap',
               !isExpanded && isLong ? 'line-clamp-3' : ''
             )}>
               {body}
@@ -442,10 +480,10 @@ function PostCard({
             {isLong && (
               <button
                 onClick={onToggleExpand}
-                className="flex items-center gap-1 text-xs text-text-muted hover:text-text transition-colors"
+                className="flex items-center gap-1 text-xs text-text-subtle hover:text-text-muted transition-colors"
               >
                 {isExpanded
-                  ? <><ChevronUp className="w-3 h-3" /> Less</>
+                  ? <><ChevronUp className="w-3 h-3" /> Show less</>
                   : <><ChevronDown className="w-3 h-3" /> Read more</>
                 }
               </button>
@@ -454,7 +492,7 @@ function PostCard({
         )}
       </div>
 
-      {/* Mobile copy shortcut - shown when expanded so the copy button isn't far away */}
+      {/* Mobile copy shortcut when expanded */}
       {isExpanded && isLong && (
         <div className="sm:hidden px-4 pb-3">
           <CopyButton
@@ -470,39 +508,39 @@ function PostCard({
         </div>
       )}
 
-      {/* Action bar */}
-      <div className="flex items-center justify-between gap-2 px-4 py-3 border-t border-border bg-surface-hover/40">
-        <div className="flex items-center gap-1">
+      {/* ── Action bar ──────────────────────────────────────────────── */}
+      <div className="flex items-center justify-between gap-2 px-4 py-2.5 border-t border-border">
+        <div className="flex items-center gap-0.5">
           <button
             onClick={onRegenerate}
             disabled={isRefining}
-            title="Regenerate this variation"
-            className="p-1.5 text-text-muted hover:text-text hover:bg-surface-hover rounded-lg transition-colors"
+            title="Regenerate"
+            className="p-2 text-text-muted hover:text-text hover:bg-surface-hover rounded-lg transition-colors"
           >
             <RefreshCw className="w-3.5 h-3.5" />
           </button>
           {!isNewUser && (
             <button
               onClick={() => setShowRefine(v => !v)}
-              title="Refine this post"
+              title="Adjust"
               className={cn(
-                'p-1.5 rounded-lg transition-colors flex items-center gap-1 text-xs',
+                'p-2 rounded-lg transition-colors flex items-center gap-1.5 text-xs',
                 showRefine
                   ? 'text-primary bg-primary/10'
                   : 'text-text-muted hover:text-text hover:bg-surface-hover'
               )}
             >
               <Sliders className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Adjust</span>
+              <span className="hidden sm:inline font-medium">Adjust</span>
             </button>
           )}
           <button
             onClick={onQuoteCard}
-            title="Get quote card image"
-            className="p-1.5 text-text-muted hover:text-text hover:bg-surface-hover rounded-lg transition-colors flex items-center gap-1 text-xs"
+            title="Quote card image"
+            className="p-2 text-text-muted hover:text-text hover:bg-surface-hover rounded-lg transition-colors flex items-center gap-1.5 text-xs"
           >
             <ImageDown className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Image</span>
+            <span className="hidden sm:inline font-medium">Image</span>
           </button>
         </div>
         <CopyButton
@@ -512,14 +550,13 @@ function PostCard({
             toast.success('Copied, ready to paste on LinkedIn')
             if (!markedPosted) setShowPostedPrompt(true)
           }}
-          size="sm"
           label="Copy post"
         />
       </div>
 
-      {/* "Did you post?" inline prompt - shown after copy, auto-dismisses in 10s */}
+      {/* ── "Did you post?" inline prompt ───────────────────────────── */}
       {showPostedPrompt && (
-        <div className="flex items-center justify-between gap-3 px-4 py-2.5 border-t border-border bg-surface-hover/20">
+        <div className="flex items-center justify-between gap-3 px-4 py-2.5 border-t border-border bg-surface-hover/30">
           <p className="text-xs text-text-muted">Did you post this on LinkedIn?</p>
           <div className="flex items-center gap-3">
             <button
@@ -530,16 +567,16 @@ function PostCard({
                   await onMarkPosted()
                   setMarkedPosted(true)
                   setShowPostedPrompt(false)
-                  toast.success('Marked as posted ✓')
+                  toast.success('Marked as posted')
                 } catch {
                   toast.error('Could not save. Try again.')
                 } finally {
                   setPostingToLinkedIn(false)
                 }
               }}
-              className="text-xs font-medium text-success hover:text-success/80 transition-colors disabled:opacity-50"
+              className="text-xs font-semibold text-success hover:text-success/80 transition-colors disabled:opacity-50"
             >
-              Yes ✓
+              Yes, posted
             </button>
             <button
               onClick={() => setShowPostedPrompt(false)}
@@ -552,14 +589,14 @@ function PostCard({
       )}
       {markedPosted && (
         <div className="px-4 py-2 border-t border-success/20 bg-success/[0.04]">
-          <p className="text-xs text-success font-medium">Posted on LinkedIn ✓</p>
+          <p className="text-xs text-success font-semibold">Posted on LinkedIn</p>
         </div>
       )}
 
-      {/* Refine panel - hidden by default, revealed on click */}
+      {/* ── Refine panel ────────────────────────────────────────────── */}
       {showRefine && (
-        <div className="px-4 py-3 border-t border-border space-y-2">
-          <p className="text-xs text-text-muted">This sounds...</p>
+        <div className="px-4 py-3 border-t border-border space-y-2 bg-surface-hover/20">
+          <p className="text-xs text-text-muted font-medium">This sounds...</p>
           <div className="flex flex-wrap gap-2">
             {REFINE_OPTIONS.map(opt => (
               <button
@@ -569,7 +606,7 @@ function PostCard({
                   setShowRefine(false)
                 }}
                 disabled={isRefining}
-                className="text-xs px-3 py-1.5 rounded-full border border-border bg-surface hover:border-primary/50 hover:text-primary hover:bg-primary/5 text-text-muted transition-all"
+                className="text-xs px-3 py-1.5 rounded-full border border-border bg-surface hover:border-primary/50 hover:text-primary hover:bg-primary/[0.04] text-text-muted transition-all disabled:opacity-40"
               >
                 {opt.label}
               </button>

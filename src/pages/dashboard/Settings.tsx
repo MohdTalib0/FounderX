@@ -13,10 +13,10 @@ type Tab = 'brand' | 'account'
 
 const STAGES = ['idea', 'mvp', 'live', 'scale'] as const
 const PERSONALITIES = [
-  { value: 'builder', label: 'The Builder' },
+  { value: 'builder',     label: 'The Builder' },
   { value: 'storyteller', label: 'The Storyteller' },
-  { value: 'analyst', label: 'The Analyst' },
-  { value: 'contrarian', label: 'The Contrarian' },
+  { value: 'analyst',     label: 'The Analyst' },
+  { value: 'contrarian',  label: 'The Contrarian' },
 ] as const
 
 export default function Settings() {
@@ -24,20 +24,23 @@ export default function Settings() {
   const [tab, setTab] = useState<Tab>('brand')
 
   return (
-    <div className="max-w-xl mx-auto space-y-5">
-      <div>
-        <h1 className="text-page text-text">Settings</h1>
-      </div>
+    <div className="max-w-2xl mx-auto space-y-5">
+      <h1 className="text-xl font-bold text-text">Settings</h1>
 
       {/* Tabs */}
       <div className="flex gap-1 bg-surface border border-border rounded-card p-1 w-fit">
-        {([['brand', company?.is_individual ? 'Personal Brand' : 'Founder Brand'], ['account', 'Account']] as [Tab, string][]).map(([value, label]) => (
+        {([
+          ['brand',   company?.is_individual ? 'Personal Brand' : 'Founder Brand'],
+          ['account', 'Account'],
+        ] as [Tab, string][]).map(([value, label]) => (
           <button
             key={value}
             onClick={() => setTab(value)}
             className={cn(
               'text-sm px-4 py-1.5 rounded-btn transition-all',
-              tab === value ? 'bg-primary text-white font-medium' : 'text-text-muted hover:text-text'
+              tab === value
+                ? 'bg-primary text-white font-medium'
+                : 'text-text-muted hover:text-text'
             )}
           >
             {label}
@@ -46,10 +49,7 @@ export default function Settings() {
       </div>
 
       {tab === 'brand' && company && (
-        <BrandTab
-          company={company}
-          onUpdate={(updated) => setCompany(updated)}
-        />
+        <BrandTab company={company} onUpdate={setCompany} />
       )}
 
       {tab === 'account' && (
@@ -79,17 +79,17 @@ function BrandTab({ company, onUpdate }: {
   onUpdate: (c: Company) => void
 }) {
   const isIndividual = company.is_individual
-  const [name, setName] = useState(company.name)
-  const [description, setDescription] = useState(company.description)
+  const [name, setName]                   = useState(company.name)
+  const [description, setDescription]     = useState(company.description)
   const [targetAudience, setTargetAudience] = useState(company.target_audience)
-  const [stage, setStage] = useState(company.stage)
-  const [personality, setPersonality] = useState(company.founder_personality)
-  const [keywords, setKeywords] = useState(company.keywords?.join(', ') ?? '')
+  const [stage, setStage]                 = useState(company.stage)
+  const [personality, setPersonality]     = useState(company.founder_personality)
+  const [keywords, setKeywords]           = useState(company.keywords?.join(', ') ?? '')
 
-  const [saving, setSaving] = useState(false)
+  const [saving, setSaving]           = useState(false)
   const [regenerating, setRegenerating] = useState(false)
-  const [saved, setSaved] = useState(false)
-  const [error, setError] = useState('')
+  const [saved, setSaved]             = useState(false)
+  const [error, setError]             = useState('')
 
   const handleSave = async () => {
     setSaving(true)
@@ -127,7 +127,6 @@ function BrandTab({ company, onUpdate }: {
     setError('')
 
     try {
-      // Save current field state first so Edge Function reads the latest values
       await supabase
         .from('companies')
         .update({
@@ -140,9 +139,7 @@ function BrandTab({ company, onUpdate }: {
         })
         .eq('id', company.id)
 
-      // Call Edge Function - it generates persona and saves it back to company
       const result = await generatePersona({ company_id: company.id })
-
       onUpdate(result.company as typeof company)
       toast.success('Persona regenerated.')
     } catch {
@@ -154,31 +151,36 @@ function BrandTab({ company, onUpdate }: {
   }
 
   return (
-    <div className="space-y-5">
-      {/* Persona display */}
+    <div className="space-y-6">
+
+      {/* Persona card */}
       {company.persona_statement && (
-        <div className="bg-surface border border-border rounded-card p-5 space-y-3">
-          <p className="text-xs font-medium text-text-muted">Your persona</p>
-          <p className="text-text leading-snug">{company.persona_statement}</p>
-
-          {company.content_pillars && company.content_pillars.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-2">
-              {company.content_pillars.map((p: string, i: number) => (
-                <span key={i} className="text-xs px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
-                  {p}
-                </span>
-              ))}
-            </div>
-          )}
-
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={handleRegeneratePersona}
-            loading={regenerating}
-          >
-            Regenerate persona
-          </Button>
+        <div className="bg-surface border border-border rounded-card overflow-hidden">
+          <div className="px-4 pt-4 pb-3 border-b border-border">
+            <p className="section-label mb-2">
+              {isIndividual ? 'Your personal brand' : 'Your founder brand'}
+            </p>
+            <p className="text-sm text-text leading-snug">{company.persona_statement}</p>
+            {company.content_pillars && company.content_pillars.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mt-3">
+                {company.content_pillars.map((p: string) => (
+                  <span key={p} className="text-xs px-2.5 py-1 rounded-full bg-primary/[0.08] text-primary border border-primary/20">
+                    {p}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="px-4 py-3">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={handleRegeneratePersona}
+              loading={regenerating}
+            >
+              Regenerate persona
+            </Button>
+          </div>
         </div>
       )}
 
@@ -252,9 +254,11 @@ function BrandTab({ company, onUpdate }: {
 
       {error && <p className="text-sm text-danger">{error}</p>}
 
-      <Button onClick={handleSave} loading={saving} className="w-full">
-        {saved ? '✓ Saved' : 'Save changes'}
-      </Button>
+      <div className="pt-1 border-t border-border">
+        <Button onClick={handleSave} loading={saving} className="w-full mt-4">
+          {saved ? 'Saved' : 'Save changes'}
+        </Button>
+      </div>
     </div>
   )
 }
@@ -276,12 +280,8 @@ function AccountTab({
   const [savingPrefs, setSavingPrefs] = useState(false)
 
   const planLabel =
-    profile?.plan === 'pro' ? 'Pro' :
+    profile?.plan === 'pro'  ? 'Pro'  :
     profile?.plan === 'beta' ? 'Beta' : 'Free'
-
-  const planBadge =
-    profile?.plan === 'pro' ? 'PRO' :
-    profile?.plan === 'beta' ? 'BETA' : 'FREE'
 
   const handleToggleNotifications = async (enabled: boolean) => {
     setEmailNotifications(enabled)
@@ -292,64 +292,56 @@ function AccountTab({
       .eq('id', profile!.id)
     setSavingPrefs(false)
     if (error) {
-      setEmailNotifications(!enabled) // rollback
+      setEmailNotifications(!enabled)
       toast.error('Failed to update email preference.')
     }
   }
 
   return (
     <div className="space-y-4">
-      <div className="bg-surface border border-border rounded-card p-5 space-y-3">
-        <div className="space-y-1">
-          <p className="text-xs text-text-muted">Name</p>
-          <p className="text-text">{profile?.full_name ?? '-'}</p>
-        </div>
-        <div className="space-y-1">
-          <p className="text-xs text-text-muted">Email</p>
-          <p className="text-text">{profile?.email ?? '-'}</p>
-        </div>
-        <div className="space-y-1">
-          <p className="text-xs text-text-muted">Plan</p>
-          <div className="flex items-center gap-2">
-            <p className="text-text">{planLabel}</p>
-            <span className="text-[10px] font-medium px-1.5 py-0.5 rounded border border-primary/30 bg-primary/[0.08] text-primary">
-              {planBadge}
-            </span>
+
+      {/* Profile info */}
+      <div className="bg-surface border border-border rounded-card divide-y divide-border overflow-hidden">
+        {[
+          { label: 'Name',  value: profile?.full_name ?? '-' },
+          { label: 'Email', value: profile?.email ?? '-' },
+          { label: 'Plan',  value: planLabel },
+        ].map(({ label, value }) => (
+          <div key={label} className="flex items-center justify-between px-4 py-3">
+            <span className="text-xs text-text-muted">{label}</span>
+            <span className="text-sm text-text font-medium">{value}</span>
           </div>
-        </div>
+        ))}
       </div>
 
-      {/* Beta access banner */}
+      {/* Beta banner */}
       {profile?.plan === 'beta' && (
-        <div className="relative bg-surface border border-primary/20 rounded-card p-5 overflow-hidden">
+        <div className="relative bg-surface border border-primary/20 rounded-card px-4 py-3.5 overflow-hidden">
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
           <div className="flex items-start gap-3">
             <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0 animate-pulse" />
             <div>
               <p className="text-sm font-semibold text-text mb-0.5">Beta: full access</p>
               <p className="text-xs text-text-muted leading-relaxed">
-                You're one of the first 50 {isIndividual ? 'creators' : 'founders'}. All features are free during the beta.
-                Pro plan coming soon.
+                You're one of the first 50 {isIndividual ? 'creators' : 'founders'}. All features are free during beta. Pro plan coming soon.
               </p>
             </div>
           </div>
         </div>
       )}
 
-      {/* Email notifications */}
-      <div className="bg-surface border border-border rounded-card p-5">
-        <div className="flex items-center justify-between">
+      {/* Email notifications toggle */}
+      <div className="bg-surface border border-border rounded-card px-4 py-3.5">
+        <div className="flex items-center justify-between gap-4">
           <div>
             <p className="text-sm font-medium text-text">Email notifications</p>
-            <p className="text-xs text-text-muted mt-0.5">
-              Weekly post ideas and re-engagement reminders
-            </p>
+            <p className="text-xs text-text-muted mt-0.5">Weekly post ideas and re-engagement reminders</p>
           </div>
           <button
             onClick={() => handleToggleNotifications(!emailNotifications)}
             disabled={savingPrefs}
             className={cn(
-              'relative w-10 h-6 rounded-full transition-colors shrink-0',
+              'relative w-10 h-6 rounded-full transition-colors shrink-0 disabled:opacity-60',
               emailNotifications ? 'bg-primary' : 'bg-border'
             )}
           >
@@ -361,11 +353,9 @@ function AccountTab({
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Button variant="secondary" onClick={onSignOut} className="w-full">
-          Sign out
-        </Button>
-      </div>
+      <Button variant="secondary" onClick={onSignOut} className="w-full">
+        Sign out
+      </Button>
     </div>
   )
 }
@@ -374,10 +364,10 @@ function AccountTab({
 
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-2">
       <div className="flex items-center gap-2">
         <label className="text-sm font-medium text-text-muted">{label}</label>
-        {hint && <span className="text-xs text-text-muted/60">{hint}</span>}
+        {hint && <span className="text-xs text-text-subtle">{hint}</span>}
       </div>
       {children}
     </div>
