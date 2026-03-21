@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Check, ChevronDown, Zap, ArrowRight, Shield, RefreshCw } from 'lucide-react'
+import { Check, ChevronDown, ArrowRight, Shield, RefreshCw } from 'lucide-react'
 import PublicHeader from '@/components/layout/PublicHeader'
 import PublicFooter from '@/components/layout/PublicFooter'
 import { cn } from '@/lib/utils'
