@@ -218,7 +218,7 @@ export const comparisons: ComparisonData[] = [
       },
       {
         q: 'Is Wrively just a ChatGPT wrapper?',
-        a: 'No. The AI model is the engine. The Voice Layer is the product. Wrively\'s differentiation is the persistent persona system built during onboarding — the thing that makes every generation start from who you are, not from a blank prompt. That\'s not possible to replicate by prompting ChatGPT differently.',
+        a: 'No. The AI model is the engine. The Voice Layer is the product. Wrively\'s differentiation is the persistent persona system built during onboarding - the thing that makes every generation start from who you are, not from a blank prompt. That\'s not possible to replicate by prompting ChatGPT differently.',
       },
       {
         q: 'ChatGPT has memory now. Does that change things?',
@@ -226,7 +226,7 @@ export const comparisons: ComparisonData[] = [
       },
       {
         q: 'What if I want to use both?',
-        a: 'That\'s fine. Many founders use Wrively for LinkedIn specifically and ChatGPT for everything else. They don\'t compete on general tasks — Wrively doesn\'t do research, code, or anything outside LinkedIn content. For LinkedIn posts specifically, Wrively produces meaningfully better output.',
+        a: 'That\'s fine. Many founders use Wrively for LinkedIn specifically and ChatGPT for everything else. They don\'t compete on general tasks - Wrively doesn\'t do research, code, or anything outside LinkedIn content. For LinkedIn posts specifically, Wrively produces meaningfully better output.',
       },
     ],
   },
@@ -237,13 +237,13 @@ export const comparisons: ComparisonData[] = [
     competitorName: 'Jasper',
     competitorTagline: 'AI content platform for marketing teams',
     metaTitle: 'Wrively vs Jasper for LinkedIn • A Jasper Alternative Built for Founder Voice',
-    metaDescription: 'Looking for a Jasper alternative for LinkedIn? Wrively is purpose-built for founders and professionals — not marketing teams. Compare features and pricing.',
+    metaDescription: 'Looking for a Jasper alternative for LinkedIn? Wrively is purpose-built for founders and professionals - not marketing teams. Compare features and pricing.',
     headline: 'Jasper is built for marketing teams. You\'re a founder posting as yourself.',
     subheadline: 'Jasper is a powerful tool for the wrong use case. If you\'re posting as a person, not a brand, Wrively is built for that.',
-    intro: 'Jasper is a strong AI writing platform — for marketing teams producing blog posts, ads, and brand content at scale. If you\'re a marketing manager running content across multiple channels, Jasper makes sense. If you\'re a founder or professional posting on LinkedIn as yourself, Jasper is a $49/month solution to a problem that doesn\'t require that much infrastructure.',
+    intro: 'Jasper is a strong AI writing platform - for marketing teams producing blog posts, ads, and brand content at scale. If you\'re a marketing manager running content across multiple channels, Jasper makes sense. If you\'re a founder or professional posting on LinkedIn as yourself, Jasper is a $49/month solution to a problem that doesn\'t require that much infrastructure.',
     whoSwitches: 'Founders and professionals who signed up for Jasper expecting LinkedIn-specific voice tools, found it was primarily built for marketing teams, and want something purpose-built for personal posting.',
-    wrivelySummary: 'Wrively is built for one thing: LinkedIn posts that sound like you. Not blog posts. Not ad copy. Not brand content. One platform, one channel, and a Voice Layer that persists so every generation comes from your specific model — not a marketing brief.',
-    competitorSummary: 'Jasper is a broad AI content platform designed for marketing teams. It has templates for dozens of content types — blog posts, ads, social media, email, landing pages. LinkedIn is one of many outputs. The voice matching is template-based, not persona-persistent. At $49/month minimum, it\'s priced for marketing budgets, not individual founders.',
+    wrivelySummary: 'Wrively is built for one thing: LinkedIn posts that sound like you. Not blog posts. Not ad copy. Not brand content. One platform, one channel, and a Voice Layer that persists so every generation comes from your specific model - not a marketing brief.',
+    competitorSummary: 'Jasper is a broad AI content platform designed for marketing teams. It has templates for dozens of content types - blog posts, ads, social media, email, landing pages. LinkedIn is one of many outputs. The voice matching is template-based, not persona-persistent. At $49/month minimum, it\'s priced for marketing budgets, not individual founders.',
     table: [
       { feature: 'Built specifically for LinkedIn',     wrively: true,            competitor: false, },
       { feature: 'Persistent Voice Layer',              wrively: true,            competitor: false, },
@@ -261,7 +261,7 @@ export const comparisons: ComparisonData[] = [
     switchReasons: [
       {
         title: 'Jasper is built for teams. You\'re a person.',
-        body: 'Jasper\'s brand voice features are designed for marketing teams maintaining consistency across writers. If you\'re posting as yourself — one voice, one person — that infrastructure adds complexity without value.',
+        body: 'Jasper\'s brand voice features are designed for marketing teams maintaining consistency across writers. If you\'re posting as yourself - one voice, one person - that infrastructure adds complexity without value.',
       },
       {
         title: 'The price difference is hard to justify early',
@@ -269,11 +269,11 @@ export const comparisons: ComparisonData[] = [
       },
       {
         title: 'Jasper\'s LinkedIn output is template-based, not voice-trained',
-        body: 'Jasper generates LinkedIn posts from templates. Wrively generates them from a persistent model of your specific voice — your stage, your personality type, your content pillars, your communication tone. The output difference is significant for personal posting.',
+        body: 'Jasper generates LinkedIn posts from templates. Wrively generates them from a persistent model of your specific voice - your stage, your personality type, your content pillars, your communication tone. The output difference is significant for personal posting.',
       },
       {
         title: 'Wrively is the entire workflow, not just the writing step',
-        body: 'Daily topic suggestions, comment generation, draft rewriting, content history — the full posting habit loop. Jasper gives you a writing tool. Wrively gives you a system.',
+        body: 'Daily topic suggestions, comment generation, draft rewriting, content history - the full posting habit loop. Jasper gives you a writing tool. Wrively gives you a system.',
       },
     ],
     faq: [
@@ -291,7 +291,7 @@ export const comparisons: ComparisonData[] = [
       },
       {
         q: 'What if I\'m already paying for Jasper?',
-        a: 'If you\'re using Jasper purely for LinkedIn posts, you\'re likely overpaying for features you don\'t use. Try Wrively free — no card required. If the LinkedIn output is better (most founders find it is), cancelling Jasper saves you $40+/month.',
+        a: 'If you\'re using Jasper purely for LinkedIn posts, you\'re likely overpaying for features you don\'t use. Try Wrively free - no card required. If the LinkedIn output is better (most founders find it is), cancelling Jasper saves you $40+/month.',
       },
     ],
   },
@@ -328,7 +328,7 @@ export const comparisons: ComparisonData[] = [
       },
       {
         title: 'Voice consistency over posting frequency',
-        body: 'Posting more often with generic output builds the wrong kind of presence. Wrively prioritizes posts that sound distinctly like you — which builds more trust per post than volume alone.',
+        body: 'Posting more often with generic output builds the wrong kind of presence. Wrively prioritizes posts that sound distinctly like you - which builds more trust per post than volume alone.',
       },
       {
         title: 'You are a solo founder, not a content operation',
@@ -346,7 +346,7 @@ export const comparisons: ComparisonData[] = [
       },
       {
         q: 'Can Wrively replace my entire Draftly workflow?',
-        a: 'If you primarily use Draftly for scheduling, no. If you use it mainly to generate and organize content, then yes — Wrively covers that with significantly better voice quality.',
+        a: 'If you primarily use Draftly for scheduling, no. If you use it mainly to generate and organize content, then yes - Wrively covers that with significantly better voice quality.',
       },
       {
         q: 'Is Wrively cheaper than Draftly?',
@@ -367,7 +367,7 @@ export const comparisons: ComparisonData[] = [
     intro: 'Shield Analytics is a LinkedIn analytics tool. It tells you which posts performed, what your best posting times are, and how your follower growth tracks over time. That information is genuinely useful - once you are posting consistently. For founders who are not posting consistently yet, adding an analytics layer to an empty content stream does not move anything forward.',
     whoSwitches: 'Founders who signed up for Shield Analytics while still struggling to post consistently, realized that tracking performance required having performance to track.',
     wrivelySummary: 'Wrively is a content generation tool, not an analytics tool. It builds your Voice Layer once and generates posts from it. The goal is to get you posting consistently first. Once you are posting, performance data starts to matter - which is when tools like Shield become genuinely useful.',
-    competitorSummary: 'Shield Analytics provides detailed LinkedIn performance metrics: post analytics, follower growth, best times to post, content type breakdowns, and benchmarking. It does not generate content — it measures it.',
+    competitorSummary: 'Shield Analytics provides detailed LinkedIn performance metrics: post analytics, follower growth, best times to post, content type breakdowns, and benchmarking. It does not generate content - it measures it.',
     table: [
       { feature: 'AI post generation',             wrively: true,             competitor: false },
       { feature: 'Voice-trained content',          wrively: true,             competitor: false },
