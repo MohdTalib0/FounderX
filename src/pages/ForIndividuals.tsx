@@ -9,11 +9,11 @@ export default function ForIndividuals() {
   return (
     <div className="min-h-screen bg-background text-text overflow-x-hidden">
       <Helmet>
-        <title>Wrively for Individuals — Personal Brand on LinkedIn | Voice Layer</title>
-        <meta name="description" content="Build your personal brand on LinkedIn without spending hours on content. Wrively writes in your voice — for consultants, executives, freelancers, and creators." />
+        <title>Wrively for Individuals • Personal Brand on LinkedIn | Voice Layer</title>
+        <meta name="description" content="Build your personal brand on LinkedIn without spending hours on content. Wrively writes in your voice • for consultants, executives, freelancers, and creators." />
         <link rel="canonical" href="https://wrively.com/for-individuals" />
-        <meta property="og:title" content="Wrively for Individuals — Personal Brand on LinkedIn" />
-        <meta property="og:description" content="Build your personal brand on LinkedIn without spending hours on content. Wrively writes in your voice — for consultants, executives, freelancers, and creators." />
+        <meta property="og:title" content="Wrively for Individuals • Personal Brand on LinkedIn" />
+        <meta property="og:description" content="Build your personal brand on LinkedIn without spending hours on content. Wrively writes in your voice • for consultants, executives, freelancers, and creators." />
         <meta property="og:url" content="https://wrively.com/for-individuals" />
       </Helmet>
 

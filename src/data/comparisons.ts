@@ -39,14 +39,14 @@ export const comparisons: ComparisonData[] = [
     slug: 'taplio-alternative',
     competitorName: 'Taplio',
     competitorTagline: 'LinkedIn scheduling and analytics platform',
-    metaTitle: 'Wrively vs Taplio — The Taplio Alternative Built for Founder Voice',
+    metaTitle: 'Wrively vs Taplio • The Taplio Alternative Built for Founder Voice',
     metaDescription: 'Looking for a Taplio alternative? Wrively skips the scheduler and focuses on what actually makes LinkedIn work: posts that sound like you. Compare features, pricing, and use cases.',
     headline: 'A Taplio alternative that writes in your voice, not a template.',
     subheadline: 'Taplio schedules. Wrively writes. If your posts don\'t sound like you, no scheduler fixes that.',
     intro: 'Taplio is a solid LinkedIn scheduling and analytics tool. If you need a content calendar, auto-posting, and engagement pod features, it covers those well. But most founders who try Taplio hit the same wall: the writing still feels like work. The scheduler is only useful if the content is worth scheduling.',
     whoSwitches: 'Founders who signed up for Taplio, saw the scheduling dashboard, and realized they still had no idea what to write or how to make it sound like them.',
-    wrivelySummary: 'Wrively builds a Voice Layer from your onboarding answers — your stage, your audience, your personality, how you think about your work. Every post it generates comes from that model. You never start from a blank page and you never get output that sounds like it was written for someone else.',
-    competitorSummary: 'Taplio is primarily a LinkedIn scheduling and CRM tool. It has AI writing features but they are not voice-trained — they generate LinkedIn-style content, not your-voice content. The core product is built around scheduling queues, engagement pods, and profile analytics.',
+    wrivelySummary: 'Wrively builds a Voice Layer from your onboarding answers - your stage, your audience, your personality, how you think about your work. Every post it generates comes from that model. You never start from a blank page and you never get output that sounds like it was written for someone else.',
+    competitorSummary: 'Taplio is primarily a LinkedIn scheduling and CRM tool. It has AI writing features but they are not voice-trained - they generate LinkedIn-style content, not your-voice content. The core product is built around scheduling queues, engagement pods, and profile analytics.',
     table: [
       { feature: 'AI post generation',         wrively: true,            competitor: true,  wrivelySub: 'Voice-trained to you', },
       { feature: 'Writes in your personal voice', wrively: true,         competitor: false, },
@@ -83,7 +83,7 @@ export const comparisons: ComparisonData[] = [
     faq: [
       {
         q: 'Can Wrively replace Taplio completely?',
-        a: 'If you primarily use Taplio for scheduling and auto-posting, no. Wrively does not schedule or auto-post. If you use Taplio mainly to generate and organize content, then yes — Wrively covers that with significantly better voice quality.',
+        a: 'If you primarily use Taplio for scheduling and auto-posting, no. Wrively does not schedule or auto-post. If you use Taplio mainly to generate and organize content, then yes - Wrively covers that with significantly better voice quality.',
       },
       {
         q: 'Does Wrively have LinkedIn analytics?',
@@ -91,7 +91,7 @@ export const comparisons: ComparisonData[] = [
       },
       {
         q: 'How is Wrively\'s AI writing different from Taplio\'s?',
-        a: 'Taplio\'s AI generates LinkedIn posts. Wrively builds a Voice Layer during onboarding — your role, stage, personality type, audience, and content pillars — and every post generates from that model. The output is specific to you, not to "a founder in SaaS."',
+        a: 'Taplio\'s AI generates LinkedIn posts. Wrively builds a Voice Layer during onboarding - your role, stage, personality type, audience, and content pillars - and every post generates from that model. The output is specific to you, not to "a founder in SaaS."',
       },
       {
         q: 'Is there a free trial?',
@@ -105,13 +105,13 @@ export const comparisons: ComparisonData[] = [
     slug: 'hypefury-alternative',
     competitorName: 'Hypefury',
     competitorTagline: 'Social media scheduling for Twitter/X and LinkedIn',
-    metaTitle: 'Wrively vs Hypefury — The Hypefury Alternative That Actually Writes for You',
+    metaTitle: 'Wrively vs Hypefury • The Hypefury Alternative That Actually Writes for You',
     metaDescription: 'Comparing Wrively and Hypefury for LinkedIn? Hypefury schedules content. Wrively writes it in your voice. See which one solves the problem you actually have.',
     headline: 'A Hypefury alternative for founders who want better writing, not just a queue.',
     subheadline: 'Hypefury helps you schedule. Wrively helps you have something worth scheduling.',
     intro: 'Hypefury is a popular scheduling tool, primarily built for Twitter/X creators who also post on LinkedIn. If you\'re cross-posting between platforms and want a queue-based workflow, it handles that well. But LinkedIn and Twitter are different platforms with different audiences and different content formats. A tool built around Twitter scheduling is not the same as a tool built around LinkedIn voice.',
     whoSwitches: 'Founders who started with Hypefury for Twitter, added LinkedIn as a secondary channel, and realized their cross-posted content wasn\'t resonating because it wasn\'t written for the LinkedIn audience or format.',
-    wrivelySummary: 'Wrively is built exclusively for LinkedIn. Every feature — post generation, draft rewriting, comment suggestions — is designed for how LinkedIn works, how its algorithm distributes content, and how a founder builds credibility on that specific platform. It writes in your voice because it first learns your voice.',
+    wrivelySummary: 'Wrively is built exclusively for LinkedIn. Every feature - post generation, draft rewriting, comment suggestions - is designed for how LinkedIn works, how its algorithm distributes content, and how a founder builds credibility on that specific platform. It writes in your voice because it first learns your voice.',
     competitorSummary: 'Hypefury started as a Twitter scheduling tool and expanded to LinkedIn. Its core strength is cross-platform content management, reposting top-performing tweets as LinkedIn posts, and managing a posting queue. The AI writing features are general-purpose and not LinkedIn-specific.',
     table: [
       { feature: 'AI post generation',              wrively: true,             competitor: true,  },
@@ -131,11 +131,11 @@ export const comparisons: ComparisonData[] = [
     switchReasons: [
       {
         title: 'You\'re LinkedIn-first, not Twitter-first',
-        body: 'Hypefury is fundamentally a Twitter tool that added LinkedIn. If LinkedIn is your primary platform — where your potential customers, investors, and hires spend time — you want a tool designed from the ground up for how LinkedIn content works.',
+        body: 'Hypefury is fundamentally a Twitter tool that added LinkedIn. If LinkedIn is your primary platform - where your potential customers, investors, and hires spend time - you want a tool designed from the ground up for how LinkedIn content works.',
       },
       {
         title: 'Cross-posted Twitter content doesn\'t land on LinkedIn',
-        body: 'The formats are different. The hook structures are different. The audiences are different. What goes viral on Twitter often reads like noise on LinkedIn. Wrively writes for LinkedIn specifically — the right length, the right format, the right tone for the professional feed.',
+        body: 'The formats are different. The hook structures are different. The audiences are different. What goes viral on Twitter often reads like noise on LinkedIn. Wrively writes for LinkedIn specifically - the right length, the right format, the right tone for the professional feed.',
       },
       {
         title: 'The writing still feels generic',
@@ -161,7 +161,7 @@ export const comparisons: ComparisonData[] = [
       },
       {
         q: 'What\'s the difference between Wrively\'s free plan and Hypefury\'s trial?',
-        a: 'Wrively\'s free plan is permanent — 12 post generations per month with no expiry date and no credit card required. You can use it indefinitely. Hypefury requires a credit card and runs a 7-day trial before billing starts.',
+        a: 'Wrively\'s free plan is permanent - 12 post generations per month with no expiry date and no credit card required. You can use it indefinitely. Hypefury requires a credit card and runs a 7-day trial before billing starts.',
       },
     ],
   },
@@ -171,10 +171,10 @@ export const comparisons: ComparisonData[] = [
     slug: 'chatgpt-for-linkedin',
     competitorName: 'ChatGPT',
     competitorTagline: 'General-purpose AI assistant',
-    metaTitle: 'Wrively vs ChatGPT for LinkedIn — Why ChatGPT Posts Don\'t Sound Like You',
-    metaDescription: 'Using ChatGPT for LinkedIn posts? Here\'s why the output sounds generic — and how Wrively fixes it with a Voice Layer that actually remembers who you are.',
+    metaTitle: 'Wrively vs ChatGPT for LinkedIn • Why ChatGPT Posts Don\'t Sound Like You',
+    metaDescription: 'Using ChatGPT for LinkedIn posts? Here\'s why the output sounds generic - and how Wrively fixes it with a Voice Layer that actually remembers who you are.',
     headline: 'ChatGPT is a blank page. Wrively is a memory.',
-    subheadline: 'ChatGPT starts from zero every session. Wrively starts from you — and stays there.',
+    subheadline: 'ChatGPT starts from zero every session. Wrively starts from you - and stays there.',
     intro: 'ChatGPT can write LinkedIn posts. That\'s not the problem. The problem is that it doesn\'t know you. Every time you open it, you\'re a stranger. You brief it, it writes something competent and generic, you edit it into something vaguely resembling your voice, you spend 40 minutes on a post you\'re not fully happy with. Then you do it again next week. That\'s not a posting system. That\'s a different kind of blank page.',
     whoSwitches: 'Founders who have been using ChatGPT for LinkedIn posts, are tired of the output sounding like "a LinkedIn influencer wrote this," and want a tool that actually learns how they think.',
     wrivelySummary: 'Wrively builds a Voice Layer from your onboarding answers — your role, stage, personality, audience, and content pillars. Every post it generates comes from that persistent model. You never explain yourself to it. It already knows you. The output sounds like you because it\'s generated from a model of you, not from a fresh prompt.',
@@ -236,7 +236,7 @@ export const comparisons: ComparisonData[] = [
     slug: 'jasper-for-linkedin',
     competitorName: 'Jasper',
     competitorTagline: 'AI content platform for marketing teams',
-    metaTitle: 'Wrively vs Jasper for LinkedIn — A Jasper Alternative Built for Founder Voice',
+    metaTitle: 'Wrively vs Jasper for LinkedIn • A Jasper Alternative Built for Founder Voice',
     metaDescription: 'Looking for a Jasper alternative for LinkedIn? Wrively is purpose-built for founders and professionals — not marketing teams. Compare features and pricing.',
     headline: 'Jasper is built for marketing teams. You\'re a founder posting as yourself.',
     subheadline: 'Jasper is a powerful tool for the wrong use case. If you\'re posting as a person, not a brand, Wrively is built for that.',
@@ -301,7 +301,7 @@ export const comparisons: ComparisonData[] = [
     slug: 'draftly-alternative',
     competitorName: 'Draftly',
     competitorTagline: 'LinkedIn content creator and scheduler',
-    metaTitle: 'Wrively vs Draftly — The Draftly Alternative That Writes in Your Voice',
+    metaTitle: 'Wrively vs Draftly • The Draftly Alternative That Writes in Your Voice',
     metaDescription: 'Comparing Wrively and Draftly for LinkedIn content? See how a Voice Layer approach outperforms template-based scheduling for founders who want to sound like themselves.',
     headline: 'A Draftly alternative focused on voice, not templates.',
     subheadline: 'Draftly helps you schedule. Wrively helps you write. The writing problem comes first.',
@@ -360,13 +360,13 @@ export const comparisons: ComparisonData[] = [
     slug: 'shield-analytics-alternative',
     competitorName: 'Shield Analytics',
     competitorTagline: 'LinkedIn analytics and performance tracking',
-    metaTitle: 'Wrively vs Shield Analytics — Two Different LinkedIn Problems',
+    metaTitle: 'Wrively vs Shield Analytics • Two Different LinkedIn Problems',
     metaDescription: 'Shield Analytics tracks LinkedIn performance. Wrively generates LinkedIn content in your voice. They solve different problems. Here is when each one makes sense.',
     headline: 'Shield tracks your LinkedIn. Wrively writes it.',
     subheadline: 'If you do not have consistent posts, analytics will not help. Wrively solves the creation problem first.',
-    intro: 'Shield Analytics is a LinkedIn analytics tool. It tells you which posts performed, what your best posting times are, and how your follower growth tracks over time. That information is genuinely useful — once you are posting consistently. For founders who are not posting consistently yet, adding an analytics layer to an empty content stream does not move anything forward.',
+    intro: 'Shield Analytics is a LinkedIn analytics tool. It tells you which posts performed, what your best posting times are, and how your follower growth tracks over time. That information is genuinely useful - once you are posting consistently. For founders who are not posting consistently yet, adding an analytics layer to an empty content stream does not move anything forward.',
     whoSwitches: 'Founders who signed up for Shield Analytics while still struggling to post consistently, realized that tracking performance required having performance to track.',
-    wrivelySummary: 'Wrively is a content generation tool, not an analytics tool. It builds your Voice Layer once and generates posts from it. The goal is to get you posting consistently first. Once you are posting, performance data starts to matter — which is when tools like Shield become genuinely useful.',
+    wrivelySummary: 'Wrively is a content generation tool, not an analytics tool. It builds your Voice Layer once and generates posts from it. The goal is to get you posting consistently first. Once you are posting, performance data starts to matter - which is when tools like Shield become genuinely useful.',
     competitorSummary: 'Shield Analytics provides detailed LinkedIn performance metrics: post analytics, follower growth, best times to post, content type breakdowns, and benchmarking. It does not generate content — it measures it.',
     table: [
       { feature: 'AI post generation',             wrively: true,             competitor: false },
@@ -419,13 +419,13 @@ export const comparisons: ComparisonData[] = [
     slug: 'lempod-alternative',
     competitorName: 'Lempod',
     competitorTagline: 'LinkedIn engagement pods and automation',
-    metaTitle: 'Wrively vs Lempod — Why Engagement Pods Are the Wrong Solution',
+    metaTitle: 'Wrively vs Lempod • Why Engagement Pods Are the Wrong Solution',
     metaDescription: 'Considering Lempod for LinkedIn growth? See why founders are switching to Wrively for authentic voice content instead of artificial engagement boosts.',
     headline: 'Authentic voice vs. artificial engagement.',
     subheadline: 'Lempod inflates your numbers. Wrively improves your writing. These are not the same thing.',
-    intro: 'Lempod is an engagement pod tool — it connects you with other LinkedIn users who automatically like and comment on your posts to boost algorithmic reach. There is a real argument for early visibility. But engagement pods come with meaningful tradeoffs: the comments are generic, the engagement is not genuine, and LinkedIn has actively penalized pod activity in algorithm updates. The reach you get is not the same as the trust you build.',
+    intro: 'Lempod is an engagement pod tool - it connects you with other LinkedIn users who automatically like and comment on your posts to boost algorithmic reach. There is a real argument for early visibility. But engagement pods come with meaningful tradeoffs: the comments are generic, the engagement is not genuine, and LinkedIn has actively penalized pod activity in algorithm updates. The reach you get is not the same as the trust you build.',
     whoSwitches: 'Founders who tried Lempod for a few months, saw inflated impression numbers, but noticed that the engagement was not translating into real connections, DMs, or business outcomes.',
-    wrivelySummary: 'Wrively focuses on writing quality rather than engagement volume. When a post sounds genuinely like you, it earns real comments from real people who found it valuable. That kind of engagement compounds — a thoughtful comment from an investor is worth more than 50 pod likes.',
+    wrivelySummary: 'Wrively focuses on writing quality rather than engagement volume. When a post sounds genuinely like you, it earns real comments from real people who found it valuable. That kind of engagement compounds: a thoughtful comment from an investor is worth more than 50 pod likes.',
     competitorSummary: 'Lempod is an engagement pod platform that automatically generates likes and comments on your posts from other pod members. The goal is to trigger the LinkedIn algorithm early and boost distribution. It does not help with content creation.',
     table: [
       { feature: 'AI post generation',            wrively: true,             competitor: false },
@@ -441,7 +441,7 @@ export const comparisons: ComparisonData[] = [
     switchReasons: [
       {
         title: 'Artificial engagement does not convert',
-        body: 'Pod likes inflate your impression count but they do not produce investor DMs, customer signups, or hire interest. Real business outcomes on LinkedIn come from posts that make real people want to respond — not automated interactions from strangers in a pod.',
+        body: 'Pod likes inflate your impression count but they do not produce investor DMs, customer signups, or hire interest. Real business outcomes on LinkedIn come from posts that make real people want to respond - not automated interactions from strangers in a pod.',
       },
       {
         title: 'LinkedIn actively penalizes pod activity',
@@ -463,7 +463,7 @@ export const comparisons: ComparisonData[] = [
       },
       {
         q: 'Will Wrively posts get the same reach as pod-boosted posts?',
-        a: 'Not immediately. Pods can boost early signal on a post which helps with algorithm distribution. But posts that earn genuine early engagement (real comments from real readers) typically outperform pod-boosted posts over a 48-hour window — and do not carry the account risk.',
+        a: 'Not immediately. Pods can boost early signal on a post which helps with algorithm distribution. But posts that earn genuine early engagement (real comments from real readers) typically outperform pod-boosted posts over a 48-hour window - and do not carry the account risk.',
       },
       {
         q: 'Who should stick with Lempod?',

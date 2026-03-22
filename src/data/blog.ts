@@ -808,7 +808,7 @@ export const articles: BlogArticle[] = [
   {
     slug: 'linkedin-algorithm-2026-what-founders-need-to-know',
     title: 'The LinkedIn Algorithm in 2026: What Founders Actually Need to Know',
-    description: 'Most LinkedIn algorithm advice is outdated or wrong. Here is what actually drives reach for founders posting original content in 2026 — based on what is working now.',
+    description: 'Most LinkedIn algorithm advice is outdated or wrong. Here is what actually drives reach for founders posting original content in 2026 - based on what is working now.',
     date: '2026-03-18',
     readTime: '9 min read',
     category: 'Strategy',
@@ -847,7 +847,7 @@ export const articles: BlogArticle[] = [
         content: [
           'Post when your most engaged followers are online, not when global LinkedIn usage peaks',
           'For most B2B founders, Tuesday through Thursday mornings (7am to 9am in your audience\'s time zone) outperform other windows',
-          'Avoid Friday afternoons and weekends for original content — lower engagement in the initial window means poor distribution regardless of post quality',
+          'Avoid Friday afternoons and weekends for original content - lower engagement in the initial window means poor distribution regardless of post quality',
           'The first comment on your own post, within the first 30 minutes, adds context and signals engagement to the algorithm',
         ],
       },
@@ -857,14 +857,14 @@ export const articles: BlogArticle[] = [
       },
       {
         type: 'p',
-        content: 'LinkedIn has shifted its distribution model significantly since 2023. What worked then — hashtag optimization, tagging people in posts, posting links — no longer works the same way.',
+        content: 'LinkedIn has shifted its distribution model significantly since 2023. What worked then - hashtag optimization, tagging people in posts, posting links - no longer works the same way.',
       },
       {
         type: 'ol',
         content: [
           'Original first-person perspective. The algorithm can now detect reposted or recycled content. Original takes, personal stories, and first-person observations consistently outperform reposted content by 3 to 5x in organic reach.',
           'Comments, not just likes. A like takes 0.2 seconds. A comment takes 30 seconds. The algorithm weights comments 5 to 10x more heavily than reactions. Posts that end with a specific question get disproportionate distribution.',
-          'Early saves and reposts. When someone saves your post (the bookmark icon), it signals high-quality content to the algorithm. Reposts are the strongest signal of all — they mean someone valued your content enough to attach their name to it.',
+          'Early saves and reposts. When someone saves your post (the bookmark icon), it signals high-quality content to the algorithm. Reposts are the strongest signal of all - they mean someone valued your content enough to attach their name to it.',
           'Native video and documents. LinkedIn is actively promoting native video and PDF carousel posts to compete with other platforms. These formats consistently reach 2 to 4x more people than text posts with the same engagement rate.',
           'Consistency signals credibility. Posting 3 times per week for 4 weeks outperforms posting 12 times in one week, then going silent. The algorithm models your account as reliable or unreliable based on posting patterns.',
         ],
@@ -889,7 +889,7 @@ export const articles: BlogArticle[] = [
       },
       {
         type: 'p',
-        content: 'Every post is shown in the feed with only the first two to three lines visible. On mobile — where over 60% of LinkedIn usage happens — that is often just one line. The hook determines whether anyone reads further. The rest of the post determines whether they engage.',
+        content: 'Every post is shown in the feed with only the first two to three lines visible. On mobile, where over 60% of LinkedIn usage happens, that is often just one line. The hook determines whether anyone reads further. The rest of the post determines whether they engage.',
       },
       {
         type: 'p',
@@ -905,7 +905,7 @@ export const articles: BlogArticle[] = [
       },
       {
         type: 'p',
-        content: 'Founders who post as themselves — not as their company — have a structural advantage in LinkedIn\'s current algorithm. The platform is actively investing in personal content because it drives more engagement than corporate content. This window will not last forever. It is open now.',
+        content: 'Founders who post as themselves, not as their company, have a structural advantage in LinkedIn\'s current algorithm. The platform is actively investing in personal content because it drives more engagement than corporate content. This window will not last forever. It is open now.',
       },
       {
         type: 'callout',
@@ -967,12 +967,12 @@ export const articles: BlogArticle[] = [
       {
         type: 'ol',
         content: [
-          '"After 47 customer interviews, I finally understand why people churn." — Specific number creates authority. "Finally understand" signals a hard-earned insight, not surface advice.',
-          '"We shipped our first product in 11 days. Here is the only shortcut that actually worked." — Specific timeline. "Only shortcut" creates a knowledge gap — what is the one thing?',
-          '"I have made the same hiring mistake three times. Last week I figured out why." — Admission of failure builds trust. "Last week" makes it recent and specific.',
-          '"The best onboarding email I ever wrote was 4 sentences long. This is what it said." — Counterintuitive ("best" = shortest). Creates immediate curiosity about the content.',
-          '"Revenue stalled for 6 weeks. This is the exact message that broke the pattern." — Problem + specific result. "Exact message" promises a tangible takeaway.',
-          '"I spent $40,000 on ads before learning this one thing about our ICP." — Cost anchor establishes stakes. The lesson is now worth paying attention to.',
+          '"After 47 customer interviews, I finally understand why people churn." - Specific number creates authority. "Finally understand" signals a hard-earned insight, not surface advice.',
+          '"We shipped our first product in 11 days. Here is the only shortcut that actually worked." - Specific timeline. "Only shortcut" creates a knowledge gap - what is the one thing?',
+          '"I have made the same hiring mistake three times. Last week I figured out why." - Admission of failure builds trust. "Last week" makes it recent and specific.',
+          '"The best onboarding email I ever wrote was 4 sentences long. This is what it said." - Counterintuitive ("best" = shortest). Creates immediate curiosity about the content.',
+          '"Revenue stalled for 6 weeks. This is the exact message that broke the pattern." - Problem + specific result. "Exact message" promises a tangible takeaway.',
+          '"I spent $40,000 on ads before learning this one thing about our ICP." - Cost anchor establishes stakes. The lesson is now worth paying attention to.',
         ],
       },
       {
@@ -981,17 +981,17 @@ export const articles: BlogArticle[] = [
       },
       {
         type: 'p',
-        content: 'Bold hooks take a clear stance. They polarize slightly — some readers will agree strongly, some will push back. Both responses drive comments, which is the highest-value engagement signal on LinkedIn.',
+        content: 'Bold hooks take a clear stance. They polarize slightly - some readers will agree strongly, some will push back. Both responses drive comments, which is the highest-value engagement signal on LinkedIn.',
       },
       {
         type: 'ol',
         content: [
-          '"Most LinkedIn advice is written by people who have never built a company." — Direct challenge to a category. Immediately self-identifies with the reader who has felt the same.',
-          '"Raising a seed round before finding product-market fit is the worst thing that happened to us." — Counterintuitive for a founder. Challenges a widely-held assumption.',
-          '"The only LinkedIn metric that matters is how many DMs you get from people who want to work with you." — Dismisses vanity metrics. Forces the reader to agree or defend their current approach.',
-          '"Founders who do not post on LinkedIn in 2026 are handing their distribution to their competitors." — Stakes-based claim. Creates urgency without being aggressive.',
-          '"We almost did not build the feature that became 60% of our revenue. Here is what changed our minds." — Opens at a decision point. The reader wants to know what almost happened.',
-          '"Cold email is dying. Here is what is replacing it for early-stage B2B founders." — Challenge to a widespread tactic. Specific audience signals relevance.',
+          '"Most LinkedIn advice is written by people who have never built a company." - Direct challenge to a category. Immediately self-identifies with the reader who has felt the same.',
+          '"Raising a seed round before finding product-market fit is the worst thing that happened to us." - Counterintuitive for a founder. Challenges a widely-held assumption.',
+          '"The only LinkedIn metric that matters is how many DMs you get from people who want to work with you." - Dismisses vanity metrics. Forces the reader to agree or defend their current approach.',
+          '"Founders who do not post on LinkedIn in 2026 are handing their distribution to their competitors." - Stakes-based claim. Creates urgency without being aggressive.',
+          '"We almost did not build the feature that became 60% of our revenue. Here is what changed our minds." - Opens at a decision point. The reader wants to know what almost happened.',
+          '"Cold email is dying. Here is what is replacing it for early-stage B2B founders." - Challenge to a widespread tactic. Specific audience signals relevance.',
         ],
       },
       {
@@ -1000,17 +1000,17 @@ export const articles: BlogArticle[] = [
       },
       {
         type: 'p',
-        content: 'Contrarian hooks challenge something most people believe. They work best when you actually have evidence or experience to back the claim up — they should feel surprising, not just provocative.',
+        content: 'Contrarian hooks challenge something most people believe. They work best when you actually have evidence or experience to back the claim up - they should feel surprising, not just provocative.',
       },
       {
         type: 'ol',
         content: [
-          '"The advice to launch fast nearly killed our startup." — Direct challenge to "launch fast" orthodoxy. Immediately relevant to any founder who has heard this advice.',
-          '"Your investors are not your advisors. The founders who treat them that way scale slowest." — Challenges a comfortable narrative. Founders with experience will nod; those without will want to read why.',
-          '"I grew from 0 to 8,000 LinkedIn followers without posting once about our product." — Counterintuitive growth story. "Without posting about our product" creates the knowledge gap.',
-          '"The best thing I did for our growth rate was stop measuring it weekly." — Paradoxical. Forces the reader to reconcile the claim with their own assumptions.',
-          '"We turned down our best offer because the VC insisted on a clause we had never heard of. It was the right call." — Tension (turned down best offer) + validation (it was right). The clause creates curiosity.',
-          '"Our product was better than our competitor\'s. That is exactly why we were losing." — Complete inversion of the expected logic. Begs the question: how?',
+          '"The advice to launch fast nearly killed our startup." - Direct challenge to "launch fast" orthodoxy. Immediately relevant to any founder who has heard this advice.',
+          '"Your investors are not your advisors. The founders who treat them that way scale slowest." - Challenges a comfortable narrative. Founders with experience will nod; those without will want to read why.',
+          '"I grew from 0 to 8,000 LinkedIn followers without posting once about our product." - Counterintuitive growth story. "Without posting about our product" creates the knowledge gap.',
+          '"The best thing I did for our growth rate was stop measuring it weekly." - Paradoxical. Forces the reader to reconcile the claim with their own assumptions.',
+          '"We turned down our best offer because the VC insisted on a clause we had never heard of. It was the right call." - Tension (turned down best offer) + validation (it was right). The clause creates curiosity.',
+          '"Our product was better than our competitor\'s. That is exactly why we were losing." - Complete inversion of the expected logic. Begs the question: how?',
         ],
       },
       {
@@ -1035,15 +1035,15 @@ export const articles: BlogArticle[] = [
       },
       {
         type: 'p',
-        content: 'Before publishing, apply this test to your first line: read it out loud and ask "so what?" If the answer is obvious — if there is no tension, no gap, no reason to keep reading — the hook needs rewriting.',
+        content: 'Before publishing, apply this test to your first line: read it out loud and ask "so what?" If the answer is obvious - if there is no tension, no gap, no reason to keep reading - the hook needs rewriting.',
       },
       {
         type: 'p',
-        content: 'A second test: show the first line to someone who does not know what the post is about. Ask if they want to read more. If the answer is "sure, I guess" — rewrite it. If the answer is "yes, what happened?" — publish it.',
+        content: 'A second test: show the first line to someone who does not know what the post is about. Ask if they want to read more. If the answer is "sure, I guess" - rewrite it. If the answer is "yes, what happened?" - publish it.',
       },
       {
         type: 'callout',
-        content: 'Wrively generates Safe, Bold, and Contrarian versions of every post — including three different hook options for each. You pick the variation that fits the day. No rewriting required.',
+        content: 'Wrively generates Safe, Bold, and Contrarian versions of every post - including three different hook options for each. You pick the variation that fits the day. No rewriting required.',
       },
     ],
     relatedSlugs: [
@@ -1154,7 +1154,7 @@ export const articles: BlogArticle[] = [
           'Start earlier. The compounding starts from the first post, but the results only become visible after 3 to 4 months. Every month you delay is a month of runway you are leaving on the table.',
           'Engage with comments faster. Posts that got engagement in the first 30 minutes consistently reached more people. I was slow to respond in the first two months. It hurt distribution.',
           'Post about failures sooner. I was protective about failure posts early on and saved the polished wins for LinkedIn. The failure posts were what actually built an audience.',
-          'Use a system from day one. The weeks I spent most time deciding what to post were the weeks I almost skipped. The weeks I had a clear system — a topic, a format, a variation to pick from — I never missed.',
+          'Use a system from day one. The weeks I spent most time deciding what to post were the weeks I almost skipped. The weeks I had a clear system - a topic, a format, a variation to pick from - I never missed.',
         ],
       },
       {

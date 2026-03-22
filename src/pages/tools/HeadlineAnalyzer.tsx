@@ -80,7 +80,7 @@ function analyzeHeadline(headline: string): AnalysisResult {
     lengthTip = 'Cut to the most specific, highest-signal phrase. Remove anything decorative.'
   }
 
-  // ── 2. Specificity — no generic buzzwords (0–20) ──────────────────────────
+  // ── 2. Specificity - no generic buzzwords (0-20) ──────────────────────────
   const foundWeak = WEAK_ROLE_WORDS.filter(w => lower.includes(w))
   let specificityScore = 0
   let specificityFeedback = ''
@@ -104,7 +104,7 @@ function analyzeHeadline(headline: string): AnalysisResult {
     specificityTip = 'Rewrite from scratch. Replace every abstract word with something only you could say.'
   }
 
-  // ── 3. Value proposition — action / outcome language (0–20) ──────────────
+  // ── 3. Value proposition - action / outcome language (0-20) ──────────────
   const hasValue = VALUE_WORDS.some(w => lower.includes(w))
   const hasAudience = /\b(founders?|ceos?|startups?|saas|b2b|teams?|devs?|developers?|engineers?|marketers?|agencies?|brands?)\b/i.test(text)
   let valueScore = 0
@@ -130,7 +130,7 @@ function analyzeHeadline(headline: string): AnalysisResult {
   } else {
     valueScore = 4
     valueFeedback = 'Reads like a job title, not a value proposition.'
-    valueTip = 'Reframe as "I help [specific audience] do [specific thing]" — then compress it.'
+    valueTip = 'Reframe as "I help [specific audience] do [specific thing]", then compress it.'
   }
 
   // ── 4. Credibility markers (0–20) ─────────────────────────────────────────
@@ -157,7 +157,7 @@ function analyzeHeadline(headline: string): AnalysisResult {
     credibilityTip = 'Add a number: years of experience, users served, revenue generated, or a notable brand you\'ve worked with.'
   }
 
-  // ── 5. Keyword clarity — title / role present (0–20) ─────────────────────
+  // ── 5. Keyword clarity - title / role present (0-20) ─────────────────────
   const ROLE_KEYWORDS = [
     'founder', 'ceo', 'cto', 'coo', 'vp', 'head of', 'director',
     'engineer', 'developer', 'designer', 'marketer', 'consultant',
@@ -191,7 +191,7 @@ function analyzeHeadline(headline: string): AnalysisResult {
 
   if (total >= 85) {
     grade = 'A'
-    summary = 'Strong headline. Specific, credible, and searchable. Keep it — or test a variation.'
+    summary = 'Strong headline. Specific, credible, and searchable. Keep it, or test a variation.'
   } else if (total >= 70) {
     grade = 'B'
     summary = 'Solid headline with room to sharpen. One focused edit away from excellent.'
@@ -291,10 +291,10 @@ export default function HeadlineAnalyzer() {
   return (
     <div className="min-h-screen bg-background text-text overflow-x-hidden">
       <Helmet>
-        <title>LinkedIn Headline Analyzer — Free Score and Suggestions | Wrively</title>
+        <title>LinkedIn Headline Analyzer | Free Score and Suggestions | Wrively</title>
         <meta name="description" content="Paste your LinkedIn headline and get an instant score. See exactly what's weak, what's strong, and how to fix it. Free, no signup required." />
         <link rel="canonical" href="https://wrively.com/tools/linkedin-headline-analyzer" />
-        <meta property="og:title" content="LinkedIn Headline Analyzer — Free Score and Suggestions" />
+        <meta property="og:title" content="LinkedIn Headline Analyzer | Free Score and Suggestions" />
         <meta property="og:description" content="Paste your LinkedIn headline and get an instant score across 5 criteria. Free, no signup required." />
         <meta property="og:url" content="https://wrively.com/tools/linkedin-headline-analyzer" />
         <script type="application/ld+json">{toolSchema}</script>
@@ -308,7 +308,7 @@ export default function HeadlineAnalyzer() {
         <div className="mb-10">
           <div className="inline-flex items-center gap-2 border border-primary/25 bg-primary/[0.06] text-primary text-xs font-medium px-3 py-1.5 rounded-full mb-5">
             <Sparkles className="w-3.5 h-3.5" />
-            Free tool — no signup required
+            Free tool - no signup required
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3">
             LinkedIn Headline Analyzer
@@ -460,7 +460,7 @@ export default function HeadlineAnalyzer() {
                 A great headline is step one. Your posts are step two.
               </h3>
               <p className="text-sm text-text-muted mb-4 leading-relaxed">
-                Wrively builds your Voice Layer — the model of how you think and sound —
+                Wrively builds your Voice Layer: the model of how you think and sound,
                 so every post you generate actually sounds like you. Not a template. You.
               </p>
               <Link to="/signup">
@@ -495,9 +495,9 @@ export default function HeadlineAnalyzer() {
             <div className="space-y-4">
               {[
                 { label: 'Length', desc: 'LinkedIn shows your headline in search results, connection requests, and post comments. Too short wastes real estate. Too long gets cut off. The sweet spot is 60 to 120 characters for the core message, with the full 220 available for detail.' },
-                { label: 'No generic buzzwords', desc: '"Experienced," "passionate," "results-driven" — these words appear in millions of headlines and say nothing specific about you. They signal effort but not substance. Every word should be replaceable only with something specific to you.' },
+                { label: 'No generic buzzwords', desc: '"Experienced," "passionate," "results-driven" - these words appear in millions of headlines and say nothing specific about you. They signal effort but not substance. Every word should be replaceable only with something specific to you.' },
                 { label: 'Value proposition', desc: 'Your headline should answer: what do you do and who do you do it for? "I help B2B SaaS founders build their LinkedIn audience" is a value proposition. "Marketing professional" is a title. Titles describe you. Value propositions describe what you deliver.' },
-                { label: 'Credibility markers', desc: 'Numbers, notable companies, and specific outcomes are credibility shortcuts. "200+ clients served," "ex-Stripe," "$5M ARR" — these turn a claim into proof. Even one specific number outperforms five adjectives.' },
+                { label: 'Credibility markers', desc: 'Numbers, notable companies, and specific outcomes are credibility shortcuts. "200+ clients served," "ex-Stripe," "$5M ARR" - these turn a claim into proof. Even one specific number outperforms five adjectives.' },
                 { label: 'Role keyword', desc: 'LinkedIn\'s search algorithm uses your headline as a primary signal for who you are. If someone searches for a "product designer" or "B2B consultant," your headline determines whether you appear. Include your actual role keyword somewhere visible.' },
               ].map(({ label, desc }) => (
                 <div key={label} className="bg-surface border border-border rounded-card px-5 py-4">
@@ -525,7 +525,7 @@ export default function HeadlineAnalyzer() {
             <h2 className="text-xl font-bold text-text mb-3">Your headline attracts profile visits. Your posts build the audience.</h2>
             <p className="text-base text-text-muted leading-relaxed mb-4">
               A strong headline drives profile clicks from search and from comments you leave on other posts.
-              But what converts a visitor into a follower is your content — specifically, whether your posts
+              But what converts a visitor into a follower is your content - specifically, whether your posts
               sound like a real person with a real point of view.
             </p>
             <p className="text-base text-text-muted leading-relaxed">

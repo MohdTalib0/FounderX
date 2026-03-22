@@ -107,10 +107,10 @@ export default function Pricing() {
   return (
     <div className="min-h-screen bg-background text-text overflow-x-hidden">
       <Helmet>
-        <title>Wrively Pricing — Free, Starter and Pro Plans | LinkedIn Voice Layer</title>
+        <title>Wrively Pricing • Free, Starter and Pro Plans | LinkedIn Voice Layer</title>
         <meta name="description" content="Start free with 12 posts per month. Upgrade to Starter ($9/mo) or Pro ($19/mo) for unlimited LinkedIn posts in your voice. No credit card required." />
         <link rel="canonical" href="https://wrively.com/pricing" />
-        <meta property="og:title" content="Wrively Pricing — Free, Starter and Pro Plans" />
+        <meta property="og:title" content="Wrively Pricing • Free, Starter and Pro Plans" />
         <meta property="og:description" content="Start free with 12 posts per month. Upgrade to Starter ($9/mo) or Pro ($19/mo) for unlimited LinkedIn posts in your voice." />
         <meta property="og:url" content="https://wrively.com/pricing" />
         <meta property="og:image" content="https://wrively.com/og/pricing.png" />
@@ -173,7 +173,7 @@ export default function Pricing() {
           {/* Free */}
           <PlanCard plan={PLANS[0]} />
 
-          {/* Starter — featured, elevated on desktop */}
+          {/* Starter - featured, elevated on desktop */}
           <div className="sm:-mt-4">
             <PlanCard plan={PLANS[1]} />
           </div>

@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { ArrowRight, Home, FileText, BarChart2 } from 'lucide-react'
+import { Home, FileText, BarChart2 } from 'lucide-react'
 import PublicHeader from '@/components/layout/PublicHeader'
 import PublicFooter from '@/components/layout/PublicFooter'
 import Button from '@/components/ui/Button'
 
 const POPULAR = [
   { to: '/blog', icon: FileText, label: 'Blog', desc: 'LinkedIn tips for founders' },
-  { to: '/tools/linkedin-headline-analyzer', icon: BarChart2, label: 'Headline Analyzer', desc: 'Free tool — grade your LinkedIn headline' },
+  { to: '/tools/linkedin-headline-analyzer', icon: BarChart2, label: 'Headline Analyzer', desc: 'Free tool • grade your LinkedIn headline' },
   { to: '/pricing', icon: Home, label: 'Pricing', desc: 'Free, Starter, and Pro plans' },
 ]
 

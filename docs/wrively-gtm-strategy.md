@@ -1,4 +1,4 @@
-# Wrively — Go-To-Market Strategy
+# Wrively • Go-To-Market Strategy
 ### Product Marketing + SEO Playbook
 
 **Brand:** Wrively
@@ -165,7 +165,7 @@ The founders who win attention aren't the smartest or the most creative. They're
 > **Recommended H1 (emotional, on-page):** `Sound like yourself. Every time.`
 > Removes "AI" — feels premium, personal, identity-level. More emotional than functional.
 >
-> **Recommended meta title (SEO):** `Wrively — AI That Sounds Like You | LinkedIn Voice Layer`
+> **Recommended meta title (SEO):** `Wrively • AI That Sounds Like You | LinkedIn Voice Layer`
 > Keeps "AI" for search intent. "Voice Layer" starts appearing in Google snippets, building the category association.
 >
 > **The logic:** Homepage H1 converts humans. Meta title converts Google. They're doing different jobs.
@@ -494,7 +494,7 @@ Each page: 20+ hook examples, what makes them work, a template, CTA to generate 
 ## 8. On-Page SEO for Existing Pages
 
 ### Homepage (`wrively.com`)
-- **Title:** `Wrively — LinkedIn Posts That Sound Like You`
+- **Title:** `Wrively • LinkedIn Posts That Sound Like You`
 - **H1:** Match the winning headline from the marketing brief
 - **Meta desc:** `Wrively builds your voice in 4 questions, then writes every LinkedIn post from it. Three variations. Under 3 minutes. Try free.`
 - Add FAQ schema block at bottom of page (5 Q&As targeting question-format searches)

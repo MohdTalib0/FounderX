@@ -28,7 +28,8 @@
       "WebSearch",
       "WebFetch(domain:www.pensai.ai)",
       "Read(//c/Users/moham/.claude/projects/c--Users-moham-Project---FounderX/memory/**)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(node -e \":*)"
     ],
     "additionalDirectories": [
       "c:\\Users\\moham\\.claude\\projects\\c--Users-moham-Project---FounderX\\memory"

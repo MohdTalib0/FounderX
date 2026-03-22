@@ -90,16 +90,16 @@ function analyzePost(text: string): PostResult {
     hookTip = 'Start with a bold claim, a specific number, a counterintuitive statement, or a one-line story. The hook is the only line most people read.'
   } else if (hookTooLong) {
     hookScore = 12
-    hookFeedback = 'Opening line is too long. On LinkedIn, the hook is everything — it needs to stop the scroll in under 10 words.'
+    hookFeedback = 'Opening line is too long. On LinkedIn, the hook is everything - it needs to stop the scroll in under 10 words.'
     hookTip = 'Cut your first line to under 12 words. One idea, maximum impact. The rest can come after the "...more" fold.'
   } else if (hookIsQuestion) {
     hookScore = 18
-    hookFeedback = 'Question hook. Good for engagement — makes the reader answer in their head.'
+    hookFeedback = 'Question hook. Good for engagement - makes the reader answer in their head.'
     hookTip = 'Make sure the question is specific, not generic. "Have you ever felt lost?" is weak. "Why do 90% of founders quit LinkedIn after 3 posts?" is strong.'
   } else if (hookIsBold) {
     hookScore = 25
     hookFeedback = 'Strong opening line. Specific, short, and designed to stop the scroll.'
-    hookTip = 'Test a version that starts with a specific number or a counterintuitive claim — they tend to outperform narrative opens.'
+    hookTip = 'Test a version that starts with a specific number or a counterintuitive claim - they tend to outperform narrative opens.'
   } else {
     hookScore = 14
     hookFeedback = 'Average opening. It won\'t repel readers but it won\'t stop them mid-scroll either.'
@@ -117,7 +117,7 @@ function analyzePost(text: string): PostResult {
     lengthTip = 'Aim for 80 to 250 words. Add the reasoning behind your point, a specific example, or one concrete takeaway.'
   } else if (wordCount <= 100) {
     lengthScore = 14
-    lengthFeedback = `${wordCount} words. On the short side — good for bold takes, thin for insight posts.`
+    lengthFeedback = `${wordCount} words. On the short side - good for bold takes, thin for insight posts.`
     lengthTip = 'If this is an insight or lesson post, add one specific example or data point. Short posts work best when the claim is genuinely bold.'
   } else if (wordCount <= 280) {
     lengthScore = 20
@@ -147,10 +147,10 @@ function analyzePost(text: string): PostResult {
   if (hasWallOfText) {
     formatScore = 4
     formatFeedback = 'Wall of text. No line breaks means readers see a block of gray and scroll past.'
-    formatTip = 'Break every 1 to 3 sentences into its own line. Whitespace is not wasted space on LinkedIn — it\'s what makes posts scannable.'
+    formatTip = 'Break every 1 to 3 sentences into its own line. Whitespace is not wasted space on LinkedIn - it\'s what makes posts scannable.'
   } else if (hasLongParagraph) {
     formatScore = 10
-    formatFeedback = 'At least one paragraph is too dense. LinkedIn readers skim — dense blocks lose them.'
+    formatFeedback = 'At least one paragraph is too dense. LinkedIn readers skim - dense blocks lose them.'
     formatTip = 'No paragraph should exceed 3 sentences. If you have more to say, break it into a new line.'
   } else if (hasFillerPhrases.length > 0) {
     formatScore = 14
@@ -159,14 +159,14 @@ function analyzePost(text: string): PostResult {
   } else if (avgWordsPerParagraph <= 25 && paragraphs.length > 1) {
     formatScore = 20
     formatFeedback = 'Well formatted. Short paragraphs and clear line breaks make this easy to read.'
-    formatTip = hasSingleLineParagraphs ? 'Strong use of single-line paragraphs for emphasis. Use them sparingly — they lose impact if every line is a one-liner.' : 'Clean structure. Keep it.'
+    formatTip = hasSingleLineParagraphs ? 'Strong use of single-line paragraphs for emphasis. Use them sparingly - they lose impact if every line is a one-liner.' : 'Clean structure. Keep it.'
   } else {
     formatScore = 14
     formatFeedback = 'Decent formatting but some paragraphs are longer than ideal.'
     formatTip = 'Break any paragraph over 3 sentences into smaller chunks. The visual rhythm of short paragraphs keeps readers moving through the post.'
   }
 
-  // ── 4. Structure — has a clear arc (0–20) ────────────────────────────────
+  // ── 4. Structure - has a clear arc (0-20) ────────────────────────────────
   const hasMultipleActs = paragraphs.length >= 3
   const bodyHasSpecifics = /\b(\d+|specific|example|for instance|for example|last week|last month|this morning|yesterday|our|my|we)\b/i.test(trimmed)
   const hasContrast = /\b(but|however|instead|not|never|wrong|mistake|actually|the truth|most people|everyone thinks)\b/i.test(lower)
@@ -182,14 +182,14 @@ function analyzePost(text: string): PostResult {
   } else if (bodyHasSpecifics && hasContrast) {
     structureScore = 20
     structureFeedback = 'Good structure. Has a hook, specific detail in the body, and contrast to hold tension.'
-    structureTip = 'Strong post structure. Make sure the ending lands cleanly — the last line is the second-most-read line after the hook.'
+    structureTip = 'Strong post structure. Make sure the ending lands cleanly - the last line is the second-most-read line after the hook.'
   } else if (bodyHasSpecifics || hasContrast) {
     structureScore = 14
     structureFeedback = bodyHasSpecifics
-      ? 'Has specific details — good. Missing contrast or tension to pull the reader through.'
-      : 'Has contrast / tension — good. Could use more specific examples to back the claim.'
+      ? 'Has specific details - good. Missing contrast or tension to pull the reader through.'
+      : 'Has contrast / tension - good. Could use more specific examples to back the claim.'
     structureTip = bodyHasSpecifics
-      ? 'Add one "but" or "however" moment — a turn that subverts the reader\'s expectation. Posts with a twist retain attention better.'
+      ? 'Add one "but" or "however" moment - a turn that subverts the reader\'s expectation. Posts with a twist retain attention better.'
       : 'Ground the contrast in a specific example. "Most people think X. I thought so too, until [specific thing happened]."'
   } else {
     structureScore = 8
@@ -215,11 +215,11 @@ function analyzePost(text: string): PostResult {
   } else if (hasCTA) {
     ctaScore = 10
     ctaFeedback = 'Has a call to action but the close is a bit long.'
-    ctaTip = 'The last line should be punchy — 5 to 10 words maximum. Cut everything after your engagement question.'
+    ctaTip = 'The last line should be punchy - 5 to 10 words maximum. Cut everything after your engagement question.'
   } else if (endsAbruptly) {
     ctaScore = 4
     ctaFeedback = 'No call to action. The post ends without inviting any response.'
-    ctaTip = 'End with a specific question. Not "what do you think?" — something answerable: "What\'s the most counterintuitive lesson from your first product launch?"'
+    ctaTip = 'End with a specific question. Not "what do you think?" - something answerable: "What\'s the most counterintuitive lesson from your first product launch?"'
   } else {
     ctaScore = 8
     ctaFeedback = 'Short post with no explicit CTA. Acceptable for bold takes, weaker for insight posts.'
@@ -288,7 +288,7 @@ function StatusIcon({ status }: { status: 'good' | 'warn' | 'bad' }) {
 // ─── Example posts ────────────────────────────────────────────────────────────
 
 const EXAMPLES = [
-  `We almost ran out of runway last month.\n\nHere's what saved us — and what I'd do differently.\n\nIn March we had 6 weeks of cash left. No term sheets. One potential customer ghosting us after 3 months of calls.\n\nI did something I'd been avoiding: I posted about it on LinkedIn.\n\nNot the sanitized version. The real one.\n\nWithin 48 hours:\n- Two investors reached out who hadn't responded to cold emails\n- A founder intro'd us to a customer who closed in 2 weeks\n- Our pipeline went from 0 to 4 active conversations\n\nDistribution is the product. Not just for B2C.\n\nWhat's the most counter-intuitive way you've found customers?`,
+  `We almost ran out of runway last month.\n\nHere's what saved us - and what I'd do differently.\n\nIn March we had 6 weeks of cash left. No term sheets. One potential customer ghosting us after 3 months of calls.\n\nI did something I'd been avoiding: I posted about it on LinkedIn.\n\nNot the sanitized version. The real one.\n\nWithin 48 hours:\n- Two investors reached out who hadn't responded to cold emails\n- A founder intro'd us to a customer who closed in 2 weeks\n- Our pipeline went from 0 to 4 active conversations\n\nDistribution is the product. Not just for B2C.\n\nWhat's the most counter-intuitive way you've found customers?`,
   `I want to share some thoughts about building in public and why I think it's really important for founders to be transparent about their journey and the lessons they've learned along the way because I believe it creates trust and authenticity which are both very valuable in today's startup ecosystem where everyone is trying to differentiate themselves from the competition.`,
   `3 things I learned after 100 customer calls:\n\nPrice is never the real objection.\n\nThey buy outcomes, not features.\n\nThe person in the room is rarely the decision maker.\n\nWhich one surprised you most?`,
 ]
@@ -333,10 +333,10 @@ export default function PostChecker() {
   return (
     <div className="min-h-screen bg-background text-text overflow-x-hidden">
       <Helmet>
-        <title>LinkedIn Post Checker — Free Score Before You Publish | Wrively</title>
+        <title>LinkedIn Post Checker | Free Score Before You Publish | Wrively</title>
         <meta name="description" content="Paste your LinkedIn post and get an instant score on hook strength, length, formatting, structure, and CTA. Free, no signup. Know if it's ready before you hit post." />
         <link rel="canonical" href="https://wrively.com/tools/linkedin-post-checker" />
-        <meta property="og:title" content="LinkedIn Post Checker — Free Score Before You Publish" />
+        <meta property="og:title" content="LinkedIn Post Checker | Free Score Before You Publish" />
         <meta property="og:description" content="Instant score on 5 criteria: hook, length, formatting, structure, and CTA. Free, no signup." />
         <meta property="og:url" content="https://wrively.com/tools/linkedin-post-checker" />
         <script type="application/ld+json">{toolSchema}</script>
@@ -350,14 +350,14 @@ export default function PostChecker() {
         <div className="mb-10">
           <div className="inline-flex items-center gap-2 border border-primary/25 bg-primary/[0.06] text-primary text-xs font-medium px-3 py-1.5 rounded-full mb-5">
             <Sparkles className="w-3.5 h-3.5" />
-            Free tool — no signup required
+            Free tool - no signup required
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3">
             LinkedIn Post Checker
           </h1>
           <p className="text-base text-text-muted leading-relaxed max-w-xl">
-            Paste your draft LinkedIn post. Get an instant score across 5 criteria — hook strength, length,
-            formatting, structure, and closing — with specific fixes before you publish.
+            Paste your draft LinkedIn post. Get an instant score across 5 criteria - hook strength, length,
+            formatting, structure, and closing - with specific fixes before you publish.
           </p>
         </div>
 
@@ -374,7 +374,7 @@ export default function PostChecker() {
                 setPost(e.target.value)
                 if (hasAnalyzed) setResult(analyzePost(e.target.value))
               }}
-              placeholder={`e.g.\nWe almost ran out of runway last month.\n\nHere's what saved us — and what I'd do differently.\n\n...`}
+              placeholder={`e.g.\nWe almost ran out of runway last month.\n\nHere's what saved us - and what I'd do differently.\n\n...`}
               rows={9}
               className="w-full bg-transparent border-0 text-sm text-text placeholder:text-text-subtle resize-none focus:outline-none pb-4 leading-relaxed font-mono"
             />
@@ -517,7 +517,7 @@ export default function PostChecker() {
               </h3>
               <p className="text-sm text-text-muted mb-4 leading-relaxed">
                 Wrively builds your Voice Layer once, then generates Safe, Bold, and Contrarian posts
-                in your voice. Every post is structured to score well on the criteria above — hook first, no filler, clean close.
+                in your voice. Every post is structured to score well on the criteria above - hook first, no filler, clean close.
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link to="/signup">
@@ -561,19 +561,19 @@ export default function PostChecker() {
                 },
                 {
                   label: 'Length (20 points)',
-                  desc: 'The optimal LinkedIn post length for engagement is 150 to 300 words. Too short and you haven\'t delivered enough value to earn a follow. Too long and you\'re writing a blog post — most readers won\'t reach the end. The algorithm also correlates dwell time (how long someone spends reading) with distribution, so length affects reach directly.',
+                  desc: 'The optimal LinkedIn post length for engagement is 150 to 300 words. Too short and you haven\'t delivered enough value to earn a follow. Too long and you\'re writing a blog post - most readers won\'t reach the end. The algorithm also correlates dwell time (how long someone spends reading) with distribution, so length affects reach directly.',
                 },
                 {
                   label: 'Formatting and readability (20 points)',
-                  desc: 'LinkedIn is a mobile-first platform. Readers skim. A wall of text is invisible. Short paragraphs, consistent line breaks, and no dense blocks are what make a post feel readable before anyone reads a word. Filler phrases ("game changer," "leverage," "paradigm shift") also score negatively — they signal low-effort content.',
+                  desc: 'LinkedIn is a mobile-first platform. Readers skim. A wall of text is invisible. Short paragraphs, consistent line breaks, and no dense blocks are what make a post feel readable before anyone reads a word. Filler phrases ("game changer," "leverage," "paradigm shift") also score negatively - they signal low-effort content.',
                 },
                 {
                   label: 'Structure (20 points)',
-                  desc: 'The best LinkedIn posts have an arc: a hook that creates tension, a body that delivers specific value, and a close that lands the point. Specificity is the key signal — a post with a real example, a specific number, or a named situation feels authentic. Generic posts feel AI-generated regardless of who wrote them.',
+                  desc: 'The best LinkedIn posts have an arc: a hook that creates tension, a body that delivers specific value, and a close that lands the point. Specificity is the key signal - a post with a real example, a specific number, or a named situation feels authentic. Generic posts feel AI-generated regardless of who wrote them.',
                 },
                 {
                   label: 'Closing and CTA (15 points)',
-                  desc: 'The last line is the second-most-read line after the hook. A post that ends abruptly leaves engagement on the table. A specific question at the end — not "what do you think?" but something answerable — consistently generates 3 to 5x more comments than a post that just stops.',
+                  desc: 'The last line is the second-most-read line after the hook. A post that ends abruptly leaves engagement on the table. A specific question at the end - not "what do you think?" but something answerable - consistently generates 3 to 5x more comments than a post that just stops.',
                 },
               ].map(({ label, desc }) => (
                 <div key={label} className="bg-surface border border-border rounded-card px-5 py-4">
@@ -590,7 +590,7 @@ export default function PostChecker() {
               You can\'t objectively score your own writing when you wrote it. You know what you meant to say, so you read the intention into the words rather than what\'s actually there. That\'s why posts that feel good when you write them can still fall flat.
             </p>
             <p className="text-base text-text-muted leading-relaxed">
-              The better approach is to generate posts that are structured correctly from the start — hook first, specific body, clean close — rather than editing bad structure into good structure after the fact. Wrively generates that way by default, because it knows LinkedIn\'s format and your specific voice.
+              The better approach is to generate posts that are structured correctly from the start - hook first, specific body, clean close - rather than editing bad structure into good structure after the fact. Wrively generates that way by default, because it knows LinkedIn\'s format and your specific voice.
             </p>
             <Link
               to="/signup"

@@ -50,7 +50,7 @@ function analyzeVoice(sample: string): VoiceResult {
       id: 'first_person',
       label: 'First-person presence',
       value: `${Math.round(fpRatio * 100)}% of words`,
-      description: 'You write from direct personal experience — not generic advice.',
+      description: 'You write from direct personal experience, not generic advice.',
       status: 'strong',
       tip: 'Keep writing in first-person. It builds trust and separates you from generic AI content.',
     }
@@ -84,7 +84,7 @@ function analyzeVoice(sample: string): VoiceResult {
       value: `${Math.round(avgSentenceLength)} words avg`,
       description: 'You mix short punchy sentences with longer ones. This creates natural reading pace.',
       status: 'strong',
-      tip: 'This rhythm is working. LinkedIn readers scan on mobile — keep sentences under 20 words on average.',
+      tip: 'This rhythm is working. LinkedIn readers scan on mobile - keep sentences under 20 words on average.',
     }
     if (avgSentenceLength > 22) return {
       id: 'rhythm',
@@ -115,7 +115,7 @@ function analyzeVoice(sample: string): VoiceResult {
       value: `${specificitySignals} specific references`,
       description: 'You ground your writing in concrete numbers and real context. This is what makes content memorable.',
       status: 'strong',
-      tip: 'Numbers and named experiences are your differentiator. Keep using them — generic advice is forgettable.',
+      tip: 'Numbers and named experiences are your differentiator. Keep using them - generic advice is forgettable.',
     }
     if (specificitySignals <= 1) return {
       id: 'specificity',
@@ -152,7 +152,7 @@ function analyzeVoice(sample: string): VoiceResult {
       value: 'No questions',
       description: 'You make statements but do not invite the reader in. Monologue, not dialogue.',
       status: 'weak',
-      tip: 'End your next post with a genuine question. Not "Agree?" — something you actually want an answer to.',
+      tip: 'End your next post with a genuine question. Not "Agree?" - something you actually want an answer to.',
     }
     return {
       id: 'questions',
@@ -202,7 +202,6 @@ function analyzeVoice(sample: string): VoiceResult {
   // ─── Compute overall score and profile ───────────────────────────────────
   const traits = [fpScore, rhythmScore, specificityScore, questionScore, buzzScore]
   const strongCount = traits.filter(t => t.status === 'strong').length
-  const weakCount = traits.filter(t => t.status === 'weak').length
   const voiceScore = Math.round((strongCount / traits.length) * 100)
 
   const profiles: Record<number, string> = {
@@ -228,7 +227,7 @@ const EXAMPLES = [
     label: 'Strong founder voice',
     text: `We almost shut down last month.
 
-Our MRR had dropped 23% in 6 weeks. Our biggest customer churned. My co-founder and I had our first real fight — about whether to pivot or push through.
+Our MRR had dropped 23% in 6 weeks. Our biggest customer churned. My co-founder and I had our first real fight - about whether to pivot or push through.
 
 We stayed.
 
@@ -314,7 +313,7 @@ export default function VoiceAnalyzer() {
   return (
     <>
       <Helmet>
-        <title>LinkedIn Voice Analyzer - Does Your Writing Sound Like You?</title>
+        <title>LinkedIn Voice Analyzer • Does Your Writing Sound Like You?</title>
         <meta
           name="description"
           content="Free tool. Paste your LinkedIn writing sample and get an instant voice profile: first-person presence, rhythm, specificity, jargon score, and actionable fixes."
@@ -370,7 +369,7 @@ export default function VoiceAnalyzer() {
                 setText(e.target.value)
                 if (analyzed) { setResult(null); setAnalyzed(false) }
               }}
-              placeholder="Paste a LinkedIn post or paragraph here — at least 30 words for a meaningful analysis..."
+              placeholder="Paste a LinkedIn post or paragraph here - at least 30 words for a meaningful analysis..."
               rows={8}
               className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm text-text placeholder:text-text-subtle resize-y focus:outline-none focus:border-primary transition-colors"
             />

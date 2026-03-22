@@ -1,4 +1,4 @@
-# Wrively — Product Overview
+# Wrively • Product Overview
 > Last updated: March 2026
 
 ---

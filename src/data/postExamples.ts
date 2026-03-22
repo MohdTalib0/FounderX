@@ -97,7 +97,7 @@ Hot take or do you agree?`,
       'Specific numbers build more trust than general claims. "$850K raised" beats "we closed our round."',
       'Rejections are reader magnets. Founders at all stages relate to them.',
       'Avoid sounding like a PR announcement. "We are thrilled to announce" signals nothing was learned.',
-      'The best fundraising posts end with a question to other founders — this builds real community.',
+      'The best fundraising posts end with a question to other founders - this builds real community.',
       'Keep the investor name out of it unless they have given explicit permission.',
     ],
     relatedTopics: ALL_RELATED.filter(t => t.slug !== 'fundraising'),
@@ -171,7 +171,7 @@ Disagree? I want to hear the other side.`,
     ],
     tips: [
       'Never start with "I am excited to announce." It signals you are writing for PR, not for people.',
-      'Day 1 numbers are vanity. Day 14 retention is the real signal — and readers respect founders who know this.',
+      'Day 1 numbers are vanity. Day 14 retention is the real signal - and readers respect founders who know this.',
       'If your launch did not go as planned, that is your best post. Honest failure posts out-perform success announcements.',
       'Tag 1-2 people who meaningfully helped (co-founder, early users, an advisor). Do not create a thank-you list.',
       'If you raise a round on the same day, choose one story. Both in one post dilutes both.',
@@ -186,7 +186,7 @@ Disagree? I want to hear the other side.`,
     metaDescription: 'How to build in public on LinkedIn without oversharing or sounding performative. Real post examples across Safe, Bold, and Contrarian tones.',
     headline: 'LinkedIn Post Examples: Build in Public',
     subheadline: 'How to share the messy middle of building without oversharing or sounding performative.',
-    intro: 'Build-in-public is the most powerful content strategy for founders — and the one most often done wrong. Done right, it is honest, specific, and creates real community. Done wrong, it is a performance of struggle that rings hollow. These examples show the difference.',
+    intro: 'Build-in-public is the most powerful content strategy for founders - and the one most often done wrong. Done right, it is honest, specific, and creates real community. Done wrong, it is a performance of struggle that rings hollow. These examples show the difference.',
     examples: [
       {
         title: 'The weekly progress post',
@@ -205,7 +205,7 @@ The honest number: we are at $1,200 MRR. Down $80 from last week.
 I share these numbers not because they are impressive. Because in 12 months I want to look back and see exactly where we were.
 
 Anyone else find that writing weekly updates forces you to be more honest with yourself?`,
-        why: 'Real numbers at every turn. The frame ("I want to look back") explains why the founder is sharing this — removes the "why is he posting this?" question.',
+        why: 'Real numbers at every turn. The frame ("I want to look back") explains why the founder is sharing this - removes the "why is he posting this?" question.',
       },
       {
         title: 'The mistake post',
@@ -342,11 +342,11 @@ How do you find early-stage people who are actually a fit?`,
   // ─── Lessons learned ─────────────────────────────────────────────────────────
   {
     slug: 'lessons-learned',
-    metaTitle: 'LinkedIn Post Examples: Lessons Learned (Founder Edition)',
+    metaTitle: 'LinkedIn Post Examples • Lessons Learned (Founder Edition)',
     metaDescription: 'How founders write lessons-learned posts that actually teach something. Real examples that avoid generic advice and share specific insight.',
     headline: 'LinkedIn Post Examples: Lessons Learned',
     subheadline: 'How to write a lessons-learned post that actually teaches something, not just lists things everyone already knows.',
-    intro: 'The lessons-learned post is the most common format on founder LinkedIn — and the most often done badly. Most are lists of advice that sound like they came from any business book. The ones that perform are specific, personal, and unexpected. These examples show the difference.',
+    intro: 'The lessons-learned post is the most common format on founder LinkedIn - and the most often done badly. Most are lists of advice that sound like they came from any business book. The ones that perform are specific, personal, and unexpected. These examples show the difference.',
     examples: [
       {
         title: 'The specific lesson from a specific mistake',
@@ -409,7 +409,7 @@ The most valuable post you could write is one lesson, one story behind it, one r
 I would rather read 300 words about one thing you genuinely learned than 1,000 words of advice you have assembled.
 
 What is the one lesson you would actually write a full essay about?`,
-        why: 'Calls out a widely practiced format in a way that founders who write a lot will recognize immediately. Gives a clear alternative. Does not lecture — it has a real argument.',
+        why: 'Calls out a widely practiced format in a way that founders who write a lot will recognize immediately. Gives a clear alternative. Does not lecture - it has a real argument.',
       },
     ],
     tips: [
@@ -425,7 +425,7 @@ What is the one lesson you would actually write a full essay about?`,
   // ─── Founder mindset ─────────────────────────────────────────────────────────
   {
     slug: 'founder-mindset',
-    metaTitle: 'LinkedIn Post Examples: Founder Mindset (Not Generic Motivation)',
+    metaTitle: 'LinkedIn Post Examples • Founder Mindset (Not Generic Motivation)',
     metaDescription: 'How founders write about mental models, decision-making, and mindset without sounding like a motivational speaker. Real post examples.',
     headline: 'LinkedIn Post Examples: Founder Mindset',
     subheadline: 'How to write about mental models and hard decisions without sounding like a motivational calendar.',

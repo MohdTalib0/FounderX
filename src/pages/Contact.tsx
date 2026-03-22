@@ -60,10 +60,10 @@ export default function Contact() {
   return (
     <div className="min-h-screen bg-background text-text">
       <Helmet>
-        <title>Contact Wrively — Get in Touch</title>
+        <title>Contact Wrively • Get in Touch</title>
         <meta name="description" content="Have a question, feedback, or idea? Contact the Wrively team. We read every message and respond within one business day." />
         <link rel="canonical" href="https://wrively.com/contact" />
-        <meta property="og:title" content="Contact Wrively — Get in Touch" />
+        <meta property="og:title" content="Contact Wrively • Get in Touch" />
         <meta property="og:description" content="Have a question, feedback, or idea? Contact the Wrively team. We read every message." />
         <meta property="og:url" content="https://wrively.com/contact" />
       </Helmet>

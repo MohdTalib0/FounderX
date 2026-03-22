@@ -163,7 +163,7 @@ export default function ComparisonPage() {
         <section className="max-w-xl mx-auto px-6 pb-16 text-center">
           <div className="bg-surface border border-border rounded-card p-8 relative overflow-hidden">
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-            <h2 className="text-xl font-bold text-text mb-2">Try Wrively — it takes 2 minutes</h2>
+            <h2 className="text-xl font-bold text-text mb-2">Try Wrively • it takes 2 minutes</h2>
             <p className="text-sm text-text-muted mb-6 leading-relaxed">
               Free plan, no card required. Answer 4 questions and your Voice Layer is ready.
               Your first post generates before you leave the setup screen.

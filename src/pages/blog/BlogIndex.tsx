@@ -26,10 +26,10 @@ export default function BlogIndex() {
   return (
     <div className="min-h-screen bg-background text-text overflow-x-hidden">
       <Helmet>
-        <title>Wrively Blog — LinkedIn Strategy and Voice for Founders</title>
+        <title>Wrively Blog • LinkedIn Strategy and Voice for Founders</title>
         <meta name="description" content="Practical guides on LinkedIn content, founder voice, and AI writing. Learn how to post consistently, sound like yourself, and build an audience that converts." />
         <link rel="canonical" href="https://wrively.com/blog" />
-        <meta property="og:title" content="Wrively Blog — LinkedIn Strategy and Voice for Founders" />
+        <meta property="og:title" content="Wrively Blog • LinkedIn Strategy and Voice for Founders" />
         <meta property="og:description" content="Practical guides on LinkedIn content, founder voice, and AI writing for founders." />
         <meta property="og:url" content="https://wrively.com/blog" />
       </Helmet>

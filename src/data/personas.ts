@@ -30,7 +30,7 @@ export const personas: PersonaData[] = [
   {
     slug: 'founders',
     label: 'Founders',
-    metaTitle: 'Wrively for Founders: LinkedIn Posts That Sound Like You',
+    metaTitle: 'Wrively for Founders • LinkedIn Posts That Sound Like You',
     metaDescription: 'Wrively is the LinkedIn Voice Layer built for founders. Stop staring at a blank page. Build your voice in 4 questions and post consistently in under 3 minutes.',
     badge: 'For startup founders',
     headline: 'You built a company. Now build the audience that makes it matter.',
@@ -39,20 +39,20 @@ export const personas: PersonaData[] = [
     painPoints: [
       'You tried ChatGPT. The posts sounded like a LinkedIn influencer, not a founder.',
       'You have things to say but no time to turn them into posts you\'re proud of.',
-      'You know LinkedIn matters for fundraising, hiring, and distribution — but you\'re not on it.',
+      'You know LinkedIn matters for fundraising, hiring, and distribution - but you\'re not on it.',
       'You\'ve posted a few times, got weak results, and quietly stopped.',
     ],
     features: [
       {
         title: 'Voice Layer built from your founder context',
-        body: 'Four questions at setup: your startup, your stage, your audience, your personality. Wrively builds a model of you — not a generic founder, you specifically. Every post generates from it.',
+        body: 'Four questions at setup: your startup, your stage, your audience, your personality. Wrively builds a model of you - not a generic founder, you specifically. Every post generates from it.',
       },
       {
         title: 'Stage-aware content',
         body: 'Idea stage content is different from MVP stage content is different from scale stage content. Wrively knows where you are and writes accordingly. You don\'t have to explain your context every session.',
       },
       {
-        title: 'Safe, Bold, and Contrarian — every time',
+        title: 'Safe, Bold, and Contrarian - every time',
         body: 'Three variations of every post. Safe builds credibility. Bold drives follows. Contrarian starts conversations. Pick the one that fits the day. All three are in your voice.',
       },
       {
@@ -78,7 +78,7 @@ export const personas: PersonaData[] = [
       {
         step: 3,
         title: 'Copy, paste, post',
-        body: 'One click to copy. Paste into LinkedIn. Under 3 minutes start to finish. The habit compounds — 52 posts a year beats 0.',
+        body: 'One click to copy. Paste into LinkedIn. Under 3 minutes start to finish. The habit compounds: 52 posts a year beats 0.',
       },
     ],
     cta: 'Build my founder voice',
@@ -89,22 +89,22 @@ export const personas: PersonaData[] = [
   {
     slug: 'consultants',
     label: 'Consultants',
-    metaTitle: 'Wrively for Consultants — LinkedIn Content That Builds Inbound',
+    metaTitle: 'Wrively for Consultants • LinkedIn Content That Builds Inbound',
     metaDescription: 'Wrively helps independent consultants build a LinkedIn presence that generates inbound leads. Write in your voice consistently without spending hours on content.',
     badge: 'For independent consultants',
     headline: 'Your next client is on LinkedIn. They just don\'t know you exist yet.',
-    subheadline: 'Consultants who post consistently get found. Wrively makes consistent posting possible — in your voice, on your expertise, without the content grind.',
+    subheadline: 'Consultants who post consistently get found. Wrively makes consistent posting possible - in your voice, on your expertise, without the content grind.',
     intro: 'For consultants, LinkedIn is not optional. It\'s your pipeline. Every post is a chance to demonstrate expertise to the exact people who hire consultants. But posting consistently is hard when you\'re billing hours, managing clients, and running a business by yourself. Wrively removes the friction so you can show up every week without it taking your whole morning.',
     painPoints: [
       'You know your expertise is valuable but you struggle to turn it into posts that don\'t sound like a press release.',
       'You spend an hour on a post, delete half of it, and still aren\'t happy with what\'s left.',
       'Your competitors are posting consistently and getting inquiries. You\'re not posting.',
-      'You\'ve tried AI writing tools — the output is generic and doesn\'t reflect how you actually think.',
+      'You\'ve tried AI writing tools - the output is generic and doesn\'t reflect how you actually think.',
     ],
     features: [
       {
         title: 'Voice Layer built around your expertise',
-        body: 'You define your niche, your target clients, and how you communicate. Wrively builds a model of your consulting voice and writes every post from it — not from a generic professional template.',
+        body: 'You define your niche, your target clients, and how you communicate. Wrively builds a model of your consulting voice and writes every post from it - not from a generic professional template.',
       },
       {
         title: 'Insight posts that demonstrate expertise',
@@ -112,11 +112,11 @@ export const personas: PersonaData[] = [
       },
       {
         title: 'Rewrite your messy client insights',
-        body: 'You have insights from client work every week. Paste your rough notes from a project, a debrief, or a pattern you noticed. Wrively turns them into a post worth sharing — without the client details you can\'t share.',
+        body: 'You have insights from client work every week. Paste your rough notes from a project, a debrief, or a pattern you noticed. Wrively turns them into a post worth sharing - without the client details you can\'t share.',
       },
       {
         title: 'Comments that build relationships',
-        body: 'The fastest way to get known by your ideal clients is to add value in their comments. Wrively generates specific, insightful comments in your voice — not "great point!" but something they actually remember.',
+        body: 'The fastest way to get known by your ideal clients is to add value in their comments. Wrively generates specific, insightful comments in your voice - not "great point!" but something they actually remember.',
       },
     ],
     howItWorks: [
@@ -128,7 +128,7 @@ export const personas: PersonaData[] = [
       {
         step: 2,
         title: 'Get posts from your expertise',
-        body: 'Wrively generates posts that reflect your actual thinking on your niche — not generic business advice. Three variations, your tone, your angle.',
+        body: 'Wrively generates posts that reflect your actual thinking on your niche - not generic business advice. Three variations, your tone, your angle.',
       },
       {
         step: 3,
@@ -144,12 +144,12 @@ export const personas: PersonaData[] = [
   {
     slug: 'executives',
     label: 'Executives',
-    metaTitle: 'Wrively for Executives — LinkedIn Thought Leadership Without the Ghostwriter',
-    metaDescription: 'Wrively helps executives build a LinkedIn presence that sounds like them — not a PR team. Share your perspective consistently without the time cost.',
+    metaTitle: 'Wrively for Executives • LinkedIn Thought Leadership Without the Ghostwriter',
+    metaDescription: 'Wrively helps executives build a LinkedIn presence that sounds like them - not a PR team. Share your perspective consistently without the time cost.',
     badge: 'For executives and leaders',
     headline: 'Your perspective has value. LinkedIn is where it compounds.',
     subheadline: 'Executives who share their thinking on LinkedIn attract talent, build reputation, and shape their industry. Wrively makes it sustainable without a ghostwriter.',
-    intro: 'The best executive LinkedIn content doesn\'t sound like a press release. It sounds like a person with genuine experience and real opinions. The problem is that the time and cognitive load of producing that content consistently is high — and the output from generic AI tools is exactly the corporate-sounding content you\'re trying to avoid. Wrively writes in your voice, not in a version of executive-speak.',
+    intro: 'The best executive LinkedIn content doesn\'t sound like a press release. It sounds like a person with genuine experience and real opinions. The problem is that the time and cognitive load of producing that content consistently is high - and the output from generic AI tools is exactly the corporate-sounding content you\'re trying to avoid. Wrively writes in your voice, not in a version of executive-speak.',
     painPoints: [
       'You have opinions and experience worth sharing, but every draft you write sounds too formal or too corporate.',
       'Hiring a ghostwriter costs thousands per month and the output still needs heavy editing.',
@@ -183,7 +183,7 @@ export const personas: PersonaData[] = [
       {
         step: 2,
         title: 'Generate posts from your perspective',
-        body: 'Choose a topic from your content pillars or enter your own. Three posts appear in your voice — not in generic leadership speak.',
+        body: 'Choose a topic from your content pillars or enter your own. Three posts appear in your voice - not in generic leadership speak.',
       },
       {
         step: 3,
@@ -199,12 +199,12 @@ export const personas: PersonaData[] = [
   {
     slug: 'solopreneurs',
     label: 'Solopreneurs',
-    metaTitle: 'Wrively for Solopreneurs — LinkedIn Content That Grows Your One-Person Business',
+    metaTitle: 'Wrively for Solopreneurs • LinkedIn Content That Grows Your One-Person Business',
     metaDescription: 'Wrively helps solopreneurs build a LinkedIn audience without a team or a content budget. Your voice, your expertise, posted consistently in under 3 minutes.',
     badge: 'For solopreneurs',
     headline: 'You are the brand. Show up like it.',
-    subheadline: 'Solopreneurs who post consistently grow faster — more clients, more visibility, more opportunities. Wrively makes consistency possible when you\'re running everything yourself.',
-    intro: 'Running a one-person business means every hour counts twice. You can\'t hire a content team. You can\'t spend three hours a week on LinkedIn posts. But you also can\'t afford to be invisible. Wrively gives you a sustainable posting system — posts in your voice, in under 3 minutes, that build the audience your business needs without consuming the time your work requires.',
+    subheadline: 'Solopreneurs who post consistently grow faster: more clients, more visibility, more opportunities. Wrively makes consistency possible when you\'re running everything yourself.',
+    intro: 'Running a one-person business means every hour counts twice. You can\'t hire a content team. You can\'t spend three hours a week on LinkedIn posts. But you also can\'t afford to be invisible. Wrively gives you a sustainable posting system: posts in your voice, in under 3 minutes, that build the audience your business needs without consuming the time your work requires.',
     painPoints: [
       'You\'re doing everything yourself. Content keeps falling to the bottom of the list.',
       'You know LinkedIn could grow your business but you can\'t justify the time it takes.',
@@ -226,7 +226,7 @@ export const personas: PersonaData[] = [
       },
       {
         title: 'Free plan that matches the habit',
-        body: '12 posts per month on the free plan — exactly enough for the 3x/week posting habit that LinkedIn rewards. No credit card. No trial that expires.',
+        body: '12 posts per month on the free plan - exactly enough for the 3x/week posting habit that LinkedIn rewards. No credit card. No trial that expires.',
       },
     ],
     howItWorks: [
@@ -243,7 +243,7 @@ export const personas: PersonaData[] = [
       {
         step: 3,
         title: 'Let the audience compound',
-        body: '52 posts a year beats 0. The solopreneurs who win on LinkedIn aren\'t posting better content — they\'re posting more consistently. Wrively makes consistency the easy choice.',
+        body: '52 posts a year beats 0. The solopreneurs who win on LinkedIn aren\'t posting better content - they\'re posting more consistently. Wrively makes consistency the easy choice.',
       },
     ],
     cta: 'Build my solopreneur voice',

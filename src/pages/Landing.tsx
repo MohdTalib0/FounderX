@@ -11,10 +11,10 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-background text-text overflow-x-hidden">
       <Helmet>
-        <title>Wrively — AI That Sounds Like You | LinkedIn Voice Layer</title>
+        <title>Wrively • AI That Sounds Like You | LinkedIn Voice Layer</title>
         <meta name="description" content="Wrively is the Voice Layer for LinkedIn. Build your voice once in 4 questions. Get posts that sound like you, every week, in under 3 minutes. Free to start." />
         <link rel="canonical" href="https://wrively.com/" />
-        <meta property="og:title" content="Wrively — AI That Sounds Like You | LinkedIn Voice Layer" />
+        <meta property="og:title" content="Wrively • AI That Sounds Like You | LinkedIn Voice Layer" />
         <meta property="og:description" content="Wrively is the Voice Layer for LinkedIn. Build your voice once. Get posts that sound like you, every week, in under 3 minutes." />
         <meta property="og:url" content="https://wrively.com/" />
         <meta property="og:image" content="https://wrively.com/og/home.png" />
@@ -32,9 +32,9 @@ export default function Landing() {
           '@type': 'FAQPage',
           mainEntity: [
             { '@type': 'Question', name: 'Is Wrively free?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. The free plan includes 12 posts per month, 15 comment suggestions, and 5 draft rewrites. No credit card required. You can start posting today without entering payment details.' } },
-            { '@type': 'Question', name: 'How is Wrively different from ChatGPT?', acceptedAnswer: { '@type': 'Answer', text: 'ChatGPT starts from a blank page every session — you have to re-explain yourself every time and the output sounds generic. Wrively builds a Voice Layer from your onboarding answers once, then every post it generates comes from that model permanently. You never brief the AI twice.' } },
+            { '@type': 'Question', name: 'How is Wrively different from ChatGPT?', acceptedAnswer: { '@type': 'Answer', text: 'ChatGPT starts from a blank page every session - you have to re-explain yourself every time and the output sounds generic. Wrively builds a Voice Layer from your onboarding answers once, then every post it generates comes from that model permanently. You never brief the AI twice.' } },
             { '@type': 'Question', name: 'Do my posts actually sound like me?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Wrively builds a persona from your company, stage, audience, and writing personality. Every generation pulls from that model. The output sounds like you on a clear-headed day, not like a LinkedIn influencer template.' } },
-            { '@type': 'Question', name: 'How long does the setup take?', acceptedAnswer: { '@type': 'Answer', text: 'Four questions. About two minutes. You tell Wrively about your startup, your stage, your audience, and your writing personality. That is it — Wrively builds your Voice Layer and generates your first post before you reach the dashboard.' } },
+            { '@type': 'Question', name: 'How long does the setup take?', acceptedAnswer: { '@type': 'Answer', text: 'Four questions. About two minutes. You tell Wrively about your startup, your stage, your audience, and your writing personality. That is it: Wrively builds your Voice Layer and generates your first post before you reach the dashboard.' } },
             { '@type': 'Question', name: 'Does Wrively post to LinkedIn for me?', acceptedAnswer: { '@type': 'Answer', text: 'No. Wrively generates the post and you copy it with one click. You paste it into LinkedIn yourself. This keeps you in control of what goes out and when, and avoids the compliance issues that come with LinkedIn automation.' } },
           ],
         })}</script>
@@ -58,7 +58,7 @@ export default function Landing() {
           </h1>
 
           <p className="text-base sm:text-lg text-text-muted leading-relaxed max-w-xl mx-auto mb-10">
-            Most AI writes for everyone. Wrively writes for you — trained on how you think,
+            Most AI writes for everyone. Wrively writes for you - trained on how you think,
             what you believe, and how you sound when you're at your best.
           </p>
 
@@ -896,7 +896,7 @@ const LANDING_FAQ = [
   },
   {
     q: 'How is Wrively different from ChatGPT?',
-    a: 'ChatGPT starts from a blank page every session — you re-explain yourself every time and get generic output. Wrively builds a Voice Layer from your onboarding answers once. Every post it generates comes from that model permanently. You never brief the AI twice.',
+    a: 'ChatGPT starts from a blank page every session - you re-explain yourself every time and get generic output. Wrively builds a Voice Layer from your onboarding answers once. Every post it generates comes from that model permanently. You never brief the AI twice.',
   },
   {
     q: 'Do my posts actually sound like me?',
