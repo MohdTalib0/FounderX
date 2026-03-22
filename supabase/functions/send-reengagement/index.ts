@@ -46,7 +46,7 @@ function wrap(inner: string, baseUrl: string): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>FounderX</title>
+  <title>Wrively</title>
 </head>
 <body style="margin:0;padding:0;background:#F4F4F5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
@@ -55,7 +55,7 @@ function wrap(inner: string, baseUrl: string): string {
 
     <!-- Logo -->
     <tr><td style="padding-bottom:16px;">
-      <p style="margin:0;font-size:15px;font-weight:700;color:#18181B;">⚡ FounderX</p>
+      <p style="margin:0;font-size:15px;font-weight:700;color:#18181B;">⚡ Wrively</p>
     </td></tr>
 
     <!-- Card -->
@@ -66,7 +66,7 @@ function wrap(inner: string, baseUrl: string): string {
     <!-- Footer -->
     <tr><td style="padding:18px 0 0;text-align:center;">
       <p style="margin:0;font-size:11px;color:#A1A1AA;line-height:1.7;">
-        You're getting this because you signed up for FounderX.&nbsp;
+        You're getting this because you signed up for Wrively.&nbsp;
         <a href="${baseUrl}/dashboard/settings" style="color:#6366F1;text-decoration:none;">Manage preferences</a>
       </p>
     </td></tr>
@@ -252,8 +252,8 @@ serve(async (req) => {
     return json({ error: 'Email service not configured' }, 500)
   }
 
-  const baseUrl    = Deno.env.get('APP_URL')    ?? 'https://founderx.app'
-  const fromAddr   = Deno.env.get('EMAIL_FROM')  ?? 'FounderX <team@founderx.app>'
+  const baseUrl    = Deno.env.get('APP_URL')    ?? 'https://wrively.com'
+  const fromAddr   = Deno.env.get('EMAIL_FROM')  ?? 'Wrively <team@wrively.com>'
 
   // Service role - needed to read all users, bypasses RLS
   const supabase = createClient(

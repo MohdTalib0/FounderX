@@ -136,7 +136,7 @@ function QuoteCardInner({ text, founderName, companyName, variation, size }: Quo
           </div>
         </div>
 
-        {/* FounderX logo */}
+        {/* Wrively logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: s(10), opacity: 0.6 }}>
           <div style={{
             width: s(32), height: s(32),
@@ -153,7 +153,7 @@ function QuoteCardInner({ text, founderName, companyName, variation, size }: Quo
             </svg>
           </div>
           <span style={{ fontSize: s(18), fontWeight: 700, color: '#F5F5F5', letterSpacing: '-0.02em' }}>
-            FounderX
+            Wrively
           </span>
         </div>
       </div>
@@ -197,7 +197,7 @@ export function QuoteCardModal({ text, founderName, companyName, variation, onCl
         pixelRatio: 1,
       })
       const link = document.createElement('a')
-      link.download = `founderx-${variation}-${Date.now()}.png`
+      link.download = `wrively-${variation}-${Date.now()}.png`
       link.href = dataUrl
       link.click()
     } catch (err) {

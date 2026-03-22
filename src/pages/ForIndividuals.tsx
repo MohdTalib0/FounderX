@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { ArrowRight, Check, PenLine, Zap, Sparkles, RefreshCw, MessageSquare, Briefcase, Users, User } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import PublicHeader from '@/components/layout/PublicHeader'
@@ -7,6 +8,14 @@ import { cn } from '@/lib/utils'
 export default function ForIndividuals() {
   return (
     <div className="min-h-screen bg-background text-text overflow-x-hidden">
+      <Helmet>
+        <title>Wrively for Individuals — Personal Brand on LinkedIn | Voice Layer</title>
+        <meta name="description" content="Build your personal brand on LinkedIn without spending hours on content. Wrively writes in your voice — for consultants, executives, freelancers, and creators." />
+        <link rel="canonical" href="https://wrively.com/for-individuals" />
+        <meta property="og:title" content="Wrively for Individuals — Personal Brand on LinkedIn" />
+        <meta property="og:description" content="Build your personal brand on LinkedIn without spending hours on content. Wrively writes in your voice — for consultants, executives, freelancers, and creators." />
+        <meta property="og:url" content="https://wrively.com/for-individuals" />
+      </Helmet>
 
       <PublicHeader />
 
@@ -30,7 +39,7 @@ export default function ForIndividuals() {
           blank page, generic output, inconsistent posting.
         </p>
         <p className="text-base text-text-muted leading-relaxed mb-10 max-w-lg mx-auto">
-          FounderX builds your personal voice and writes every post from it.
+          Wrively builds your personal voice and writes every post from it.
           No company required.
         </p>
 
@@ -110,7 +119,7 @@ export default function ForIndividuals() {
               step: 1,
               icon: Sparkles,
               title: 'Choose "Myself" at setup',
-              body: 'One click at the start. FounderX builds your personal voice profile: your style, your role, your audience.',
+              body: 'One click at the start. Wrively builds your personal voice profile: your style, your role, your audience.',
             },
             {
               step: 2,
@@ -163,7 +172,7 @@ export default function ForIndividuals() {
               icon: <RefreshCw className="w-5 h-5 text-amber-400" />,
               iconBg: 'bg-amber-500/10 border-amber-500/20',
               title: 'Rough notes to real post',
-              body: 'Had a conversation or experience worth sharing? Paste your messy notes. FounderX turns them into something post-ready.',
+              body: 'Had a conversation or experience worth sharing? Paste your messy notes. Wrively turns them into something post-ready.',
             },
             {
               icon: <MessageSquare className="w-5 h-5 text-sky-400" />,
@@ -248,14 +257,14 @@ export default function ForIndividuals() {
             <div className="w-6 h-6 bg-primary-gradient rounded-md flex items-center justify-center">
               <Zap className="w-3.5 h-3.5 text-white" />
             </div>
-            <span className="text-sm font-semibold text-text-muted">FounderX</span>
+            <span className="text-sm font-semibold text-text-muted">Wrively</span>
           </div>
           <div className="flex items-center gap-6">
             <Link to="/" className="text-xs text-text-subtle hover:text-text-muted transition-colors">Home</Link>
             <Link to="/pricing" className="text-xs text-text-subtle hover:text-text-muted transition-colors">Pricing</Link>
             <Link to="/login" className="text-xs text-text-subtle hover:text-text-muted transition-colors">Sign in</Link>
           </div>
-          <p className="text-xs text-text-subtle">2025 FounderX.</p>
+          <p className="text-xs text-text-subtle">2025 Wrively.</p>
         </div>
       </footer>
     </div>

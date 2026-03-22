@@ -189,7 +189,7 @@ export default function DashboardLayout() {
             <div className="w-7 h-7 bg-primary-gradient rounded-lg flex items-center justify-center shadow-card">
               <Zap className="w-4 h-4 text-white" />
             </div>
-            <span className="font-bold text-base tracking-tight text-text">FounderX</span>
+            <span className="font-bold text-base tracking-tight text-text">Wrively</span>
           </div>
 
           <UserMenu />

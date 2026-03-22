@@ -33,8 +33,8 @@ async function callOpenRouter(apiKey: string, body: object): Promise<string> {
     headers: {
       'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
-      'HTTP-Referer': 'https://founderx.app',
-      'X-Title': 'FounderX',
+      'HTTP-Referer': 'https://wrively.com',
+      'X-Title': 'Wrively',
     },
     body: JSON.stringify(body),
   })

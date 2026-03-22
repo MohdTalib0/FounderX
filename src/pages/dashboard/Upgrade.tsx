@@ -194,7 +194,7 @@ export default function Upgrade() {
                     {/* CTA */}
                     {!isCurrent && (
                       <a
-                        href={`mailto:hello@founderx.app?subject=Upgrade to ${p.name}&body=Hi, I'd like to upgrade to the ${p.name} plan.`}
+                        href={`mailto:hello@wrively.com?subject=Upgrade to ${p.name}&body=Hi, I'd like to upgrade to the ${p.name} plan.`}
                         className={cn(
                           'flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-btn text-sm font-semibold transition-colors',
                           isNext
@@ -215,7 +215,7 @@ export default function Upgrade() {
           </div>
 
           <p className="text-[11px] text-text-subtle text-center pt-1">
-            Questions? Email <a href="mailto:hello@founderx.app" className="text-primary hover:text-primary-hover transition-colors">hello@founderx.app</a>
+            Questions? Email <a href="mailto:hello@wrively.com" className="text-primary hover:text-primary-hover transition-colors">hello@wrively.com</a>
           </p>
         </div>
       )}

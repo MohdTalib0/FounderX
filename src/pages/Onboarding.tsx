@@ -494,7 +494,7 @@ export default function Onboarding() {
           <div className="w-7 h-7 bg-primary-gradient rounded-lg flex items-center justify-center shadow-card">
             <Zap className="w-4 h-4 text-white" />
           </div>
-          <span className="text-xl font-bold text-text">FounderX</span>
+          <span className="text-xl font-bold text-text">Wrively</span>
         </div>
 
         <ProgressDots step={step as Step} />

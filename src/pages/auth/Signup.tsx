@@ -86,7 +86,7 @@ export default function Signup() {
           <div className="w-8 h-8 bg-primary-gradient rounded-lg flex items-center justify-center shadow-card">
             <Zap className="w-[18px] h-[18px] text-white" />
           </div>
-          <span className="font-bold text-text text-xl">FounderX</span>
+          <span className="font-bold text-text text-xl">Wrively</span>
         </div>
 
         {/* Card */}

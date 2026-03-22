@@ -71,7 +71,7 @@ export default function UpgradeWall({
             Founders who post 3×/week on LinkedIn see 5–10× more profile views within 30 days.
           </p>
           <p className="text-sm text-text-muted">
-            Start building your record. FounderX tracks what works for you over time.
+            Start building your record. Wrively tracks what works for you over time.
           </p>
         </>
       )}

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { Check, ChevronDown, ArrowRight, Shield, RefreshCw } from 'lucide-react'
 import PublicHeader from '@/components/layout/PublicHeader'
 import PublicFooter from '@/components/layout/PublicFooter'
@@ -88,7 +89,7 @@ const FAQ = [
   },
   {
     q: 'What are Performance insights?',
-    a: "Once you've generated 10+ posts, FounderX tracks which variations you copy most and how you rate them. Pro users get prompts that learn from this. Future posts lean toward what's actually working for you.",
+    a: "Once you've generated 10+ posts, Wrively tracks which variations you copy most and how you rate them. Pro users get prompts that learn from this. Future posts lean toward what's actually working for you.",
   },
   {
     q: 'Can I cancel anytime?',
@@ -105,6 +106,36 @@ const FAQ = [
 export default function Pricing() {
   return (
     <div className="min-h-screen bg-background text-text overflow-x-hidden">
+      <Helmet>
+        <title>Wrively Pricing — Free, Starter and Pro Plans | LinkedIn Voice Layer</title>
+        <meta name="description" content="Start free with 12 posts per month. Upgrade to Starter ($9/mo) or Pro ($19/mo) for unlimited LinkedIn posts in your voice. No credit card required." />
+        <link rel="canonical" href="https://wrively.com/pricing" />
+        <meta property="og:title" content="Wrively Pricing — Free, Starter and Pro Plans" />
+        <meta property="og:description" content="Start free with 12 posts per month. Upgrade to Starter ($9/mo) or Pro ($19/mo) for unlimited LinkedIn posts in your voice." />
+        <meta property="og:url" content="https://wrively.com/pricing" />
+        <meta property="og:image" content="https://wrively.com/og/pricing.png" />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'SoftwareApplication',
+          name: 'Wrively',
+          applicationCategory: 'BusinessApplication',
+          operatingSystem: 'Web',
+          offers: [
+            { '@type': 'Offer', name: 'Free', price: '0', priceCurrency: 'USD', description: '12 posts per month, 15 comment suggestions, 5 draft rewrites. No credit card required.' },
+            { '@type': 'Offer', name: 'Starter', price: '9', priceCurrency: 'USD', description: '80 posts per month, 100 comment suggestions, 40 draft rewrites, persona regeneration.' },
+            { '@type': 'Offer', name: 'Pro', price: '19', priceCurrency: 'USD', description: 'Unlimited posts, comments, and rewrites with performance insights and priority AI.' },
+          ],
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: FAQ.map(item => ({
+            '@type': 'Question',
+            name: item.q,
+            acceptedAnswer: { '@type': 'Answer', text: item.a },
+          })),
+        })}</script>
+      </Helmet>
       <PublicHeader />
 
       {/* Hero */}
@@ -153,8 +184,8 @@ export default function Pricing() {
 
         <p className="text-center text-xs text-text-subtle mt-6">
           Questions? Email{' '}
-          <a href="mailto:hello@founderx.app" className="text-primary hover:text-primary-hover transition-colors">
-            hello@founderx.app
+          <a href="mailto:hello@wrively.com" className="text-primary hover:text-primary-hover transition-colors">
+            hello@wrively.com
           </a>
         </p>
       </section>

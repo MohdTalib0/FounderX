@@ -47,7 +47,7 @@ export default function Sidebar() {
           <div className="w-8 h-8 bg-primary-gradient rounded-lg flex items-center justify-center shadow-card">
             <Zap className="w-[18px] h-[18px] text-white" />
           </div>
-          <span className="font-bold text-text text-base tracking-tight">FounderX</span>
+          <span className="font-bold text-text text-base tracking-tight">Wrively</span>
         </div>
       </div>
 

@@ -25,7 +25,13 @@
       "Bash(sed -i \"s/Your first post — ready to copy/Your first post, ready to copy/\" src/pages/Onboarding.tsx)",
       "WebFetch(domain:openrouter.ai)",
       "WebFetch(domain:costgoat.com)",
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:www.pensai.ai)",
+      "Read(//c/Users/moham/.claude/projects/c--Users-moham-Project---FounderX/memory/**)",
+      "Bash(npm run:*)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\moham\\.claude\\projects\\c--Users-moham-Project---FounderX\\memory"
     ]
   }
 }

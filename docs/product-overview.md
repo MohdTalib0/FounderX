@@ -1,11 +1,11 @@
-# FounderX — Product Overview
+# Wrively — Product Overview
 > Last updated: March 2026
 
 ---
 
 ## What It Is
 
-FounderX is an AI LinkedIn ghostwriter for founders and individual creators. It generates posts, rewrites drafts, remixes viral content, and suggests comments — all in the user's own voice, built from their brand context set up during onboarding.
+Wrively is an AI LinkedIn ghostwriter for founders and individual creators. It generates posts, rewrites drafts, remixes viral content, and suggests comments — all in the user's own voice, built from their brand context set up during onboarding.
 
 Two modes: **Company brand** (posting as a startup) and **Individual** (posting as a person — founder, consultant, creator, executive).
 

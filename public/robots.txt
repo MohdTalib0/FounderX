@@ -1,12 +1,22 @@
 User-agent: *
 Allow: /
 Allow: /pricing
+Allow: /contact
+Allow: /terms
+Allow: /for-individuals
+Allow: /blog
+Allow: /blog/
+Allow: /tools/
+Allow: /compare/
+Allow: /for/
+Allow: /linkedin-post-examples/
+Allow: /hooks/
 
-# Block auth and app routes — no indexing value
+# Block auth and app routes
 Disallow: /dashboard/
 Disallow: /login
 Disallow: /signup
 Disallow: /onboarding
 Disallow: /auth/
 
-Sitemap: https://founderx.app/sitemap.xml
+Sitemap: https://wrively.com/sitemap.xml

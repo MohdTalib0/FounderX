@@ -669,7 +669,7 @@ function NextStepCard({ nextStep }: NextStepProps) {
       border: 'border-amber-500/20',
       bg: 'bg-amber-500/[0.03]',
       title: 'How did that post land?',
-      desc: 'A quick rating helps FounderX write better posts for you next time.',
+      desc: 'A quick rating helps Wrively write better posts for you next time.',
       cta: 'Rate now',
       href: '/dashboard/history',
     },

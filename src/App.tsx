@@ -1,10 +1,11 @@
 import { useEffect, lazy, Suspense } from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/auth'
 
 // Eager - needed on first paint
 import Landing from '@/pages/Landing'
+import NotFound from '@/pages/NotFound'
 import AuthGuard from '@/components/guards/AuthGuard'
 import OnboardingGuard from '@/components/guards/OnboardingGuard'
 import Toaster from '@/components/ui/Toaster'
@@ -15,6 +16,16 @@ const Terms = lazy(() => import('@/pages/Terms'))
 const Contact = lazy(() => import('@/pages/Contact'))
 const ForIndividuals = lazy(() => import('@/pages/ForIndividuals'))
 const Pricing = lazy(() => import('@/pages/Pricing'))
+const BlogIndex = lazy(() => import('@/pages/blog/BlogIndex'))
+const BlogPost = lazy(() => import('@/pages/blog/BlogPost'))
+const ToolsIndex = lazy(() => import('@/pages/tools/ToolsIndex'))
+const HeadlineAnalyzer = lazy(() => import('@/pages/tools/HeadlineAnalyzer'))
+const PostChecker = lazy(() => import('@/pages/tools/PostChecker'))
+const VoiceAnalyzer = lazy(() => import('@/pages/tools/VoiceAnalyzer'))
+const ComparisonPage = lazy(() => import('@/pages/compare/ComparisonPage'))
+const PersonaPage = lazy(() => import('@/pages/for/PersonaPage'))
+const PostExamplesPage = lazy(() => import('@/pages/examples/PostExamplesPage'))
+const HookExamplesPage = lazy(() => import('@/pages/hooks/HookExamplesPage'))
 const Login = lazy(() => import('@/pages/auth/Login'))
 const Signup = lazy(() => import('@/pages/auth/Signup'))
 const AuthCallback = lazy(() => import('@/pages/auth/Callback'))
@@ -67,6 +78,16 @@ export default function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/for-individuals" element={<ForIndividuals />} />
           <Route path="/pricing" element={<Pricing />} />
+          <Route path="/blog" element={<BlogIndex />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/tools" element={<ToolsIndex />} />
+          <Route path="/tools/linkedin-headline-analyzer" element={<HeadlineAnalyzer />} />
+          <Route path="/tools/linkedin-post-checker" element={<PostChecker />} />
+          <Route path="/tools/linkedin-voice-analyzer" element={<VoiceAnalyzer />} />
+          <Route path="/linkedin-post-examples/:topic" element={<PostExamplesPage />} />
+          <Route path="/hooks/:type" element={<HookExamplesPage />} />
+          <Route path="/compare/:slug" element={<ComparisonPage />} />
+          <Route path="/for/:slug" element={<PersonaPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
@@ -96,8 +117,8 @@ export default function App() {
             <Route path="upgrade" element={<Upgrade />} />
           </Route>
 
-          {/* Fallback */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          {/* 404 */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
       <Toaster />

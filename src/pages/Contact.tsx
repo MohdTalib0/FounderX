@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { Helmet } from 'react-helmet-async'
 import { Mail, Clock, CheckCircle, Zap, ArrowRight } from 'lucide-react'
 import PublicHeader from '@/components/layout/PublicHeader'
 import PublicFooter from '@/components/layout/PublicFooter'
@@ -27,8 +28,8 @@ const INFO = [
   {
     icon: Mail,
     label: 'Email us directly',
-    value: 'hello@founderx.app',
-    href: 'mailto:hello@founderx.app',
+    value: 'hello@wrively.com',
+    href: 'mailto:hello@wrively.com',
   },
   {
     icon: Clock,
@@ -48,16 +49,24 @@ export default function Contact() {
   } = useForm<FormData>({ resolver: zodResolver(schema) })
 
   const onSubmit = (data: FormData) => {
-    const subject = encodeURIComponent(`[FounderX] ${data.subject}`)
+    const subject = encodeURIComponent(`[Wrively] ${data.subject}`)
     const body = encodeURIComponent(
       `Name: ${data.name}\nEmail: ${data.email}\n\n${data.message}`
     )
-    window.location.href = `mailto:hello@founderx.app?subject=${subject}&body=${body}`
+    window.location.href = `mailto:hello@wrively.com?subject=${subject}&body=${body}`
     setSent(true)
   }
 
   return (
     <div className="min-h-screen bg-background text-text">
+      <Helmet>
+        <title>Contact Wrively — Get in Touch</title>
+        <meta name="description" content="Have a question, feedback, or idea? Contact the Wrively team. We read every message and respond within one business day." />
+        <link rel="canonical" href="https://wrively.com/contact" />
+        <meta property="og:title" content="Contact Wrively — Get in Touch" />
+        <meta property="og:description" content="Have a question, feedback, or idea? Contact the Wrively team. We read every message." />
+        <meta property="og:url" content="https://wrively.com/contact" />
+      </Helmet>
       <PublicHeader />
 
       <main className="max-w-5xl mx-auto px-5 py-14 md:py-20">
@@ -105,7 +114,7 @@ export default function Contact() {
                 <p className="text-xs font-semibold text-text">Still in beta</p>
               </div>
               <p className="text-xs text-text-muted leading-relaxed">
-                FounderX is actively being built. Your feedback directly shapes what we build next.
+                Wrively is actively being built. Your feedback directly shapes what we build next.
               </p>
             </div>
           </div>
