@@ -35,7 +35,7 @@ export const personas: PersonaData[] = [
     badge: 'For startup founders',
     headline: 'You built a company. Now build the audience that makes it matter.',
     subheadline: 'Investors, early users, and future hires are on LinkedIn every day. Wrively writes your posts so you show up consistently - in your voice, not a template.',
-    intro: 'Founders know they should post on LinkedIn. They don\'t. Not because they have nothing to say — they have more to say than anyone. Because every time they open a blank text box, the output doesn\'t sound like them. So they don\'t post it. The week becomes a month. The month becomes a quarter. Wrively solves the identity problem, not the idea problem.',
+    intro: 'Founders know they should post on LinkedIn. They don\'t. Not because they have nothing to say - they have more to say than anyone. Because every time they open a blank text box, the output doesn\'t sound like them. So they don\'t post it. The week becomes a month. The month becomes a quarter. Wrively solves the identity problem, not the idea problem.',
     painPoints: [
       'You tried ChatGPT. The posts sounded like a LinkedIn influencer, not a founder.',
       'You have things to say but no time to turn them into posts you\'re proud of.',

@@ -61,7 +61,7 @@ function analyzeHeadline(headline: string): AnalysisResult {
   if (len === 0) {
     lengthScore = 0
     lengthFeedback = 'No headline entered.'
-    lengthTip = 'Aim for 60–120 characters — long enough to be specific, short enough to be scannable.'
+    lengthTip = 'Aim for 60-120 characters: long enough to be specific, short enough to be scannable.'
   } else if (len < 30) {
     lengthScore = 8
     lengthFeedback = 'Too short. You have room to add specifics.'
@@ -97,7 +97,7 @@ function analyzeHeadline(headline: string): AnalysisResult {
   } else if (foundWeak.length === 1) {
     specificityScore = 12
     specificityFeedback = `Contains a weak word: "${foundWeak[0]}". This is common but forgettable.`
-    specificityTip = `Replace "${foundWeak[0]}" with something concrete — a number, a result, or a specific niche.`
+    specificityTip = `Replace "${foundWeak[0]}" with something concrete: a number, a result, or a specific niche.`
   } else {
     specificityScore = 4
     specificityFeedback = `Contains ${foundWeak.length} generic words: ${foundWeak.map(w => `"${w}"`).join(', ')}.`
