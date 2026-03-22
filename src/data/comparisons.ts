@@ -177,8 +177,8 @@ export const comparisons: ComparisonData[] = [
     subheadline: 'ChatGPT starts from zero every session. Wrively starts from you - and stays there.',
     intro: 'ChatGPT can write LinkedIn posts. That\'s not the problem. The problem is that it doesn\'t know you. Every time you open it, you\'re a stranger. You brief it, it writes something competent and generic, you edit it into something vaguely resembling your voice, you spend 40 minutes on a post you\'re not fully happy with. Then you do it again next week. That\'s not a posting system. That\'s a different kind of blank page.',
     whoSwitches: 'Founders who have been using ChatGPT for LinkedIn posts, are tired of the output sounding like "a LinkedIn influencer wrote this," and want a tool that actually learns how they think.',
-    wrivelySummary: 'Wrively builds a Voice Layer from your onboarding answers — your role, stage, personality, audience, and content pillars. Every post it generates comes from that persistent model. You never explain yourself to it. It already knows you. The output sounds like you because it\'s generated from a model of you, not from a fresh prompt.',
-    competitorSummary: 'ChatGPT is a general-purpose AI assistant. It\'s excellent at many things. Writing LinkedIn posts in your specific voice is not one of them — not because the model is weak, but because it has no persistent memory of who you are. Each session starts from zero. The output quality is determined entirely by how well you brief it, which requires the kind of prompt engineering most founders don\'t have time for.',
+    wrivelySummary: 'Wrively builds a Voice Layer from your onboarding answers - your role, stage, personality, audience, and content pillars. Every post it generates comes from that persistent model. You never explain yourself to it. It already knows you. The output sounds like you because it\'s generated from a model of you, not from a fresh prompt.',
+    competitorSummary: 'ChatGPT is a general-purpose AI assistant. It\'s excellent at many things. Writing LinkedIn posts in your specific voice is not one of them - not because the model is weak, but because it has no persistent memory of who you are. Each session starts from zero. The output quality is determined entirely by how well you brief it, which requires the kind of prompt engineering most founders don\'t have time for.',
     table: [
       { feature: 'Remembers your voice between sessions', wrively: true,           competitor: false, },
       { feature: 'Built specifically for LinkedIn',        wrively: true,           competitor: false, },
@@ -200,21 +200,21 @@ export const comparisons: ComparisonData[] = [
       },
       {
         title: 'You spend 40 minutes on a ChatGPT post. Wrively takes 3.',
-        body: 'The brief, the editing, the "this doesn\'t sound like me" cycle — that\'s all prompt engineering overhead. Wrively eliminates it. Your voice layer is already built. You pick a topic and get three usable variations.',
+        body: 'The brief, the editing, the "this doesn\'t sound like me" cycle - that\'s all prompt engineering overhead. Wrively eliminates it. Your voice layer is already built. You pick a topic and get three usable variations.',
       },
       {
         title: 'ChatGPT output has tells. Wrively output doesn\'t.',
-        body: '"In today\'s fast-paced world," "game-changer," "as a founder, I\'ve learned." You know the phrases. ChatGPT reaches for them. Wrively is explicitly instructed to never use them — and because it knows your voice, it doesn\'t need to.',
+        body: '"In today\'s fast-paced world," "game-changer," "as a founder, I\'ve learned." You know the phrases. ChatGPT reaches for them. Wrively is explicitly instructed to never use them - and because it knows your voice, it doesn\'t need to.',
       },
       {
         title: 'Three variations, not one draft to edit',
-        body: 'ChatGPT gives you one response you then iterate on. Wrively gives you Safe, Bold, and Contrarian versions of every post — all in your voice. You pick the one that fits the day. No iteration spiral.',
+        body: 'ChatGPT gives you one response you then iterate on. Wrively gives you Safe, Bold, and Contrarian versions of every post - all in your voice. You pick the one that fits the day. No iteration spiral.',
       },
     ],
     faq: [
       {
         q: 'Can\'t I just give ChatGPT a better prompt?',
-        a: 'Yes, and it helps. But you\'re still doing the work of briefing a blank-slate AI every time. Even with a perfect system prompt, ChatGPT is working from a description of you, not a model of you. And the briefing resets every session — the workflow never gets faster.',
+        a: 'Yes, and it helps. But you\'re still doing the work of briefing a blank-slate AI every time. Even with a perfect system prompt, ChatGPT is working from a description of you, not a model of you. And the briefing resets every session - the workflow never gets faster.',
       },
       {
         q: 'Is Wrively just a ChatGPT wrapper?',
