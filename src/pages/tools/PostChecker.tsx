@@ -5,6 +5,7 @@ import { ArrowRight, CheckCircle, AlertCircle, XCircle, Sparkles, RotateCcw, Arr
 import PublicHeader from '@/components/layout/PublicHeader'
 import PublicFooter from '@/components/layout/PublicFooter'
 import Button from '@/components/ui/Button'
+import { ToolUpgradeCta } from '@/components/tools/ToolUpgradeCta'
 import { cn } from '@/lib/utils'
 
 // ─── Supabase Edge Function ────────────────────────────────────────────────────
@@ -50,6 +51,8 @@ interface PostResult {
   lineCount: number
   criteria: Criterion[]
   improved_hook?: string
+  cta?: string
+  cached?: boolean
 }
 
 const WEAK_HOOKS = [
@@ -528,6 +531,8 @@ export default function PostChecker() {
                 </div>
               </div>
             )}
+
+            <ToolUpgradeCta cta={result.cta} cached={result.cached} />
 
             {/* Score summary */}
             <div className="bg-surface border border-border rounded-card p-6 flex items-center gap-6">

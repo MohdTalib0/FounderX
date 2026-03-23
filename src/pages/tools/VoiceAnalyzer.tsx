@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import PublicHeader from '@/components/layout/PublicHeader'
 import PublicFooter from '@/components/layout/PublicFooter'
 import Button from '@/components/ui/Button'
+import { ToolUpgradeCta } from '@/components/tools/ToolUpgradeCta'
 import { cn } from '@/lib/utils'
 
 // ─── Supabase Edge Function ────────────────────────────────────────────────────
@@ -48,6 +49,8 @@ interface VoiceResult {
   gaps: string[]
   voiceScore: number
   summary?: string
+  cta?: string
+  cached?: boolean
 }
 
 function sentences(text: string): string[] {
@@ -500,6 +503,8 @@ export default function VoiceAnalyzer() {
                   </div>
                 </div>
               )}
+
+              <ToolUpgradeCta cta={result.cta} cached={result.cached} />
 
               {/* Score + profile */}
               <div className="bg-surface border border-border rounded-xl p-6">
