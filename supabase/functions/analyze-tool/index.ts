@@ -3,24 +3,21 @@ import { corsHeaders } from '../_shared/cors.ts'
 
 // OpenRouter :free models only — no paid fallback
 const M = {
-  step: 'stepfun/step-3.5-flash:free',
-  gemma: 'google/gemma-3-27b-it:free',
-  llama: 'meta-llama/llama-3.3-70b-instruct:free',
-  nemotron: 'nvidia/nemotron-3-super-120b-a12b:free',
-  trinity: 'arcee-ai/trinity-large-preview:free',
+  step:    'stepfun/step-3.5-flash:free',          // fastest (~77 tps)
+  gemma:   'google/gemma-3-27b-it:free',           // stable
+  trinity: 'arcee-ai/trinity-large-preview:free',  // good for style/voice analysis
 } as const
 
-/** Per-tool priority (fast / stable first for headline; heavy for post; creative for voice). */
-function modelsForTool(tool: string): string[] {
+/** Per-tool config: primary tried first (4 s window), then fallbacks are raced. */
+function modelsForTool(tool: string): { primary: string; fallbacks: string[] } {
   switch (tool) {
-    case 'headline':
-      return [M.step, M.gemma, M.llama, M.nemotron, M.trinity]
-    case 'post-checker':
-      return [M.nemotron, M.step, M.gemma, M.trinity, M.llama]
     case 'voice':
-      return [M.trinity, M.gemma, M.step, M.nemotron, M.llama]
+      // Trinity leads for style analysis; Step and Gemma as fallbacks
+      return { primary: M.trinity, fallbacks: [M.step, M.gemma] }
+    case 'headline':
+    case 'post-checker':
     default:
-      return [M.step, M.gemma, M.llama, M.nemotron, M.trinity]
+      return { primary: M.step, fallbacks: [M.gemma, M.trinity] }
   }
 }
 
@@ -222,9 +219,26 @@ function safeParseJSON(raw: string): Record<string, unknown> {
   }
 }
 
-async function tryModel(apiKey: string, model: string, systemPrompt: string, userContent: string): Promise<string> {
+async function tryModel(
+  apiKey: string,
+  model: string,
+  systemPrompt: string,
+  userContent: string,
+  externalSignal?: AbortSignal,
+): Promise<string> {
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS)
+
+  // Wire external signal so the caller can cancel this fetch (e.g. losing race)
+  if (externalSignal) {
+    if (externalSignal.aborted) {
+      clearTimeout(timer)
+      controller.abort()
+    } else {
+      externalSignal.addEventListener('abort', () => controller.abort(), { once: true })
+    }
+  }
+
   try {
     const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
@@ -258,39 +272,52 @@ async function tryModel(apiKey: string, model: string, systemPrompt: string, use
   }
 }
 
+const PRIMARY_TIMEOUT_MS = 4_000
+
 /**
- * Try the preferred model first (preserves quota on the happy path).
- * If it fails, race the remaining fallbacks simultaneously (fast recovery).
- * Only 1 model quota is consumed on success; fallbacks only fire when needed.
+ * Tiered racing:
+ * 1. Try primary model with a 4 s window (Step is ~77 tps — usually done in 2–3 s).
+ * 2. If primary times out or errors, race exactly 2 fallbacks and cancel the loser
+ *    the instant the other responds.
+ *
+ * Happy path: 1 API call.  Primary-fail path: 3 calls (1 aborted + 2 raced, 1 cancelled).
+ * Previous behaviour: primary fails → fans out to ALL remaining models simultaneously.
  */
 async function callAnalysisModelRace(
   apiKey: string,
-  models: string[],
+  models: { primary: string; fallbacks: string[] },
   systemPrompt: string,
   userContent: string,
 ): Promise<string> {
-  if (models.length === 0) throw new Error('No models configured')
+  // ── Step 1: primary with short timeout ───────────────────────────────────
+  const primaryController = new AbortController()
+  const primaryTimer = setTimeout(() => primaryController.abort(), PRIMARY_TIMEOUT_MS)
 
-  // Try the preferred model first
   try {
-    return await tryModel(apiKey, models[0], systemPrompt, userContent)
-  } catch (firstErr) {
-    console.warn(`Primary model ${models[0]} failed, racing fallbacks:`, firstErr instanceof Error ? firstErr.message : firstErr)
+    const result = await tryModel(apiKey, models.primary, systemPrompt, userContent, primaryController.signal)
+    clearTimeout(primaryTimer)
+    return result
+  } catch (primaryErr) {
+    clearTimeout(primaryTimer)
+    console.warn(`Primary model ${models.primary} failed, racing fallbacks:`, primaryErr instanceof Error ? primaryErr.message : primaryErr)
   }
 
-  // Primary failed — race the remaining models simultaneously
-  const fallbacks = models.slice(1)
-  if (fallbacks.length === 0) throw new Error('All models failed')
-
-  const promises = fallbacks.map((m) => tryModel(apiKey, m, systemPrompt, userContent))
+  // ── Step 2: race fallbacks, cancel loser immediately ─────────────────────
+  const raceController = new AbortController()
   try {
-    return await Promise.any(promises)
+    return await Promise.any(
+      models.fallbacks.map((m) =>
+        tryModel(apiKey, m, systemPrompt, userContent, raceController.signal),
+      ),
+    )
   } catch (e) {
     if (e instanceof AggregateError && e.errors.length > 0) {
       const first = e.errors[0]
       throw first instanceof Error ? first : new Error(String(first))
     }
     throw e
+  } finally {
+    raceController.abort() // cancel whichever fallback lost the race
   }
 }
 
