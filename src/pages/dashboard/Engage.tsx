@@ -70,14 +70,15 @@ export default function Engage() {
   const loadWeeklyCount = useCallback(async () => {
     if (!user) return
     const weekStart = getWeekStart()
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('comment_suggestions')
       .select('source_post, created_at')
       .eq('user_id', user.id)
       .gte('created_at', weekStart.toISOString())
-    const normalize = (s: string) => s.trim().toLowerCase().replace(/\s+/g, ' ')
-    const count = new Set((data ?? []).map(r => normalize(r.source_post))).size
-    setWeeklyCount(count)
+    if (!error && data) {
+      const normalize = (s: string) => s.trim().toLowerCase().replace(/\s+/g, ' ')
+      setWeeklyCount(new Set(data.map(r => normalize(r.source_post))).size)
+    }
     setGoalLoading(false)
   }, [user])
 

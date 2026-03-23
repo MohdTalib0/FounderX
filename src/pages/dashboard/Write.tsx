@@ -50,8 +50,8 @@ export default function Write() {
       .select('was_copied, is_published')
       .eq('user_id', user.id)
       .gte('created_at', thirtyDaysAgo.toISOString())
-      .then(({ data }) => {
-        if (data) setProofData({
+      .then(({ data, error }) => {
+        if (data && !error) setProofData({
           copied: data.filter(p => p.was_copied).length,
           published: data.filter(p => p.is_published).length,
         })

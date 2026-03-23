@@ -11,6 +11,7 @@ import OnboardingGuard from '@/components/guards/OnboardingGuard'
 import Toaster from '@/components/ui/Toaster'
 import LoadingScreen from '@/components/ui/LoadingScreen'
 import ScrollToTop from '@/components/ScrollToTop'
+import GoogleAnalytics from '@/components/GoogleAnalytics'
 
 // Lazy - loaded on demand
 const Terms = lazy(() => import('@/pages/Terms'))
@@ -58,7 +59,13 @@ export default function App() {
     })
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      // If the session expired while the user was on a protected page, redirect to login
+      // with a reason so the login page can show a contextual message.
+      if (event === 'SIGNED_OUT' && window.location.pathname.startsWith('/dashboard')) {
+        window.location.replace('/login?reason=session_expired')
+        return
+      }
       setSession(session)
       setUser(session?.user ?? null)
       if (session?.user) {
@@ -73,6 +80,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <GoogleAnalytics />
       <ScrollToTop />
       <Suspense fallback={<LoadingScreen />}>
         <Routes>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Navigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronRight, Check, Sparkles, Copy, Zap, Building2, User, Hammer, Users, Briefcase, PenLine, Wrench, BookOpen, BarChart2, Flame } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
@@ -485,6 +485,8 @@ export default function Onboarding() {
   }
 
   // ─── Step screens ──────────────────────────────────────────────────────────
+
+  if (!user) return <Navigate to="/login" replace />
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4 py-12">

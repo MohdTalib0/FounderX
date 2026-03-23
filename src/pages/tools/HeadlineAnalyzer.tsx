@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { ArrowRight, CheckCircle, AlertCircle, XCircle, Sparkles, RotateCcw } from 'lucide-react'
+import { trackToolUse } from '@/lib/toolTracking'
 import PublicHeader from '@/components/layout/PublicHeader'
 import PublicFooter from '@/components/layout/PublicFooter'
 import Button from '@/components/ui/Button'
@@ -295,12 +296,14 @@ export default function HeadlineAnalyzer() {
       const aiResult = await analyzeWithAI(headline)
       setResult(aiResult)
       setHasAnalyzed(true)
+      trackToolUse({ tool: 'headline-analyzer', score: aiResult.total, usedExample: false })
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Analysis failed'
-      // fallback to local scoring
-      setResult(analyzeHeadline(headline))
+      const fallback = analyzeHeadline(headline)
+      setResult(fallback)
       setHasAnalyzed(true)
       setError(msg)
+      trackToolUse({ tool: 'headline-analyzer', score: fallback.total, usedExample: false })
     } finally {
       setLoading(false)
     }
@@ -324,12 +327,15 @@ export default function HeadlineAnalyzer() {
       .then(aiResult => {
         setResult(aiResult)
         setHasAnalyzed(true)
+        trackToolUse({ tool: 'headline-analyzer', score: aiResult.total, usedExample: true })
       })
       .catch(err => {
         const msg = err instanceof Error ? err.message : 'Analysis failed'
-        setResult(analyzeHeadline(ex))
+        const fallback = analyzeHeadline(ex)
+        setResult(fallback)
         setHasAnalyzed(true)
         setError(msg)
+        trackToolUse({ tool: 'headline-analyzer', score: fallback.total, usedExample: true })
       })
       .finally(() => setLoading(false))
   }
@@ -488,7 +494,7 @@ export default function HeadlineAnalyzer() {
               </div>
             )}
 
-            <ToolUpgradeCta cta={result.cta} cached={result.cached} />
+            <ToolUpgradeCta cta={result.cta} cached={result.cached} source="headline-analyzer" />
 
             {/* Score summary */}
             <div className="bg-surface border border-border rounded-card p-6 flex items-center gap-6">

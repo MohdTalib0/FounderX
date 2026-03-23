@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Zap, ArrowLeft, Eye, EyeOff, Mail } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { getSessionId, getAcquisitionSource, clearAcquisitionSource } from '@/lib/toolTracking'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 
@@ -45,6 +46,25 @@ export default function Signup() {
       }
       return
     }
+    // Attribute any pre-signup tool uses to this new user (best-effort, non-blocking)
+    if (authData.user) {
+      const sessionId         = getSessionId()
+      const acquisitionSource = getAcquisitionSource() ?? 'organic'
+
+      supabase
+        .from('tool_uses')
+        .update({ user_id: authData.user.id })
+        .eq('session_id', sessionId)
+        .is('user_id', null)
+        .then(() => {}, () => {})
+
+      supabase
+        .from('profiles')
+        .update({ acquisition_source: acquisitionSource })
+        .eq('id', authData.user.id)
+        .then(() => { clearAcquisitionSource() }, () => {})
+    }
+
     if (authData.session) {
       navigate('/onboarding')
     } else {

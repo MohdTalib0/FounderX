@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { ArrowRight, CheckCircle, AlertCircle, XCircle, Sparkles, RotateCcw, ArrowUpRight } from 'lucide-react'
+import { trackToolUse } from '@/lib/toolTracking'
 import PublicHeader from '@/components/layout/PublicHeader'
 import PublicFooter from '@/components/layout/PublicFooter'
 import Button from '@/components/ui/Button'
@@ -336,11 +337,14 @@ export default function PostChecker() {
       const aiResult = await analyzeWithAI(post)
       setResult(aiResult)
       setHasAnalyzed(true)
+      trackToolUse({ tool: 'post-checker', score: aiResult.total, usedExample: false })
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Analysis failed'
-      setResult(analyzePost(post))
+      const fallback = analyzePost(post)
+      setResult(fallback)
       setHasAnalyzed(true)
       setError(msg)
+      trackToolUse({ tool: 'post-checker', score: fallback.total, usedExample: false })
     } finally {
       setLoading(false)
     }
@@ -361,11 +365,14 @@ export default function PostChecker() {
       const aiResult = await analyzeWithAI(ex)
       setResult(aiResult)
       setHasAnalyzed(true)
+      trackToolUse({ tool: 'post-checker', score: aiResult.total, usedExample: true })
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Analysis failed'
-      setResult(analyzePost(ex))
+      const fallback = analyzePost(ex)
+      setResult(fallback)
       setHasAnalyzed(true)
       setError(msg)
+      trackToolUse({ tool: 'post-checker', score: fallback.total, usedExample: true })
     } finally {
       setLoading(false)
     }
@@ -536,7 +543,7 @@ export default function PostChecker() {
               </div>
             )}
 
-            <ToolUpgradeCta cta={result.cta} cached={result.cached} />
+            <ToolUpgradeCta cta={result.cta} cached={result.cached} source="post-checker" />
 
             {/* Score summary */}
             <div className="bg-surface border border-border rounded-card p-6 flex items-center gap-6">

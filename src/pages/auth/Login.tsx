@@ -18,6 +18,11 @@ export default function Login() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const [showPassword, setShowPassword] = useState(false)
+  const [info] = useState(
+    searchParams.get('reason') === 'session_expired'
+      ? 'Your session ended. Sign in to continue.'
+      : null
+  )
   const [error, setError] = useState(
     searchParams.get('error') === 'invalid_link'
       ? 'This confirmation link is invalid or has already been used. Sign in below.'
@@ -66,6 +71,12 @@ export default function Login() {
 
           <h1 className="text-xl font-bold text-text mb-1">Welcome back</h1>
           <p className="text-sm text-text-muted mb-6">Sign in to continue building your brand</p>
+
+          {info && (
+            <p className="text-sm text-text-muted bg-surface-hover border border-border rounded-btn px-3 py-2.5 mb-4">
+              {info}
+            </p>
+          )}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <Input

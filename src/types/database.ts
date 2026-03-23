@@ -17,6 +17,8 @@ export type Database = {
           usage_reset_at: string
           last_posted_at: string | null
           email_notifications: boolean
+          acquisition_source: string | null
+          streak_days: number
           created_at: string
           updated_at: string
         }
@@ -33,6 +35,8 @@ export type Database = {
           usage_reset_at?: string
           last_posted_at?: string | null
           email_notifications?: boolean
+          acquisition_source?: string | null
+          streak_days?: number
           created_at?: string
           updated_at?: string
         }
@@ -227,6 +231,72 @@ export type Database = {
         Update: Partial<Database['public']['Tables']['sent_emails']['Insert']>
         Relationships: []
       }
+      tool_uses: {
+        Row: {
+          id: string
+          tool: 'headline-analyzer' | 'post-checker' | 'voice-analyzer'
+          user_id: string | null
+          session_id: string | null
+          score: number | null
+          used_example: boolean
+          referrer: string | null
+          utm_source: string | null
+          utm_medium: string | null
+          utm_campaign: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          tool: 'headline-analyzer' | 'post-checker' | 'voice-analyzer'
+          user_id?: string | null
+          session_id?: string | null
+          score?: number | null
+          used_example?: boolean
+          referrer?: string | null
+          utm_source?: string | null
+          utm_medium?: string | null
+          utm_campaign?: string | null
+          created_at?: string
+        }
+        Update: Partial<Database['public']['Tables']['tool_uses']['Insert']>
+        Relationships: []
+      }
+      waitlist: {
+        Row: {
+          id: string
+          email: string
+          source: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          email: string
+          source?: string | null
+          created_at?: string
+        }
+        Update: Partial<Database['public']['Tables']['waitlist']['Insert']>
+        Relationships: []
+      }
+      referrals: {
+        Row: {
+          id: string
+          referrer_id: string
+          referred_email: string | null
+          referred_id: string | null
+          status: 'pending' | 'signed_up' | 'rewarded'
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          referrer_id: string
+          referred_email?: string | null
+          referred_id?: string | null
+          status?: 'pending' | 'signed_up' | 'rewarded'
+          created_at?: string
+        }
+        Update: Partial<Database['public']['Tables']['referrals']['Insert']>
+        Relationships: []
+      }
     }
     Views: { [_ in never]: never }
     Functions: { [_ in never]: never }
@@ -241,4 +311,7 @@ export type Company = Database['public']['Tables']['companies']['Row']
 export type GeneratedPost = Database['public']['Tables']['generated_posts']['Row']
 export type CommentSuggestion = Database['public']['Tables']['comment_suggestions']['Row']
 export type DraftRewrite = Database['public']['Tables']['draft_rewrites']['Row']
-export type RemixedPost = Database['public']['Tables']['remixed_posts']['Row']
+export type RemixedPost  = Database['public']['Tables']['remixed_posts']['Row']
+export type ToolUse      = Database['public']['Tables']['tool_uses']['Row']
+export type WaitlistEntry = Database['public']['Tables']['waitlist']['Row']
+export type Referral     = Database['public']['Tables']['referrals']['Row']

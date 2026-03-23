@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { ArrowRight, CheckCircle, AlertCircle, XCircle, Mic, RotateCcw } from 'lucide-react'
+import { trackToolUse } from '@/lib/toolTracking'
 import { Link } from 'react-router-dom'
 import PublicHeader from '@/components/layout/PublicHeader'
 import PublicFooter from '@/components/layout/PublicFooter'
@@ -317,7 +318,7 @@ export default function VoiceAnalyzer() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const runAnalysis = async (input: string) => {
+  const runAnalysis = async (input: string, usedExample = false) => {
     if (!input.trim() || input.trim().split(/\s+/).length < 30) return
     setLoading(true)
     setError(null)
@@ -325,11 +326,14 @@ export default function VoiceAnalyzer() {
       const aiResult = await analyzeWithAI(input)
       setResult(aiResult)
       setHasAnalyzed(true)
+      trackToolUse({ tool: 'voice-analyzer', score: aiResult.voiceScore, usedExample })
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Analysis failed'
-      setResult(analyzeVoice(input))
+      const fallback = analyzeVoice(input)
+      setResult(fallback)
       setHasAnalyzed(true)
       setError(msg)
+      trackToolUse({ tool: 'voice-analyzer', score: fallback.voiceScore, usedExample })
     } finally {
       setLoading(false)
     }
@@ -349,7 +353,7 @@ export default function VoiceAnalyzer() {
     setResult(null)
     setHasAnalyzed(false)
     setError(null)
-    runAnalysis(sampleText)
+    runAnalysis(sampleText, true)
   }
 
   const wordCount = (text.match(/\b\w+\b/g) ?? []).length
@@ -511,7 +515,7 @@ export default function VoiceAnalyzer() {
                 </div>
               )}
 
-              <ToolUpgradeCta cta={result.cta} cached={result.cached} />
+              <ToolUpgradeCta cta={result.cta} cached={result.cached} source="voice-analyzer" />
 
               {/* Score + profile */}
               <div className="bg-surface border border-border rounded-xl p-6">
