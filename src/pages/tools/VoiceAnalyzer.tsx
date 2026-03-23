@@ -364,6 +364,14 @@ export default function VoiceAnalyzer() {
           content="Free tool. Paste your LinkedIn writing sample and get an instant voice profile: first-person presence, rhythm, specificity, jargon score, and actionable fixes."
         />
         <link rel="canonical" href="https://wrively.com/tools/linkedin-voice-analyzer" />
+        <meta property="og:title" content="LinkedIn Voice Analyzer | Does Your Writing Sound Like You?" />
+        <meta property="og:description" content="Free tool. Paste your LinkedIn writing sample and get an instant voice profile: first-person presence, rhythm, specificity, jargon score, and actionable fixes." />
+        <meta property="og:url" content="https://wrively.com/tools/linkedin-voice-analyzer" />
+        <meta property="og:image" content="https://wrively.com/og/tools.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="LinkedIn Voice Analyzer | Does Your Writing Sound Like You?" />
+        <meta name="twitter:description" content="Paste your LinkedIn writing sample and get an instant voice profile. Free, no signup required." />
+        <meta name="twitter:image" content="https://wrively.com/og/tools.png" />
         <script type="application/ld+json">{JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'WebApplication',
@@ -387,7 +395,7 @@ export default function VoiceAnalyzer() {
             Free Voice Analyzer
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-text mb-4">
-            Does Your LinkedIn Writing Sound Like You?
+            LinkedIn Voice Analyzer: Does Your Writing Sound Like You?
           </h1>
           <p className="text-text-muted text-lg leading-relaxed max-w-xl mx-auto">
             Paste a writing sample. Get an instant voice profile across 5 dimensions with specific fixes.
@@ -627,6 +635,76 @@ export default function VoiceAnalyzer() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* Why voice is harder to fix than structure */}
+        <section className="max-w-3xl mx-auto px-6 py-16">
+          <div className="space-y-12">
+
+            <div>
+              <h2 className="text-xl font-bold text-text mb-4">Why voice is harder to fix than structure</h2>
+              <p className="text-base text-text-muted leading-relaxed mb-4">
+                Most LinkedIn advice focuses on structure: hook, body, CTA. Structure is fixable in an afternoon. Voice takes longer because it's not a formula — it's the accumulated weight of specific word choices: the ratio of "I" to "we," whether you cite real numbers or vague claims, whether your sentences breathe or run together.
+              </p>
+              <p className="text-base text-text-muted leading-relaxed">
+                The practical problem: when founders switch to AI-assisted writing, voice is the first thing to disappear. The content becomes structurally correct and utterly forgettable. Posts score well on every metric except the one that actually builds an audience — they could have been written by anyone. This LinkedIn Voice Analyzer specifically flags that problem so you can correct it before it becomes a habit.
+              </p>
+            </div>
+
+            <div>
+              <h2 className="text-xl font-bold text-text mb-5">What weak vs strong voice looks like in practice</h2>
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="bg-danger/5 border border-danger/20 rounded-xl p-5">
+                  <p className="text-xs font-semibold text-danger uppercase tracking-wider mb-3">Weak voice</p>
+                  <p className="text-sm text-text-muted leading-relaxed italic">
+                    "As founders, we need to leverage every opportunity to drive growth. In today's competitive landscape, building a strong personal brand is essential for success. Passionate about helping teams unlock their full potential."
+                  </p>
+                  <p className="text-xs text-text-subtle mt-3">No first-person singular. No specifics. Three buzzwords. Could be anyone.</p>
+                </div>
+                <div className="bg-success/5 border border-success/20 rounded-xl p-5">
+                  <p className="text-xs font-semibold text-success uppercase tracking-wider mb-3">Strong voice</p>
+                  <p className="text-sm text-text-muted leading-relaxed italic">
+                    "I spent three months building a feature nobody asked for. When I finally showed it to users, they were polite. That's how I learned that 'users are happy' and 'users are using it' are two completely different things."
+                  </p>
+                  <p className="text-xs text-text-subtle mt-3">Strong first-person. Specific situation. Real stakes. Unmistakably one person.</p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h2 className="text-xl font-bold text-text mb-6">Frequently asked questions</h2>
+              <div className="space-y-5">
+                {[
+                  {
+                    q: 'How much text do I need for a meaningful result?',
+                    a: 'At least 30 words, but 100 to 300 words gives the most accurate reading. Paste a recent LinkedIn post, a paragraph from your bio, or a few lines you have written. The more representative the sample, the more accurate the voice profile.',
+                  },
+                  {
+                    q: 'What does the voice score actually measure?',
+                    a: 'Five dimensions: first-person presence (how much you write from your own perspective vs. a generic "we"), sentence rhythm (variation between short and long sentences), specificity (real numbers and named examples vs. vague claims), question usage (conversational engagement signals), and jargon avoidance (how much corporate filler dilutes your voice).',
+                  },
+                  {
+                    q: 'My score is low. Where do I start?',
+                    a: 'Start with whichever dimension the tool flags as weakest. If it is specificity, replace one vague claim per paragraph with a real number, a named customer, or a specific date. If it is jargon, delete every word that sounds like a press release. Small changes compound quickly across a post.',
+                  },
+                  {
+                    q: 'How is this different from a grammar checker?',
+                    a: 'Grammar checkers catch technical errors. This LinkedIn Voice Analyzer measures authenticity signals — the patterns that separate writing that sounds like a specific founder from writing that sounds like content produced at scale. The two problems are entirely unrelated.',
+                  },
+                  {
+                    q: 'Does this tool work for non-founders?',
+                    a: 'Yes. The voice dimensions it measures apply to anyone writing on LinkedIn: executives, consultants, freelancers, or anyone building a personal brand. The scoring criteria are based on what makes writing feel human and specific, not on any particular job title.',
+                  },
+                ].map(item => (
+                  <div key={item.q} className="border-b border-border pb-5 last:border-0 last:pb-0">
+                    <h3 className="text-sm font-semibold text-text mb-2">{item.q}</h3>
+                    <p className="text-sm text-text-muted leading-relaxed">{item.a}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
           </div>
         </section>
 

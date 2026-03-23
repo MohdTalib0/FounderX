@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 1200px;
+      height: 630px;
+      overflow: hidden;
+      background: #0C0C0E;
+      font-family: 'Inter', -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .root {
+      position: relative;
+      width: 1200px;
+      height: 630px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Background ── */
+    .bg {
+      position: absolute;
+      inset: 0;
+      background: #0C0C0E;
+      background-image:
+        linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    .glow-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 900px;
+      height: 500px;
+      background: radial-gradient(ellipse, rgba(99,102,241,0.1) 0%, transparent 65%);
+    }
+    .glow-tl {
+      position: absolute;
+      top: -80px;
+      left: -80px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(99,102,241,0.14) 0%, transparent 65%);
+    }
+
+    .accent-top {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent 0%, #6366F1 30%, #A78BFA 60%, transparent 100%);
+    }
+
+    /* ── Main ── */
+    .main {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 48px 88px 32px;
+      gap: 36px;
+    }
+
+    /* Top row: badge + headline */
+    .top {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .eyebrow-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: rgba(99,102,241,0.1);
+      border: 1px solid rgba(99,102,241,0.25);
+      font-size: 12px;
+      font-weight: 600;
+      color: #A5B4FC;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .eyebrow-sep { font-size: 14px; color: #27272A; }
+    .eyebrow-section {
+      font-size: 13px;
+      font-weight: 500;
+      color: #3F3F46;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .headline {
+      font-size: 60px;
+      font-weight: 800;
+      color: #F0F0F2;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+    .headline .accent {
+      background: linear-gradient(135deg, #818CF8 0%, #C4B5FD 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Tool cards row */
+    .tools-row {
+      display: flex;
+      gap: 16px;
+    }
+
+    .tool-card {
+      flex: 1;
+      background: #141418;
+      border: 1px solid #27272A;
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: border-color 0.2s;
+    }
+
+    .tool-icon-wrap {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(99,102,241,0.12);
+      border: 1px solid rgba(99,102,241,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tool-text { display: flex; flex-direction: column; gap: 4px; }
+    .tool-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: #E4E4E7;
+    }
+    .tool-desc {
+      font-size: 12px;
+      font-weight: 400;
+      color: #52525B;
+      line-height: 1.5;
+    }
+    .tool-tag {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.18);
+      color: #34D399;
+    }
+
+    /* ── Shelf ── */
+    .shelf {
+      position: relative;
+      z-index: 2;
+      height: 56px;
+      background: #101012;
+      border-top: 1px solid #1C1C20;
+      display: flex;
+      align-items: center;
+      padding: 0 88px;
+      justify-content: space-between;
+    }
+    .shelf-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .shelf-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .shelf-w {
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      background: linear-gradient(135deg, #6366F1, #8B5CF6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      color: white;
+    }
+    .shelf-name { font-size: 14px; font-weight: 600; color: #52525B; }
+    .shelf-sep  { width: 1px; height: 18px; background: #27272A; }
+    .shelf-note { font-size: 12px; font-weight: 400; color: #3F3F46; }
+    .shelf-domain { font-size: 13px; font-weight: 600; color: #3F3F46; }
+  </style>
+</head>
+<body>
+  <div class="root">
+    <div class="bg"></div>
+    <div class="glow-center"></div>
+    <div class="glow-tl"></div>
+    <div class="accent-top"></div>
+
+    <div class="main">
+      <div class="top">
+        <div class="eyebrow">
+          <div class="eyebrow-badge">Wrively</div>
+          <span class="eyebrow-sep">/</span>
+          <span class="eyebrow-section">Free Tools</span>
+        </div>
+        <div class="headline">
+          Free LinkedIn tools<br />
+          built for <span class="accent">founders.</span>
+        </div>
+      </div>
+
+      <div class="tools-row">
+        <!-- Headline Analyzer -->
+        <div class="tool-card">
+          <div class="tool-icon-wrap">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"/>
+              <line x1="12" y1="20" x2="12" y2="4"/>
+              <line x1="6" y1="20" x2="6" y2="14"/>
+            </svg>
+          </div>
+          <div class="tool-text">
+            <div class="tool-name">Headline Analyzer</div>
+            <div class="tool-desc">Score + specific rewrites across 5 criteria</div>
+          </div>
+          <div class="tool-tag">Free</div>
+        </div>
+
+        <!-- Post Checker -->
+        <div class="tool-card">
+          <div class="tool-icon-wrap">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+          </div>
+          <div class="tool-text">
+            <div class="tool-name">Post Checker</div>
+            <div class="tool-desc">Hook · Length · Format · Structure · CTA</div>
+          </div>
+          <div class="tool-tag">Free</div>
+        </div>
+
+        <!-- Voice Analyzer -->
+        <div class="tool-card">
+          <div class="tool-icon-wrap">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              <line x1="12" y1="19" x2="12" y2="23"/>
+              <line x1="8" y1="23" x2="16" y2="23"/>
+            </svg>
+          </div>
+          <div class="tool-text">
+            <div class="tool-name">Voice Analyzer</div>
+            <div class="tool-desc">Authenticity profile across 5 voice signals</div>
+          </div>
+          <div class="tool-tag">Free</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="shelf">
+      <div class="shelf-left">
+        <div class="shelf-brand">
+          <div class="shelf-w">W</div>
+          <span class="shelf-name">Wrively</span>
+        </div>
+        <div class="shelf-sep"></div>
+        <span class="shelf-note">No signup required · Instant AI results</span>
+      </div>
+      <span class="shelf-domain">wrively.com/tools</span>
+    </div>
+  </div>
+</body>
+</html>

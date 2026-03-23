@@ -393,6 +393,11 @@ export default function PostChecker() {
         <meta property="og:title" content="LinkedIn Post Checker | Free Score Before You Publish" />
         <meta property="og:description" content="Instant score on 5 criteria: hook, length, formatting, structure, and CTA. Free, no signup." />
         <meta property="og:url" content="https://wrively.com/tools/linkedin-post-checker" />
+        <meta property="og:image" content="https://wrively.com/og/tools.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="LinkedIn Post Checker | Free Score Before You Publish" />
+        <meta name="twitter:description" content="Instant score on 5 criteria: hook, length, formatting, structure, and CTA. Free, no signup." />
+        <meta name="twitter:image" content="https://wrively.com/og/tools.png" />
         <script type="application/ld+json">{toolSchema}</script>
       </Helmet>
 
@@ -635,6 +640,13 @@ export default function PostChecker() {
                   Also check your headline
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </Link>
+                <Link
+                  to="/tools/linkedin-voice-analyzer"
+                  className="inline-flex items-center gap-1.5 text-sm text-text-muted hover:text-text transition-colors border border-border rounded-btn px-4 py-2"
+                >
+                  Also check your voice
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </Link>
               </div>
             </div>
           </div>
@@ -703,6 +715,28 @@ export default function PostChecker() {
           </div>
 
         </div>
+
+        {/* More free tools */}
+        <div className="mt-16 pt-12 border-t border-border">
+          <h2 className="text-xl font-bold text-text mb-6">More free LinkedIn tools</h2>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <Link
+              to="/tools/linkedin-headline-analyzer"
+              className="group bg-surface border border-border rounded-xl p-5 hover:border-primary/50 transition-colors"
+            >
+              <h3 className="text-sm font-semibold text-text mb-1 group-hover:text-primary transition-colors">LinkedIn Headline Analyzer</h3>
+              <p className="text-sm text-text-muted">Is your headline driving profile visits? Get a grade and specific rewrites across 5 criteria.</p>
+            </Link>
+            <Link
+              to="/tools/linkedin-voice-analyzer"
+              className="group bg-surface border border-border rounded-xl p-5 hover:border-primary/50 transition-colors"
+            >
+              <h3 className="text-sm font-semibold text-text mb-1 group-hover:text-primary transition-colors">LinkedIn Voice Analyzer</h3>
+              <p className="text-sm text-text-muted">Does your writing sound like you or like everyone else? Instant voice profile across 5 dimensions.</p>
+            </Link>
+          </div>
+        </div>
+
       </main>
 
       <PublicFooter />

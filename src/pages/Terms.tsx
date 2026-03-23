@@ -65,7 +65,12 @@ export default function Terms() {
         <link rel="canonical" href="https://wrively.com/terms" />
         <meta property="og:title" content="Terms of Service | Wrively" />
         <meta property="og:url" content="https://wrively.com/terms" />
+        <meta property="og:image" content="https://wrively.com/og/home.png" />
         <meta name="robots" content="noindex, follow" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Terms of Service | Wrively" />
+        <meta name="twitter:description" content="Read the Wrively Terms of Service. Learn about usage, content ownership, subscriptions, and your rights when using the Wrively platform." />
+        <meta name="twitter:image" content="https://wrively.com/og/home.png" />
       </Helmet>
       {/* Header */}
       <header className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b border-border">

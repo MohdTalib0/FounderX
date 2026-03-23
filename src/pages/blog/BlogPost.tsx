@@ -128,7 +128,12 @@ export default function BlogPost() {
         <meta property="og:description" content={article.description} />
         <meta property="og:url" content={`https://wrively.com/blog/${article.slug}`} />
         <meta property="og:type" content="article" />
+        <meta property="og:image" content="https://wrively.com/og/blog.png" />
         <meta property="article:published_time" content={article.date} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={article.title} />
+        <meta name="twitter:description" content={article.description} />
+        <meta name="twitter:image" content="https://wrively.com/og/blog.png" />
         <script type="application/ld+json">{articleSchema}</script>
       </Helmet>
 

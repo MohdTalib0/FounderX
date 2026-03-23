@@ -66,6 +66,11 @@ export default function Contact() {
         <meta property="og:title" content="Contact Wrively • Get in Touch" />
         <meta property="og:description" content="Have a question, feedback, or idea? Contact the Wrively team. We read every message." />
         <meta property="og:url" content="https://wrively.com/contact" />
+        <meta property="og:image" content="https://wrively.com/og/home.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Contact Wrively • Get in Touch" />
+        <meta name="twitter:description" content="Have a question, feedback, or idea? Contact the Wrively team. We read every message and respond within one business day." />
+        <meta name="twitter:image" content="https://wrively.com/og/home.png" />
       </Helmet>
       <PublicHeader />
 

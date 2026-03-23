@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 1200px;
+      height: 630px;
+      overflow: hidden;
+      background: #0C0C0E;
+      font-family: 'Inter', -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .root {
+      position: relative;
+      width: 1200px;
+      height: 630px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Background ── */
+    .bg {
+      position: absolute;
+      inset: 0;
+      background: #0C0C0E;
+      background-image:
+        linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    .glow-tr {
+      position: absolute;
+      top: -120px;
+      right: -80px;
+      width: 580px;
+      height: 580px;
+      background: radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 65%);
+    }
+    .glow-bl {
+      position: absolute;
+      bottom: -60px;
+      left: 100px;
+      width: 360px;
+      height: 360px;
+      background: radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 65%);
+    }
+
+    .accent-top {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent 0%, #6366F1 30%, #A78BFA 60%, transparent 100%);
+    }
+
+    /* ── Main ── */
+    .main {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      padding: 0 88px;
+      gap: 72px;
+    }
+
+    .left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .eyebrow-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: rgba(99,102,241,0.1);
+      border: 1px solid rgba(99,102,241,0.25);
+      font-size: 12px;
+      font-weight: 600;
+      color: #A5B4FC;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .eyebrow-sep {
+      font-size: 14px;
+      color: #27272A;
+      font-weight: 400;
+    }
+    .eyebrow-section {
+      font-size: 13px;
+      font-weight: 500;
+      color: #3F3F46;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .headline {
+      font-size: 62px;
+      font-weight: 800;
+      color: #F0F0F2;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+    .headline .accent {
+      background: linear-gradient(135deg, #818CF8 0%, #C4B5FD 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .sub {
+      font-size: 20px;
+      font-weight: 400;
+      color: #71717A;
+      line-height: 1.55;
+      max-width: 480px;
+    }
+
+    /* Right: real article list */
+    .right {
+      flex-shrink: 0;
+      width: 340px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .article-card {
+      background: #141418;
+      border: 1px solid #27272A;
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .article-card.featured {
+      border-color: rgba(99,102,241,0.25);
+      background: linear-gradient(135deg, rgba(99,102,241,0.06) 0%, #141418 100%);
+    }
+
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .article-cat {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+    .cat-voice    { color: #818CF8; background: rgba(99,102,241,0.12); }
+    .cat-growth   { color: #34D399; background: rgba(52,211,153,0.1); }
+    .cat-strategy { color: #F59E0B; background: rgba(245,158,11,0.1); }
+
+    .article-read {
+      font-size: 10px;
+      color: #3F3F46;
+      font-weight: 400;
+      margin-left: auto;
+    }
+
+    .article-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #D4D4D8;
+      line-height: 1.4;
+    }
+    .article-card.featured .article-title {
+      color: #F0F0F2;
+    }
+
+    /* ── Shelf ── */
+    .shelf {
+      position: relative;
+      z-index: 2;
+      height: 56px;
+      background: #101012;
+      border-top: 1px solid #1C1C20;
+      display: flex;
+      align-items: center;
+      padding: 0 88px;
+      justify-content: space-between;
+    }
+    .shelf-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .shelf-w {
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      background: linear-gradient(135deg, #6366F1, #8B5CF6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      color: white;
+    }
+    .shelf-name { font-size: 14px; font-weight: 600; color: #52525B; }
+    .shelf-domain { font-size: 13px; font-weight: 600; color: #3F3F46; }
+  </style>
+</head>
+<body>
+  <div class="root">
+    <div class="bg"></div>
+    <div class="glow-tr"></div>
+    <div class="glow-bl"></div>
+    <div class="accent-top"></div>
+
+    <div class="main">
+      <div class="left">
+        <div class="eyebrow">
+          <div class="eyebrow-badge">Wrively</div>
+          <span class="eyebrow-sep">/</span>
+          <span class="eyebrow-section">Blog</span>
+        </div>
+
+        <div class="headline">
+          LinkedIn strategy<br />
+          for <span class="accent">founders.</span>
+        </div>
+
+        <div class="sub">
+          Practical guides on content, founder<br />
+          voice, and building an audience that converts.
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="article-card featured">
+          <div class="article-meta">
+            <span class="article-cat cat-voice">Voice</span>
+            <span class="article-read">5 min read</span>
+          </div>
+          <div class="article-title">Why Your LinkedIn Posts Sound Like Everyone Else — And How to Fix It</div>
+        </div>
+
+        <div class="article-card">
+          <div class="article-meta">
+            <span class="article-cat cat-growth">Growth</span>
+            <span class="article-read">4 min read</span>
+          </div>
+          <div class="article-title">The LinkedIn Hook Formula That Drives 3× More Engagement</div>
+        </div>
+
+        <div class="article-card">
+          <div class="article-meta">
+            <span class="article-cat cat-strategy">Strategy</span>
+            <span class="article-read">6 min read</span>
+          </div>
+          <div class="article-title">How to Post on LinkedIn 3× a Week Without Running Out of Ideas</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="shelf">
+      <div class="shelf-brand">
+        <div class="shelf-w">W</div>
+        <span class="shelf-name">Wrively</span>
+      </div>
+      <span class="shelf-domain">wrively.com/blog</span>
+    </div>
+  </div>
+</body>
+</html>

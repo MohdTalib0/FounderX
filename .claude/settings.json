@@ -31,7 +31,11 @@
       "Bash(npm run:*)",
       "Bash(node -e \":*)",
       "Bash(grep -c \"slug: ''hypefury-alternative''\" \"c:\\\\Users\\\\moham\\\\Project - FounderX\\\\src\\\\data\\\\comparisons.ts\")",
-      "Bash(grep -c \"slug: ''shield-analytics-alternative''\" \"c:\\\\Users\\\\moham\\\\Project - FounderX\\\\src\\\\data\\\\comparisons.ts\")"
+      "Bash(grep -c \"slug: ''shield-analytics-alternative''\" \"c:\\\\Users\\\\moham\\\\Project - FounderX\\\\src\\\\data\\\\comparisons.ts\")",
+      "Bash(done)",
+      "Bash(/tmp/audit_summary.txt:*)",
+      "Read(//tmp/**)",
+      "Read(//c/Users/moham/Project - FounderX/**)"
     ],
     "additionalDirectories": [
       "c:\\Users\\moham\\.claude\\projects\\c--Users-moham-Project---FounderX\\memory"

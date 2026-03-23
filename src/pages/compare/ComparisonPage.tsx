@@ -32,6 +32,11 @@ export default function ComparisonPage() {
         <meta property="og:title" content={data.metaTitle} />
         <meta property="og:description" content={data.metaDescription} />
         <meta property="og:url" content={`https://wrively.com/compare/${data.slug}`} />
+        <meta property="og:image" content="https://wrively.com/og/home.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={data.metaTitle} />
+        <meta name="twitter:description" content={data.metaDescription} />
+        <meta name="twitter:image" content="https://wrively.com/og/home.png" />
         <script type="application/ld+json">{pageSchema}</script>
       </Helmet>
 

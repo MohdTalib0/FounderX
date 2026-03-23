@@ -32,6 +32,11 @@ export default function BlogIndex() {
         <meta property="og:title" content="Wrively Blog • LinkedIn Strategy and Voice for Founders" />
         <meta property="og:description" content="Practical guides on LinkedIn content, founder voice, and AI writing for founders." />
         <meta property="og:url" content="https://wrively.com/blog" />
+        <meta property="og:image" content="https://wrively.com/og/blog.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Wrively Blog • LinkedIn Strategy and Voice for Founders" />
+        <meta name="twitter:description" content="Practical guides on LinkedIn content, founder voice, and AI writing. Learn how to post consistently, sound like yourself, and build an audience that converts." />
+        <meta name="twitter:image" content="https://wrively.com/og/blog.png" />
       </Helmet>
 
       <PublicHeader />

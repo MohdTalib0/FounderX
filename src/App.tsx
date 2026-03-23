@@ -10,6 +10,7 @@ import AuthGuard from '@/components/guards/AuthGuard'
 import OnboardingGuard from '@/components/guards/OnboardingGuard'
 import Toaster from '@/components/ui/Toaster'
 import LoadingScreen from '@/components/ui/LoadingScreen'
+import ScrollToTop from '@/components/ScrollToTop'
 
 // Lazy - loaded on demand
 const Terms = lazy(() => import('@/pages/Terms'))
@@ -70,6 +71,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Suspense fallback={<LoadingScreen />}>
         <Routes>
           {/* Public */}

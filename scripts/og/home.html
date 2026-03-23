@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 1200px;
+      height: 630px;
+      overflow: hidden;
+      background: #0C0C0E;
+      font-family: 'Inter', -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .root {
+      position: relative;
+      width: 1200px;
+      height: 630px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Background ── */
+    .bg {
+      position: absolute;
+      inset: 0;
+      background: #0C0C0E;
+      /* Subtle grid mesh */
+      background-image:
+        linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    .glow-tl {
+      position: absolute;
+      top: -160px;
+      left: -100px;
+      width: 640px;
+      height: 640px;
+      background: radial-gradient(circle, rgba(99,102,241,0.22) 0%, transparent 65%);
+    }
+    .glow-br {
+      position: absolute;
+      bottom: -80px;
+      right: 200px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 65%);
+    }
+
+    /* ── Top accent ── */
+    .accent-top {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent 0%, #6366F1 30%, #A78BFA 60%, transparent 100%);
+    }
+
+    /* ── Main content ── */
+    .main {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      padding: 0 88px;
+      gap: 60px;
+    }
+
+    /* Left column */
+    .left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      padding: 7px 16px;
+      border-radius: 999px;
+      background: rgba(99,102,241,0.1);
+      border: 1px solid rgba(99,102,241,0.25);
+    }
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #6366F1;
+      box-shadow: 0 0 6px rgba(99,102,241,0.8);
+    }
+    .badge-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: #A5B4FC;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .headline {
+      font-size: 64px;
+      font-weight: 800;
+      color: #F0F0F2;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+    .headline .accent {
+      background: linear-gradient(135deg, #818CF8 0%, #C4B5FD 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .sub {
+      font-size: 22px;
+      font-weight: 400;
+      color: #71717A;
+      line-height: 1.5;
+      max-width: 480px;
+    }
+
+    /* Right column — mock post card */
+    .right {
+      flex-shrink: 0;
+      width: 320px;
+    }
+
+    .post-card {
+      background: #141418;
+      border: 1px solid #27272A;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 24px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(99,102,241,0.08);
+    }
+    .post-header {
+      padding: 16px 18px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #1E1E24;
+    }
+    .post-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.2);
+    }
+    .post-badge-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #F59E0B;
+    }
+    .post-badge-text {
+      font-size: 10px;
+      font-weight: 700;
+      color: #F59E0B;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .post-score {
+      font-size: 11px;
+      font-weight: 600;
+      color: #52525B;
+    }
+    .post-body {
+      padding: 16px 18px;
+    }
+    .post-line {
+      font-size: 13px;
+      font-weight: 500;
+      color: #D4D4D8;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .post-line strong {
+      color: #F0F0F2;
+      font-weight: 600;
+    }
+    .post-more {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .post-more-line {
+      height: 6px;
+      border-radius: 3px;
+      background: #27272A;
+    }
+    .post-footer {
+      padding: 12px 18px;
+      border-top: 1px solid #1E1E24;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366F1, #8B5CF6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+    }
+    .author-info {
+      flex: 1;
+    }
+    .author-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: #D4D4D8;
+    }
+    .author-role {
+      font-size: 10px;
+      color: #52525B;
+      margin-top: 1px;
+    }
+    .copy-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      background: rgba(99,102,241,0.15);
+      border: 1px solid rgba(99,102,241,0.3);
+      font-size: 10px;
+      font-weight: 600;
+      color: #818CF8;
+    }
+
+    /* ── Bottom shelf ── */
+    .shelf {
+      position: relative;
+      z-index: 2;
+      height: 56px;
+      background: #101012;
+      border-top: 1px solid #1C1C20;
+      display: flex;
+      align-items: center;
+      padding: 0 88px;
+      justify-content: space-between;
+    }
+    .shelf-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .shelf-w {
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      background: linear-gradient(135deg, #6366F1, #8B5CF6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      color: white;
+    }
+    .shelf-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #52525B;
+    }
+    .shelf-domain {
+      font-size: 13px;
+      font-weight: 600;
+      color: #3F3F46;
+      letter-spacing: 0.01em;
+    }
+  </style>
+</head>
+<body>
+  <div class="root">
+    <div class="bg"></div>
+    <div class="glow-tl"></div>
+    <div class="glow-br"></div>
+    <div class="accent-top"></div>
+
+    <div class="main">
+      <!-- Left -->
+      <div class="left">
+        <div class="badge">
+          <div class="badge-dot"></div>
+          <span class="badge-text">Wrively</span>
+        </div>
+
+        <div class="headline">
+          LinkedIn posts<br />
+          that sound like<br />
+          <span class="accent">you.</span>
+        </div>
+
+        <div class="sub">
+          Your founder voice. Ready in under 3 minutes.
+        </div>
+      </div>
+
+      <!-- Right: mock post card -->
+      <div class="right">
+        <div class="post-card">
+          <div class="post-header">
+            <div class="post-badge">
+              <div class="post-badge-dot"></div>
+              <span class="post-badge-text">Bold</span>
+            </div>
+            <span class="post-score">287 chars</span>
+          </div>
+          <div class="post-body">
+            <div class="post-line">
+              <strong>I spent 3 months building a feature nobody asked for.</strong>
+            </div>
+            <div class="post-line">
+              When I finally showed it to users, they were polite. That's how I learned the difference between "users are happy" and "users are using it."
+            </div>
+            <div class="post-more">
+              <div class="post-more-line" style="width:70%"></div>
+            </div>
+            <div class="post-more" style="margin-top:6px">
+              <div class="post-more-line" style="width:40%"></div>
+            </div>
+          </div>
+          <div class="post-footer">
+            <div class="avatar">M</div>
+            <div class="author-info">
+              <div class="author-name">Mohammed</div>
+              <div class="author-role">Founder @ Wrively</div>
+            </div>
+            <div class="copy-btn">Copy ✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="shelf">
+      <div class="shelf-brand">
+        <div class="shelf-w">W</div>
+        <span class="shelf-name">Wrively</span>
+      </div>
+      <span class="shelf-domain">wrively.com</span>
+    </div>
+  </div>
+</body>
+</html>
