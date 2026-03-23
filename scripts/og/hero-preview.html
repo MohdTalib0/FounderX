@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 1600px;
+      height: 900px;
+      overflow: hidden;
+      background: transparent;
+      font-family: 'Inter', -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      color: #F4F4F5;
+    }
+
+    /* ─── ROOT — rounded container ─── */
+    .root {
+      position: relative;
+      display: flex;
+      width: 1600px;
+      height: 900px;
+      background: #08080B;
+      border-radius: 20px;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    /* ─── BACKGROUND ─── */
+    .bg {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(circle, rgba(99,102,241,0.05) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+    .glow-1 {
+      position: absolute; z-index: 0;
+      top: 60px; left: 260px;
+      width: 860px; height: 580px;
+      background: radial-gradient(ellipse, rgba(99,102,241,0.08) 0%, transparent 65%);
+    }
+    .glow-2 {
+      position: absolute; z-index: 0;
+      top: -120px; right: -60px;
+      width: 560px; height: 560px;
+      background: radial-gradient(circle, rgba(139,92,246,0.045) 0%, transparent 65%);
+    }
+    .glow-3 {
+      position: absolute; z-index: 0;
+      bottom: -60px; left: 100px;
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, rgba(99,102,241,0.035) 0%, transparent 65%);
+    }
+
+    /* ══════════════════════════════
+       SIDEBAR
+    ══════════════════════════════ */
+    .sidebar {
+      width: 218px;
+      flex-shrink: 0;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      background: rgba(9,9,12,0.97);
+      display: flex;
+      flex-direction: column;
+      position: relative; z-index: 2;
+    }
+
+    .logo {
+      display: flex; align-items: center; gap: 10px;
+      padding: 22px 18px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.055);
+    }
+    .logo-mark {
+      width: 32px; height: 32px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, #6366F1 0%, #7C3AED 100%);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 14px rgba(99,102,241,0.45);
+    }
+    .logo-text {
+      font-size: 15px; font-weight: 700;
+      color: #F4F4F5; letter-spacing: -0.02em;
+    }
+
+    .nav { padding: 12px 10px; flex: 1; }
+    .nav-section-label {
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 0.11em; text-transform: uppercase;
+      color: #3F3F46; padding: 8px 10px 4px; margin-top: 4px;
+    }
+    .nav-section-label:first-child { margin-top: 0; }
+    .nav-item {
+      display: flex; align-items: center; gap: 9px;
+      padding: 8px 10px; border-radius: 8px;
+      font-size: 12.5px; color: #52525B; margin-bottom: 1px;
+    }
+    .nav-item.active {
+      background: rgba(99,102,241,0.1);
+      color: #E4E4E7; font-weight: 500;
+    }
+    .ni-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: transparent; flex-shrink: 0;
+    }
+    .nav-item.active .ni-dot {
+      background: #6366F1;
+      box-shadow: 0 0 6px rgba(99,102,241,0.9);
+    }
+
+    /* Voice Layer card */
+    .voice-card {
+      margin: 0 10px 16px;
+      background: rgba(99,102,241,0.05);
+      border: 1px solid rgba(99,102,241,0.16);
+      border-radius: 12px; padding: 13px;
+      position: relative; overflow: hidden;
+    }
+    .voice-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(99,102,241,0.6), transparent);
+    }
+    .vc-header { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+    .vc-pulse {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #6366F1; box-shadow: 0 0 8px rgba(99,102,241,1);
+    }
+    .vc-label {
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase; color: #818CF8;
+    }
+    .vc-name { font-size: 13px; font-weight: 700; color: #D4D4D8; margin-bottom: 2px; }
+    .vc-sub  { font-size: 10.5px; color: #52525B; margin-bottom: 8px; line-height: 1.4; }
+    .vc-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+    .vc-tag {
+      font-size: 9.5px; font-weight: 600; padding: 2px 8px; border-radius: 99px;
+      background: rgba(99,102,241,0.1); color: #818CF8;
+      border: 1px solid rgba(99,102,241,0.2);
+    }
+
+    /* ══════════════════════════════
+       MAIN
+    ══════════════════════════════ */
+    .main {
+      flex: 1; display: flex; flex-direction: column;
+      padding: 28px 30px 24px; gap: 18px;
+      min-width: 0; position: relative; z-index: 2;
+    }
+
+    /* Greeting row */
+    .greeting-row {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .greeting {
+      font-size: 22px; font-weight: 700;
+      color: #F4F4F5; letter-spacing: -0.025em;
+    }
+    .greeting .hi { color: #A5B4FC; }
+    .date-chip {
+      font-size: 11px; color: #52525B;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 99px; padding: 4px 12px;
+    }
+
+    /* Two-column content row */
+    .content-row {
+      display: flex; gap: 18px; flex: 1; min-height: 0;
+    }
+    .col-left  { width: 760px; flex-shrink: 0; display: flex; flex-direction: column; gap: 14px; }
+    .col-right { flex: 1; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+
+    /* ══════════════════════════════
+       TODAY'S POST CARD
+    ══════════════════════════════ */
+    .today-card {
+      flex: 1; min-height: 0;
+      background: linear-gradient(145deg, rgba(99,102,241,0.07) 0%, rgba(9,9,12,0.98) 42%);
+      border: 1px solid rgba(99,102,241,0.28);
+      border-radius: 16px; padding: 22px 24px;
+      display: flex; flex-direction: column; gap: 14px;
+      position: relative; overflow: hidden;
+      box-shadow: 0 8px 40px rgba(99,102,241,0.08), inset 0 1px 0 rgba(99,102,241,0.1);
+    }
+    .today-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent 0%, #6366F1 20%, #A78BFA 65%, transparent 100%);
+    }
+
+    .tc-top {
+      display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+    }
+    .tc-label-row { display: flex; align-items: center; gap: 8px; }
+    .tc-label {
+      font-size: 9.5px; font-weight: 800;
+      letter-spacing: 0.1em; text-transform: uppercase; color: #6366F1;
+    }
+    .tc-pillar {
+      font-size: 9.5px; font-weight: 600; padding: 2px 8px; border-radius: 99px;
+      background: rgba(99,102,241,0.1); color: #818CF8;
+      border: 1px solid rgba(99,102,241,0.2);
+    }
+    .tc-time {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 10.5px; color: #52525B;
+    }
+    .tc-topic { font-size: 12px; color: #71717A; line-height: 1.5; flex-shrink: 0; }
+    .tc-topic strong { color: #A1A1AA; font-weight: 500; }
+    .tc-divider { height: 1px; background: rgba(255,255,255,0.06); flex-shrink: 0; }
+
+    .post-preview { flex: 1; display: flex; flex-direction: column; gap: 10px; min-height: 0; overflow: hidden; }
+    .pp-badge-row { display: flex; align-items: center; gap: 8px; }
+    .pp-badge {
+      font-size: 8.5px; font-weight: 800;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 3px 9px; border-radius: 5px;
+    }
+    .pp-badge.bold {
+      background: rgba(245,158,11,0.1); color: #FBBF24;
+      border: 1px solid rgba(245,158,11,0.25);
+    }
+    .pp-meta { font-size: 9.5px; color: #3F3F46; display: flex; align-items: center; gap: 5px; }
+
+    .post-hook {
+      font-size: 15px; font-weight: 700; color: #F4F4F5;
+      line-height: 1.35; letter-spacing: -0.02em; flex-shrink: 0;
+    }
+    .post-body {
+      font-size: 12px; color: #71717A; line-height: 1.72; overflow: hidden; flex: 1;
+    }
+
+    .tc-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .btn-copy-main {
+      display: flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg, #6366F1 0%, #7C3AED 100%);
+      color: white; font-size: 13px; font-weight: 600;
+      padding: 11px 20px; border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(99,102,241,0.38), 0 0 0 1px rgba(99,102,241,0.2);
+      letter-spacing: -0.01em; white-space: nowrap;
+    }
+    .btn-secondary {
+      display: flex; align-items: center; gap: 7px;
+      color: #71717A; font-size: 12.5px; font-weight: 500;
+      padding: 11px 18px; border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03); white-space: nowrap;
+    }
+
+    /* Recent posts */
+    .recent-section { flex-shrink: 0; }
+    .section-label {
+      font-size: 9.5px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: #3F3F46; margin-bottom: 8px;
+    }
+    .recent-list { display: flex; flex-direction: column; gap: 6px; }
+    .recent-item {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px; padding: 10px 14px;
+    }
+    .ri-badge {
+      font-size: 8.5px; font-weight: 800;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 2px 7px; border-radius: 4px; flex-shrink: 0;
+    }
+    .ri-badge.bold  { background: rgba(245,158,11,0.1); color: #FBBF24; border: 1px solid rgba(245,158,11,0.2); }
+    .ri-badge.safe  { background: rgba(34,197,94,0.08); color: #4ADE80; border: 1px solid rgba(34,197,94,0.18); }
+    .ri-text {
+      flex: 1; font-size: 12px; color: #71717A;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .ri-text strong { color: #A1A1AA; font-weight: 600; }
+    .ri-time { font-size: 10px; color: #3F3F46; flex-shrink: 0; }
+    .ri-copy {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 10.5px; font-weight: 600; color: #52525B;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 6px; padding: 4px 10px; flex-shrink: 0;
+    }
+
+    /* ══════════════════════════════
+       RIGHT COLUMN CARDS
+    ══════════════════════════════ */
+    .r-card {
+      background: rgba(11,11,14,0.96);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px; padding: 18px 20px;
+    }
+    .r-card-label {
+      font-size: 9.5px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: #3F3F46; margin-bottom: 14px;
+    }
+
+    /* Week tracker */
+    .week-dots-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .wd {
+      width: 44px; height: 44px; border-radius: 12px;
+      border: 1.5px solid rgba(255,255,255,0.08);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 2px;
+    }
+    .wd.done {
+      background: rgba(34,197,94,0.07);
+      border-color: rgba(34,197,94,0.3);
+    }
+    .wd-day {
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 0.05em; text-transform: uppercase; color: #52525B;
+    }
+    .wd.done .wd-day { color: #4ADE80; }
+    .wd-check { color: #4ADE80; }
+    .wd-circle { color: #3F3F46; }
+    .week-bar { height: 3px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden; margin-bottom: 10px; }
+    .week-fill { height: 100%; width: 33%; background: linear-gradient(90deg, #22C55E, #16A34A); border-radius: 99px; }
+    .week-status { font-size: 11px; color: #52525B; line-height: 1.5; }
+    .week-status strong { color: #A1A1AA; font-weight: 500; }
+
+    /* Quick actions */
+    .qa-list { display: flex; flex-direction: column; gap: 6px; }
+    .qa-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 14px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+    }
+    .qa-icon {
+      width: 32px; height: 32px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .qa-icon.write   { background: rgba(99,102,241,0.12); }
+    .qa-icon.rewrite { background: rgba(245,158,11,0.1); }
+    .qa-icon.engage  { background: rgba(34,197,94,0.08); }
+    .qa-text { flex: 1; }
+    .qa-name { font-size: 12.5px; font-weight: 600; color: #D4D4D8; margin-bottom: 1px; }
+    .qa-desc { font-size: 10.5px; color: #52525B; }
+    .qa-arrow { color: #3F3F46; flex-shrink: 0; }
+
+    .ic-xs { width: 11px; height: 11px; }
+    .ic-sm  { width: 14px; height: 14px; }
+    .ic-md  { width: 16px; height: 16px; }
+  </style>
+</head>
+<body>
+<div class="root">
+  <div class="bg"></div>
+  <div class="glow-1"></div>
+  <div class="glow-2"></div>
+  <div class="glow-3"></div>
+
+  <!-- ═══════════ SIDEBAR ═══════════ -->
+  <div class="sidebar">
+    <div class="logo">
+      <!-- Real Wrively logo (zap/lightning bolt from favicon.svg) -->
+      <div class="logo-mark">
+        <svg viewBox="0 0 32 32" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 5L8 18h8l-2 9 10-13h-8l2-9z" fill="white" stroke="white" stroke-width="0.5" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <span class="logo-text">Wrively</span>
+    </div>
+
+    <div class="nav">
+      <div class="nav-section-label">Overview</div>
+      <div class="nav-item active">
+        <div class="ni-dot"></div>Home
+      </div>
+      <div class="nav-section-label">Create</div>
+      <div class="nav-item">
+        <div class="ni-dot"></div>Write Post
+      </div>
+      <div class="nav-item">
+        <div class="ni-dot"></div>Rewrite Draft
+      </div>
+      <div class="nav-section-label">Engage</div>
+      <div class="nav-item">
+        <div class="ni-dot"></div>Get Comments
+      </div>
+      <div class="nav-section-label">Library</div>
+      <div class="nav-item">
+        <div class="ni-dot"></div>History
+      </div>
+      <div class="nav-item">
+        <div class="ni-dot"></div>Settings
+      </div>
+    </div>
+
+    <!-- Voice Layer -->
+    <div class="voice-card">
+      <div class="vc-header">
+        <div class="vc-pulse"></div>
+        <span class="vc-label">Voice Layer</span>
+      </div>
+      <div class="vc-name">The Builder</div>
+      <div class="vc-sub">SaaS · MVP Stage · B2B</div>
+      <div class="vc-tags">
+        <span class="vc-tag">Build in public</span>
+        <span class="vc-tag">Lessons</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ MAIN ═══════════ -->
+  <div class="main">
+
+    <!-- Greeting -->
+    <div class="greeting-row">
+      <div class="greeting">Good morning, <span class="hi">Mohammed.</span></div>
+      <span class="date-chip">Thursday, March 23</span>
+    </div>
+
+    <!-- Two-column layout -->
+    <div class="content-row">
+
+      <!-- ── LEFT ── -->
+      <div class="col-left">
+
+        <!-- TODAY'S POST CARD -->
+        <div class="today-card">
+          <div class="tc-top">
+            <div class="tc-label-row">
+              <span class="tc-label">Today's Post</span>
+              <span class="tc-pillar">Build in public</span>
+            </div>
+            <div class="tc-time">
+              <svg class="ic-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+              Ready in 3 min
+            </div>
+          </div>
+
+          <div class="tc-topic">
+            Suggested topic — <strong>"What's the hardest thing about your current stage that nobody talks about?"</strong>
+          </div>
+
+          <div class="tc-divider"></div>
+
+          <!-- Generated post preview -->
+          <div class="post-preview">
+            <div class="pp-badge-row">
+              <span class="pp-badge bold">Bold</span>
+              <span class="pp-meta">
+                <svg class="ic-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+                </svg>
+                Generated from your Voice Layer · 4.1s
+              </span>
+            </div>
+            <div class="post-hook">Most founders lie about their launch. I won't.</div>
+            <div class="post-body">We shipped to 200 users and got 3 replies. The product was wrong. The positioning was wrong. We almost shut it down at month two.
+
+Six months later: $8k MRR, growing 20% week over week.
+
+The difference wasn't the idea. It was being willing to be completely wrong about the first version — and starting over anyway.</div>
+          </div>
+
+          <!-- Actions -->
+          <div class="tc-actions">
+            <div class="btn-copy-main">
+              <svg class="ic-sm" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+              </svg>
+              Copy this post
+            </div>
+            <div class="btn-secondary">
+              See all 3 variations
+              <svg class="ic-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECENT -->
+        <div class="recent-section">
+          <div class="section-label">Recent</div>
+          <div class="recent-list">
+            <div class="recent-item">
+              <span class="ri-badge bold">Bold</span>
+              <span class="ri-text"><strong>We wasted 3 months building something nobody asked for.</strong> Here's what that taught me...</span>
+              <span class="ri-time">2 days ago</span>
+              <div class="ri-copy">
+                <svg class="ic-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+                  <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+                </svg>
+                Copy
+              </div>
+            </div>
+            <div class="recent-item">
+              <span class="ri-badge safe">Safe</span>
+              <span class="ri-text"><strong>The thing nobody tells you about raising your first round</strong> from people who've done it...</span>
+              <span class="ri-time">5 days ago</span>
+              <div class="ri-copy">
+                <svg class="ic-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+                  <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+                </svg>
+                Copy
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /col-left -->
+
+      <!-- ── RIGHT ── -->
+      <div class="col-right">
+
+        <!-- This Week -->
+        <div class="r-card">
+          <div class="r-card-label">This Week</div>
+          <div class="week-dots-row">
+            <div class="wd done">
+              <span class="wd-day">Mon</span>
+              <svg class="ic-xs wd-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            </div>
+            <div class="wd">
+              <span class="wd-day">Wed</span>
+              <svg class="ic-xs wd-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/></svg>
+            </div>
+            <div class="wd">
+              <span class="wd-day">Fri</span>
+              <svg class="ic-xs wd-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/></svg>
+            </div>
+          </div>
+          <div class="week-bar"><div class="week-fill"></div></div>
+          <div class="week-status">
+            <strong>1 of 3 posts this week.</strong> You're on a roll — 2 more to go.
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="r-card">
+          <div class="r-card-label">Quick Actions</div>
+          <div class="qa-list">
+
+            <div class="qa-item">
+              <div class="qa-icon write">
+                <svg class="ic-md" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+                </svg>
+              </div>
+              <div class="qa-text">
+                <div class="qa-name">Write Post</div>
+                <div class="qa-desc">New topic, 3 variations</div>
+              </div>
+              <svg class="qa-arrow ic-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </div>
+
+            <div class="qa-item">
+              <div class="qa-icon rewrite">
+                <svg class="ic-md" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                </svg>
+              </div>
+              <div class="qa-text">
+                <div class="qa-name">Rewrite Draft</div>
+                <div class="qa-desc">Polish your rough thoughts</div>
+              </div>
+              <svg class="qa-arrow ic-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </div>
+
+            <div class="qa-item">
+              <div class="qa-icon engage">
+                <svg class="ic-md" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+              </div>
+              <div class="qa-text">
+                <div class="qa-name">Get Comments</div>
+                <div class="qa-desc">Engage without the blank page</div>
+              </div>
+              <svg class="qa-arrow ic-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- /col-right -->
+    </div><!-- /content-row -->
+  </div><!-- /main -->
+</div><!-- /root -->
+</body>
+</html>

@@ -25,6 +25,7 @@ const IMAGES = [
   { html: 'blog.html',            out: 'blog.png',            width: 1200, height: 630  },
   { html: 'tools.html',           out: 'tools.png',           width: 1200, height: 630  },
   { html: 'linkedin-banner.html', out: 'linkedin-banner.png', width: 1584, height: 396  },
+  { html: 'hero-preview.html',    out: 'hero-preview.png',    width: 1600, height: 900  },
 ]
 
 if (!existsSync(outDir)) mkdirSync(outDir, { recursive: true })
@@ -44,7 +45,8 @@ for (const { html, out, width, height } of IMAGES) {
   // Give Google Fonts an extra moment if network was slow
   await new Promise(r => setTimeout(r, 500))
 
-  await page.screenshot({ path: outPath, type: 'png', clip: { x: 0, y: 0, width, height } })
+  const omitBg = out === 'hero-preview.png'
+  await page.screenshot({ path: outPath, type: 'png', clip: { x: 0, y: 0, width, height }, omitBackground: omitBg })
   console.log(`  ✓  public/og/${out}  (${width}×${height})`)
 }
 

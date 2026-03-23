@@ -87,22 +87,15 @@ export default function Landing() {
 
         {/* App preview */}
         <div className="px-4 sm:px-6 lg:px-10 max-w-7xl mx-auto">
-          <div className="relative rounded-t-2xl border border-border border-b-0 overflow-hidden shadow-[0_-8px_60px_rgba(99,102,241,0.1)] bg-surface">
-            {/* Window chrome */}
-            <div className="flex items-center gap-2 px-5 py-3.5 border-b border-border bg-surface-elevated shrink-0">
-              <div className="flex gap-1.5">
-                <div className="w-3 h-3 rounded-full bg-border" />
-                <div className="w-3 h-3 rounded-full bg-border" />
-                <div className="w-3 h-3 rounded-full bg-border" />
-              </div>
-              <div className="flex-1 flex justify-center">
-                <div className="flex items-center gap-2 text-xs text-text-subtle bg-background border border-border rounded-full px-4 py-1">
-                  <div className="w-2 h-2 rounded-full bg-success" />
-                  wrively.com
-                </div>
-              </div>
-            </div>
-            <HeroAppPreview />
+          <div className="relative rounded-2xl overflow-hidden shadow-[0_0_80px_rgba(99,102,241,0.12)]">
+            <img
+              src="/og/hero-preview.png"
+              alt="Wrively dashboard — today's post ready, weekly tracker, quick actions"
+              width={1600}
+              height={900}
+              className="w-full h-auto block"
+              loading="eager"
+            />
           </div>
         </div>
       </section>
@@ -729,121 +722,6 @@ export default function Landing() {
       </section>
 
       <PublicFooter />
-    </div>
-  )
-}
-
-// Hero App Preview
-
-function HeroAppPreview() {
-  const [active, setActive] = useState<'safe' | 'bold' | 'spicy'>('bold')
-
-  const posts = {
-    safe: {
-      badge: 'SAFE',
-      badgeColor: 'text-emerald-400 border-emerald-500/20 bg-emerald-500/[0.06]',
-      text: 'Nobody told me launching an MVP would mean watching users ignore features you spent months on.\n\nWe shipped to 200 early users last quarter. Most opened once and left. Three came back every single day.\n\nWe killed everything the 197 ignored. We built more of what the 3 loved. Now we have 40 paying users.\n\nThe product that works looks nothing like the one we launched. What were your biggest wrong assumptions?',
-    },
-    bold: {
-      badge: 'BOLD',
-      badgeColor: 'text-amber-400 border-amber-500/20 bg-amber-500/[0.08]',
-      text: 'Most founders lie about their launch. I won\'t.\n\nWe shipped to 200 users and got 3 replies. The product was wrong. The positioning was wrong. We almost shut it down at month two.\n\nSix months later: $8k MRR, growing 20% week over week.\n\nThe difference wasn\'t the idea. It was being willing to be completely wrong about the first version and starting over.',
-    },
-    spicy: {
-      badge: 'SPICY',
-      badgeColor: 'text-red-400 border-red-500/20 bg-red-500/[0.06]',
-      text: 'The "launch fast and learn" advice is ruining early-stage startups.\n\nYou end up with 200 users who feel like beta testers, a reputation for shipping broken things, and a dataset of people who don\'t care about the problem.\n\nThe founders who win aren\'t the ones who launched fastest. They\'re the ones who found three people who couldn\'t live without what they built.\n\nSlow down. Find those three people first.',
-    },
-  }
-
-  const current = posts[active]
-
-  return (
-    <div className="flex min-h-[480px]">
-      {/* Sidebar */}
-      <div className="hidden lg:flex w-[220px] shrink-0 border-r border-border flex-col bg-surface">
-        <div className="px-3 py-4 space-y-0.5">
-          {[
-            { label: 'Home', isActive: false },
-            { label: 'Write Post', isActive: true },
-            { label: 'Rewrite Draft', isActive: false },
-            { label: 'Get Comments', isActive: false },
-            { label: 'History', isActive: false },
-          ].map(({ label, isActive }) => (
-            <div
-              key={label}
-              className={cn(
-                'px-3 py-1.5 rounded-[6px] text-xs',
-                isActive ? 'bg-primary/[0.08] text-text font-medium' : 'text-text-muted'
-              )}
-            >
-              {label}
-            </div>
-          ))}
-        </div>
-        <div className="px-3 mt-2 border-t border-border pt-4">
-          <p className="text-[10px] text-text-subtle uppercase tracking-widest mb-2 font-medium px-1">Recent</p>
-          {['Why we almost quit last month', 'Our first $1k MRR moment', 'What users actually want'].map((t, i) => (
-            <div key={t} className={cn('px-2 py-1.5 rounded-[6px] text-[11px] mb-0.5 truncate', i === 0 ? 'text-text bg-surface-hover' : 'text-text-muted')}>
-              {t}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Main */}
-      <div className="flex-1 flex flex-col p-5 gap-4 bg-background min-w-0">
-        <div className="flex gap-2">
-          <div className="flex-1 bg-surface border border-border rounded-input px-4 py-2.5 text-xs text-text-muted">
-            Why we almost quit last month...
-          </div>
-          <div className="shrink-0 bg-primary-gradient text-white text-xs font-semibold px-4 py-2.5 rounded-btn flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5" /> Generate
-          </div>
-        </div>
-
-        <div className="flex gap-1 bg-surface border border-border rounded-[10px] p-1 w-fit">
-          {(['safe', 'bold', 'spicy'] as const).map(v => (
-            <button
-              key={v}
-              onClick={() => setActive(v)}
-              className={cn(
-                'text-[11px] font-semibold px-4 py-1.5 rounded-[7px] transition-all capitalize',
-                active === v ? 'bg-background text-text shadow-card' : 'text-text-muted hover:text-text'
-              )}
-            >
-              {v}
-            </button>
-          ))}
-        </div>
-
-        <div className="rounded-[10px] border border-primary/20 bg-surface p-5 flex-1">
-          <div className="flex items-center justify-between mb-4">
-            <span className={cn('text-[10px] font-bold px-2 py-1 rounded-[5px] border', current.badgeColor)}>
-              {current.badge}
-            </span>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1.5 text-[11px] text-text-muted border border-border rounded-btn px-3 py-1">
-                <PenLine className="w-3 h-3" /> Adjust
-              </div>
-              <div className="flex items-center gap-1.5 text-[11px] text-white bg-primary-gradient rounded-btn px-3 py-1 font-medium">
-                <Copy className="w-3 h-3" /> Copy
-              </div>
-            </div>
-          </div>
-          <p className="text-[13px] text-text leading-relaxed whitespace-pre-line">
-            {current.text}
-          </p>
-        </div>
-
-        <div className="flex items-center justify-between text-[11px] text-text-subtle border-t border-border pt-3">
-          <div className="flex items-center gap-1.5">
-            <div className="w-1.5 h-1.5 rounded-full bg-success" />
-            Written from your Voice Layer
-          </div>
-          <span>3 variations generated</span>
-        </div>
-      </div>
     </div>
   )
 }
