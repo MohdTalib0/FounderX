@@ -35,7 +35,14 @@ export default function Signup() {
       },
     })
     if (error) {
-      setError(error.message)
+      const msg = error.message.toLowerCase()
+      if (msg.includes('already registered') || msg.includes('already exists') || msg.includes('email address is already')) {
+        setError('An account with this email already exists. Sign in instead.')
+      } else if (msg.includes('password')) {
+        setError('Password must be at least 8 characters.')
+      } else {
+        setError('Something went wrong. Please try again.')
+      }
       return
     }
     if (authData.session) {

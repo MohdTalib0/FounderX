@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Check } from 'lucide-react'
 import { toast } from '@/store/toast'
 import { useAuthStore } from '@/store/auth'
@@ -67,7 +67,7 @@ export default function Engage() {
   const [weeklyCount, setWeeklyCount] = useState(0)
   const [goalLoading, setGoalLoading] = useState(true)
 
-  const loadWeeklyCount = async () => {
+  const loadWeeklyCount = useCallback(async () => {
     if (!user) return
     const weekStart = getWeekStart()
     const { data } = await supabase
@@ -79,11 +79,11 @@ export default function Engage() {
     const count = new Set((data ?? []).map(r => normalize(r.source_post))).size
     setWeeklyCount(count)
     setGoalLoading(false)
-  }
+  }, [user])
 
   useEffect(() => {
     loadWeeklyCount()
-  }, [user])
+  }, [loadWeeklyCount])
 
   const generate = async () => {
     if (!company || !postText.trim()) return
@@ -104,7 +104,7 @@ export default function Engage() {
     } catch (err: unknown) {
       console.error('Comment generation error:', err)
       if (err instanceof LimitReachedError) {
-        setError('You have reached your monthly comment limit. Upgrade to Pro for unlimited comments.')
+        setError("You've used all your comments for this month. Upgrade to keep going.")
       } else {
         setError('Failed to generate comments. Please try again.')
       }

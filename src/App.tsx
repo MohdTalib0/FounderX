@@ -44,6 +44,7 @@ const Upgrade = lazy(() => import('@/pages/dashboard/Upgrade'))
 export default function App() {
   const { setUser, setSession, setInitialized, fetchProfile, fetchCompany } = useAuthStore()
 
+  // Mount once: Supabase session + auth listener (store actions are stable)
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -67,6 +68,7 @@ export default function App() {
     })
 
     return () => subscription.unsubscribe()
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional one-time subscription
   }, [])
 
   return (

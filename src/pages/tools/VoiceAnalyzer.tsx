@@ -23,10 +23,9 @@ async function analyzeWithAI(text: string): Promise<VoiceResult> {
     body: JSON.stringify({ tool: 'voice', content: text }),
   })
   if (!res.ok) {
-    const data = await res.json().catch(() => ({}))
-    if (res.status === 429) throw new Error(data.message ?? 'Rate limit reached. Try again tomorrow.')
-    if (res.status === 503) throw new Error(data.message ?? 'Free AI is temporarily busy. Try again in a minute.')
-    throw new Error(data.message ?? 'Analysis failed.')
+    if (res.status === 429) throw new Error('Too many requests. Try again in a few minutes.')
+    if (res.status === 503) throw new Error('Analysis is temporarily unavailable. Try again shortly.')
+    throw new Error('Something went wrong. Try again.')
   }
   return res.json()
 }
@@ -330,7 +329,7 @@ export default function VoiceAnalyzer() {
       const msg = err instanceof Error ? err.message : 'Analysis failed'
       setResult(analyzeVoice(input))
       setHasAnalyzed(true)
-      if (msg.includes('Rate limit')) setError(msg)
+      setError(msg)
     } finally {
       setLoading(false)
     }
@@ -506,8 +505,8 @@ export default function VoiceAnalyzer() {
                 <div className="bg-amber-500/[0.08] border border-amber-500/20 rounded-card p-4 flex items-start gap-3">
                   <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-text mb-0.5">AI analysis unavailable</p>
-                    <p className="text-xs text-text-muted">{error} Showing basic analysis below.</p>
+                    <p className="text-sm font-medium text-text mb-0.5">Couldn't complete the analysis</p>
+                    <p className="text-xs text-text-muted">{error}</p>
                   </div>
                 </div>
               )}

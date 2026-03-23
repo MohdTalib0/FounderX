@@ -39,7 +39,7 @@ export default function Rewrite() {
     } catch (err: unknown) {
       console.error('Rewrite error:', err)
       if (err instanceof LimitReachedError) {
-        setError('You have reached your monthly rewrite limit. Upgrade to Pro for unlimited rewrites.')
+        setError("You've used all your rewrites for this month. Upgrade to keep going.")
       } else {
         setError('Failed to rewrite. Please try again.')
       }

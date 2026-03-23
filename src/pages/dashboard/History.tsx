@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { FileText, MessageSquare, RefreshCw, Shuffle, Star, ChevronDown, ChevronUp, CheckCircle2, ImageDown, TrendingUp, Minus, TrendingDown } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/auth'
@@ -34,19 +34,15 @@ export default function History() {
   const [items, setItems] = useState<HistoryItem[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
+  const load = useCallback(async () => {
     if (!user) return
-    load()
-  }, [user])
-
-  async function load() {
     setLoading(true)
 
     const [postsRes, commentsRes, rewritesRes, remixesRes] = await Promise.all([
-      supabase.from('generated_posts').select('*').eq('user_id', user!.id).order('created_at', { ascending: false }).limit(50),
-      supabase.from('comment_suggestions').select('*').eq('user_id', user!.id).order('created_at', { ascending: false }).limit(50),
-      supabase.from('draft_rewrites').select('*').eq('user_id', user!.id).order('created_at', { ascending: false }).limit(50),
-      supabase.from('remixed_posts').select('*').eq('user_id', user!.id).order('created_at', { ascending: false }).limit(50),
+      supabase.from('generated_posts').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(50),
+      supabase.from('comment_suggestions').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(50),
+      supabase.from('draft_rewrites').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(50),
+      supabase.from('remixed_posts').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(50),
     ])
 
     const all: HistoryItem[] = [
@@ -59,7 +55,12 @@ export default function History() {
     all.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     setItems(all)
     setLoading(false)
-  }
+  }, [user])
+
+  useEffect(() => {
+    if (!user) return
+    load()
+  }, [user, load])
 
   const filtered = items.filter(item => {
     if (filter === 'all') return true

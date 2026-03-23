@@ -35,7 +35,8 @@
       "Bash(done)",
       "Bash(/tmp/audit_summary.txt:*)",
       "Read(//tmp/**)",
-      "Read(//c/Users/moham/Project - FounderX/**)"
+      "Read(//c/Users/moham/Project - FounderX/**)",
+      "Bash(find '/c/Users/moham/Project - FounderX' -name .env* -o -name *.env)"
     ],
     "additionalDirectories": [
       "c:\\Users\\moham\\.claude\\projects\\c--Users-moham-Project---FounderX\\memory"
