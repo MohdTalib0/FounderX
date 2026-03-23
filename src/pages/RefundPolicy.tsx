@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async'
 import { ArrowLeft, Zap } from 'lucide-react'
 import PublicFooter from '@/components/layout/PublicFooter'
 
-const LAST_UPDATED = 'March 23, 2026'
+const LAST_UPDATED = 'March 24, 2026'
 
 const sections = [
   {
@@ -12,27 +12,19 @@ const sections = [
   },
   {
     title: '2. Pro Plan — Monthly Billing',
-    body: `Wrively Pro is billed monthly. You can cancel your subscription at any time from Settings → Account → Manage Billing. Cancellation stops future charges immediately. You will retain Pro access until the end of the current billing period. We do not issue refunds for the remaining days of a billing period after cancellation.`,
+    body: `Wrively Pro is billed monthly. You can cancel your subscription at any time from Settings → Account → Manage Billing. Cancellation takes effect at the end of your current billing period — you will retain Pro access until that date and will not be charged again after that.`,
   },
   {
-    title: '3. Refund Eligibility',
-    body: `We offer refunds in the following circumstances: (a) you were charged after cancelling your subscription due to a billing error on our side; (b) you were charged twice for the same period; (c) you signed up for Pro and experienced a service outage that made the product unusable for more than 48 consecutive hours during your first billing period. Refund requests must be submitted within 14 days of the charge in question.`,
+    title: '3. Payments and Refunds',
+    body: `Payments for Wrively Pro are processed by Paddle, our authorised reseller. All refund requests are handled in accordance with the Paddle Buyer Terms (paddle.com/legal/buyers). To request a refund, contact us at hello@wrively.com and we will work with Paddle to process it promptly.`,
   },
   {
-    title: '4. How to Request a Refund',
-    body: `Email hello@wrively.com with your account email, the charge date, and a brief description of the issue. We aim to respond within 2 business days. Approved refunds are processed back to your original payment method within 5–10 business days, depending on your bank or card issuer.`,
+    title: '4. EU / EEA and UK Consumers',
+    body: `If you are a consumer residing in the EU, EEA, or United Kingdom, you have the right to withdraw from your subscription within 14 days of purchase for a full refund, in accordance with applicable consumer law. If you have already started using Wrively Pro during that period, your right of withdrawal may be affected as permitted by law. To exercise this right, email hello@wrively.com.`,
   },
   {
-    title: '5. Disputes',
-    body: `We ask that you contact us before initiating a chargeback with your bank. Most issues can be resolved quickly by email. Chargebacks create extra cost and friction for both parties. If you contact us first and we cannot resolve your issue, we will not contest a dispute raised in good faith.`,
-  },
-  {
-    title: '6. Changes to This Policy',
-    body: `We may update this policy from time to time. Changes will be posted here and take effect immediately. If you have an active Pro subscription when material changes are made, we will notify you by email.`,
-  },
-  {
-    title: '7. Contact',
-    body: `Billing questions or refund requests: hello@wrively.com. We're a small team and we genuinely want to make things right.`,
+    title: '5. Contact',
+    body: `For billing questions or refund requests, email hello@wrively.com. We aim to respond within 2 business days.`,
   },
 ]
 
@@ -82,12 +74,16 @@ export default function RefundPolicy() {
         {/* Intro */}
         <div className="bg-surface border border-border rounded-card px-5 py-4 mb-8">
           <p className="text-sm text-text-muted leading-relaxed">
-            We want you to feel confident upgrading to Pro. This policy explains when refunds
-            apply and how to get one. If something went wrong with your billing, just email{' '}
+            Payments for Wrively Pro are processed by Paddle as our authorised reseller.
+            Refunds are handled in accordance with the{' '}
+            <a href="https://www.paddle.com/legal/buyers" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary-hover transition-colors">
+              Paddle Buyer Terms
+            </a>
+            . Questions? Email{' '}
             <a href="mailto:hello@wrively.com" className="text-primary hover:text-primary-hover transition-colors">
               hello@wrively.com
-            </a>{' '}
-            — we'll sort it out.
+            </a>
+            .
           </p>
         </div>
 
