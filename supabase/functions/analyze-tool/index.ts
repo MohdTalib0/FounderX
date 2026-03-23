@@ -30,7 +30,7 @@ const CACHE_TTL_MS = 10 * 60 * 1000 // 10 minutes
 
 /** Shown after a successful free analysis only — optional funnel; does not gate the tool. */
 const RESPONSE_CTA =
-  'This tool is free with no signup. Want LinkedIn posts in your voice on autopilot? Join Wrively and build your Voice Layer — wrively.com'
+  'This tool is free with no signup. Want LinkedIn posts in your voice on autopilot? Join Wrively and build your Voice Layer - wrively.com'
 
 // ─── Rate limiting + cache (Deno KV) ─────────────────────────────────────────
 
