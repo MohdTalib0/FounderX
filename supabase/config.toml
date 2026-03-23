@@ -28,3 +28,6 @@ verify_jwt = false
 
 [functions.send-reengagement]
 verify_jwt = false
+
+[functions.analyze-tool]
+verify_jwt = false

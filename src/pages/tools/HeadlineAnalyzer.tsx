@@ -7,7 +7,7 @@ import PublicFooter from '@/components/layout/PublicFooter'
 import Button from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
 
-// ─── Scoring engine ───────────────────────────────────────────────────────────
+// ─── Scoring engine (kept as fallback) ────────────────────────────────────────
 
 interface Criterion {
   id: string
@@ -24,6 +24,7 @@ interface AnalysisResult {
   grade: 'A' | 'B' | 'C' | 'D' | 'F'
   summary: string
   criteria: Criterion[]
+  rewrite?: string
 }
 
 const WEAK_ROLE_WORDS = [
@@ -47,6 +48,13 @@ const CREDIBILITY_PATTERNS = [
   /\b(yc|ycombinator|500\s*startups?|techstars|sequoia|a16z)\b/i,
   /\b(forbes|techcrunch|wired|fast\s*company)\b/i,
 ]
+
+function scoreToStatus(score: number, max: number): 'good' | 'warn' | 'bad' {
+  const pct = score / max
+  if (pct >= 0.75) return 'good'
+  if (pct >= 0.4)  return 'warn'
+  return 'bad'
+}
 
 function analyzeHeadline(headline: string): AnalysisResult {
   const text = headline.trim()
@@ -217,11 +225,27 @@ function analyzeHeadline(headline: string): AnalysisResult {
   return { total, grade, summary, criteria }
 }
 
-function scoreToStatus(score: number, max: number): 'good' | 'warn' | 'bad' {
-  const pct = score / max
-  if (pct >= 0.75) return 'good'
-  if (pct >= 0.4)  return 'warn'
-  return 'bad'
+// ─── Edge function call ────────────────────────────────────────────────────────
+
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+async function analyzeWithAI(text: string): Promise<AnalysisResult> {
+  const res = await fetch(`${SUPABASE_URL}/functions/v1/analyze-tool`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+    },
+    body: JSON.stringify({ tool: 'headline', content: text }),
+  })
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}))
+    if (res.status === 429) throw new Error(data.message ?? 'Rate limit reached. Try again tomorrow.')
+    if (res.status === 503) throw new Error(data.message ?? 'Free AI is temporarily busy. Try again in a minute.')
+    throw new Error(data.message ?? 'Analysis failed. Please try again.')
+  }
+  return res.json()
 }
 
 // ─── Status icon ──────────────────────────────────────────────────────────────
@@ -257,23 +281,54 @@ export default function HeadlineAnalyzer() {
   const [headline, setHeadline] = useState('')
   const [result, setResult] = useState<AnalysisResult | null>(null)
   const [hasAnalyzed, setHasAnalyzed] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const analyze = useCallback(() => {
+  const analyze = useCallback(async () => {
     if (!headline.trim()) return
-    setResult(analyzeHeadline(headline))
-    setHasAnalyzed(true)
+    setLoading(true)
+    setError(null)
+    try {
+      const aiResult = await analyzeWithAI(headline)
+      setResult(aiResult)
+      setHasAnalyzed(true)
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Analysis failed'
+      // fallback to local scoring
+      setResult(analyzeHeadline(headline))
+      setHasAnalyzed(true)
+      setError(msg.includes('Rate limit') ? msg : null) // only show rate limit errors, silently fall back for other errors
+    } finally {
+      setLoading(false)
+    }
   }, [headline])
 
   const reset = () => {
     setHeadline('')
     setResult(null)
     setHasAnalyzed(false)
+    setError(null)
   }
 
   const tryExample = (ex: string) => {
     setHeadline(ex)
-    setResult(analyzeHeadline(ex))
-    setHasAnalyzed(true)
+    setResult(null)
+    setHasAnalyzed(false)
+    setError(null)
+    // trigger async analyze with the example text directly
+    setLoading(true)
+    analyzeWithAI(ex)
+      .then(aiResult => {
+        setResult(aiResult)
+        setHasAnalyzed(true)
+      })
+      .catch(err => {
+        const msg = err instanceof Error ? err.message : 'Analysis failed'
+        setResult(analyzeHeadline(ex))
+        setHasAnalyzed(true)
+        setError(msg.includes('Rate limit') ? msg : null)
+      })
+      .finally(() => setLoading(false))
   }
 
   const toolSchema = JSON.stringify({
@@ -330,7 +385,6 @@ export default function HeadlineAnalyzer() {
               value={headline}
               onChange={e => {
                 setHeadline(e.target.value)
-                if (hasAnalyzed) setResult(analyzeHeadline(e.target.value))
               }}
               onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); analyze() } }}
               placeholder="e.g. Founder @ Acme | Helping B2B teams close deals faster | Ex-Salesforce"
@@ -354,21 +408,19 @@ export default function HeadlineAnalyzer() {
                   <RotateCcw className="w-3.5 h-3.5" /> Reset
                 </button>
               )}
-              <Button
-                size="sm"
-                onClick={analyze}
-                disabled={!headline.trim()}
-                className="px-5"
-              >
-                Analyze headline
-                <ArrowRight className="w-3.5 h-3.5" />
+              <Button size="sm" onClick={analyze} disabled={!headline.trim() || loading} className="px-5">
+                {loading ? (
+                  <span className="flex items-center gap-2"><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin shrink-0" />Analyzing...</span>
+                ) : (
+                  <span className="flex items-center gap-1.5">Analyze headline<ArrowRight className="w-3.5 h-3.5" /></span>
+                )}
               </Button>
             </div>
           </div>
         </div>
 
         {/* Try an example */}
-        {!hasAnalyzed && (
+        {!hasAnalyzed && !loading && (
           <div className="mb-10">
             <p className="text-xs text-text-subtle mb-3">Try an example:</p>
             <div className="flex flex-wrap gap-2">
@@ -385,9 +437,48 @@ export default function HeadlineAnalyzer() {
           </div>
         )}
 
+        {/* Loading skeleton */}
+        {loading && (
+          <div className="space-y-4 animate-pulse">
+            <div className="bg-surface border border-border rounded-card p-6 flex items-center gap-6">
+              <div className="w-20 h-20 rounded-2xl bg-surface-hover shrink-0" />
+              <div className="flex-1 space-y-3">
+                <div className="h-4 bg-surface-hover rounded w-3/4" />
+                <div className="h-3 bg-surface-hover rounded w-1/2" />
+                <div className="h-2 bg-surface-hover rounded-full w-full max-w-[280px] mt-3" />
+              </div>
+            </div>
+            <div className="bg-surface border border-border rounded-card overflow-hidden">
+              <div className="px-6 py-4 border-b border-border">
+                <div className="h-4 bg-surface-hover rounded w-24" />
+              </div>
+              {[1,2,3,4,5].map(i => (
+                <div key={i} className="px-6 py-4 border-b border-border last:border-0 flex gap-3">
+                  <div className="w-4 h-4 rounded-full bg-surface-hover shrink-0 mt-0.5" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-3 bg-surface-hover rounded w-32" />
+                    <div className="h-3 bg-surface-hover rounded w-full" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Results */}
-        {result && headline.trim() && (
+        {!loading && result && headline.trim() && (
           <div className="space-y-4">
+
+            {/* Error card */}
+            {error && (
+              <div className="bg-amber-500/[0.08] border border-amber-500/20 rounded-card p-4 flex items-start gap-3">
+                <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-medium text-text mb-0.5">AI analysis unavailable</p>
+                  <p className="text-xs text-text-muted">{error} Showing basic analysis below.</p>
+                </div>
+              </div>
+            )}
 
             {/* Score summary */}
             <div className="bg-surface border border-border rounded-card p-6 flex items-center gap-6">
@@ -414,6 +505,20 @@ export default function HeadlineAnalyzer() {
                 </div>
               </div>
             </div>
+
+            {/* AI rewrite suggestion */}
+            {result?.rewrite && (
+              <div className="bg-primary/[0.04] border border-primary/20 rounded-card p-4">
+                <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-2">AI Rewrite Suggestion</p>
+                <p className="text-sm text-text leading-relaxed font-medium mb-3">"{result.rewrite}"</p>
+                <button
+                  onClick={() => { setHeadline(result.rewrite!); setResult(null); setHasAnalyzed(false) }}
+                  className="text-xs text-primary hover:underline font-medium"
+                >
+                  Use this headline and re-analyze
+                </button>
+              </div>
+            )}
 
             {/* Criteria breakdown */}
             <div className="bg-surface border border-border rounded-card overflow-hidden">
@@ -455,7 +560,7 @@ export default function HeadlineAnalyzer() {
             {/* CTA */}
             <div className="bg-surface border border-primary/20 rounded-card p-6 relative overflow-hidden mt-6">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-              <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-2">Writely</p>
+              <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-2">Wrively</p>
               <h3 className="text-base font-bold text-text mb-2">
                 A great headline is step one. Your posts are step two.
               </h3>

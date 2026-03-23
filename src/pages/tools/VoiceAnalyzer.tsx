@@ -7,6 +7,29 @@ import PublicFooter from '@/components/layout/PublicFooter'
 import Button from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
 
+// ─── Supabase Edge Function ────────────────────────────────────────────────────
+
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+async function analyzeWithAI(text: string): Promise<VoiceResult> {
+  const res = await fetch(`${SUPABASE_URL}/functions/v1/analyze-tool`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+    },
+    body: JSON.stringify({ tool: 'voice', content: text }),
+  })
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}))
+    if (res.status === 429) throw new Error(data.message ?? 'Rate limit reached. Try again tomorrow.')
+    if (res.status === 503) throw new Error(data.message ?? 'Free AI is temporarily busy. Try again in a minute.')
+    throw new Error(data.message ?? 'Analysis failed.')
+  }
+  return res.json()
+}
+
 // ─── Voice analysis engine ────────────────────────────────────────────────────
 
 interface VoiceTrait {
@@ -24,6 +47,7 @@ interface VoiceResult {
   strengths: string[]
   gaps: string[]
   voiceScore: number
+  summary?: string
 }
 
 function sentences(text: string): string[] {
@@ -258,18 +282,18 @@ Agree? Let me know your thoughts!`,
 // ─── Status icon ─────────────────────────────────────────────────────────────
 
 function StatusIcon({ status }: { status: VoiceTrait['status'] }) {
-  if (status === 'strong') return <CheckCircle className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
-  if (status === 'moderate') return <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-  return <XCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+  if (status === 'strong') return <CheckCircle className="w-4 h-4 text-success shrink-0 mt-0.5" />
+  if (status === 'moderate') return <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+  return <XCircle className="w-4 h-4 text-danger shrink-0 mt-0.5" />
 }
 
 // ─── Score ring ───────────────────────────────────────────────────────────────
 
 function ScoreRing({ score, profile }: { score: number; profile: string }) {
   const color =
-    score >= 80 ? 'text-green-500' :
-    score >= 60 ? 'text-amber-500' :
-    'text-red-500'
+    score >= 80 ? 'text-success' :
+    score >= 60 ? 'text-amber-400' :
+    'text-danger'
 
   return (
     <div className="flex flex-col items-center gap-1">
@@ -287,25 +311,43 @@ function ScoreRing({ score, profile }: { score: number; profile: string }) {
 export default function VoiceAnalyzer() {
   const [text, setText] = useState('')
   const [result, setResult] = useState<VoiceResult | null>(null)
-  const [analyzed, setAnalyzed] = useState(false)
+  const [hasAnalyzed, setHasAnalyzed] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  function handleAnalyze() {
-    if (text.trim().length < 30) return
-    const r = analyzeVoice(text)
-    setResult(r)
-    setAnalyzed(true)
+  const runAnalysis = async (input: string) => {
+    if (!input.trim() || input.trim().split(/\s+/).length < 30) return
+    setLoading(true)
+    setError(null)
+    try {
+      const aiResult = await analyzeWithAI(input)
+      setResult(aiResult)
+      setHasAnalyzed(true)
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Analysis failed'
+      setResult(analyzeVoice(input))
+      setHasAnalyzed(true)
+      if (msg.includes('Rate limit')) setError(msg)
+    } finally {
+      setLoading(false)
+    }
   }
+
+  const analyze = () => runAnalysis(text)
 
   function handleReset() {
     setText('')
     setResult(null)
-    setAnalyzed(false)
+    setHasAnalyzed(false)
+    setError(null)
   }
 
-  function loadExample(sample: string) {
-    setText(sample)
+  function loadExample(sampleText: string) {
+    setText(sampleText)
     setResult(null)
-    setAnalyzed(false)
+    setHasAnalyzed(false)
+    setError(null)
+    runAnalysis(sampleText)
   }
 
   const wordCount = (text.match(/\b\w+\b/g) ?? []).length
@@ -313,7 +355,7 @@ export default function VoiceAnalyzer() {
   return (
     <>
       <Helmet>
-        <title>LinkedIn Voice Analyzer • Does Your Writing Sound Like You?</title>
+        <title>LinkedIn Voice Analyzer | Does Your Writing Sound Like You? | Wrively</title>
         <meta
           name="description"
           content="Free tool. Paste your LinkedIn writing sample and get an instant voice profile: first-person presence, rhythm, specificity, jargon score, and actionable fixes."
@@ -365,10 +407,7 @@ export default function VoiceAnalyzer() {
             </div>
             <textarea
               value={text}
-              onChange={e => {
-                setText(e.target.value)
-                if (analyzed) { setResult(null); setAnalyzed(false) }
-              }}
+              onChange={e => setText(e.target.value)}
               placeholder="Paste a LinkedIn post or paragraph here - at least 30 words for a meaningful analysis..."
               rows={8}
               className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm text-text placeholder:text-text-subtle resize-y focus:outline-none focus:border-primary transition-colors"
@@ -376,15 +415,24 @@ export default function VoiceAnalyzer() {
 
             <div className="flex flex-wrap items-center gap-3 mt-4">
               <Button
-                onClick={handleAnalyze}
-                disabled={wordCount < 30}
-                className="flex items-center gap-2"
+                onClick={analyze}
+                disabled={loading || wordCount < 30}
+                className="flex items-center gap-2 px-6"
               >
-                Analyze my voice
-                <ArrowRight className="w-4 h-4" />
+                {loading ? (
+                  <span className="flex items-center gap-2">
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin shrink-0" />
+                    Analyzing your voice...
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    Analyze my voice
+                    <ArrowRight className="w-4 h-4" />
+                  </span>
+                )}
               </Button>
 
-              {analyzed && (
+              {hasAnalyzed && !loading && (
                 <button
                   onClick={handleReset}
                   className="flex items-center gap-1.5 text-sm text-text-muted hover:text-text transition-colors"
@@ -412,9 +460,46 @@ export default function VoiceAnalyzer() {
             </div>
           </div>
 
+          {/* Loading skeleton */}
+          {loading && (
+            <div className="space-y-4 animate-pulse">
+              <div className="bg-surface border border-border rounded-card p-6 flex items-center gap-6">
+                <div className="w-24 h-24 rounded-full bg-surface-hover shrink-0" />
+                <div className="flex-1 space-y-3">
+                  <div className="h-5 bg-surface-hover rounded w-48" />
+                  <div className="h-3 bg-surface-hover rounded w-full" />
+                  <div className="h-3 bg-surface-hover rounded w-3/4" />
+                </div>
+              </div>
+              <div className="bg-surface border border-border rounded-card overflow-hidden">
+                <div className="px-6 py-4 border-b border-border"><div className="h-4 bg-surface-hover rounded w-24" /></div>
+                {[1,2,3,4,5].map(i => (
+                  <div key={i} className="px-6 py-4 border-b border-border last:border-0 flex gap-3">
+                    <div className="w-4 h-4 rounded-full bg-surface-hover shrink-0 mt-0.5" />
+                    <div className="flex-1 space-y-2">
+                      <div className="h-3 bg-surface-hover rounded w-32" />
+                      <div className="h-3 bg-surface-hover rounded w-full" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Results */}
-          {result && (
-            <div className="space-y-6 animate-fade-in">
+          {!loading && result && (
+            <div className="space-y-6">
+
+              {/* Error card */}
+              {error && (
+                <div className="bg-amber-500/[0.08] border border-amber-500/20 rounded-card p-4 flex items-start gap-3">
+                  <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-text mb-0.5">AI analysis unavailable</p>
+                    <p className="text-xs text-text-muted">{error} Showing basic analysis below.</p>
+                  </div>
+                </div>
+              )}
 
               {/* Score + profile */}
               <div className="bg-surface border border-border rounded-xl p-6">
@@ -422,19 +507,22 @@ export default function VoiceAnalyzer() {
                   <ScoreRing score={result.voiceScore} profile={result.profile} />
                   <div className="flex-1 text-center sm:text-left">
                     <h2 className="text-lg font-semibold text-text mb-2">Your Voice Profile</h2>
+                    {result.summary && (
+                      <p className="text-sm text-text-muted mb-3 leading-relaxed">{result.summary}</p>
+                    )}
                     {result.strengths.length > 0 && (
                       <p className="text-sm text-text-muted mb-1">
-                        <span className="text-green-500 font-medium">Strengths:</span>{' '}
+                        <span className="text-success font-medium">Strengths:</span>{' '}
                         {result.strengths.join(', ')}
                       </p>
                     )}
                     {result.gaps.length > 0 && (
                       <p className="text-sm text-text-muted">
-                        <span className="text-red-400 font-medium">Needs work:</span>{' '}
+                        <span className="text-danger font-medium">Needs work:</span>{' '}
                         {result.gaps.join(', ')}
                       </p>
                     )}
-                    {result.strengths.length === 0 && result.gaps.length === 0 && (
+                    {!result.summary && result.strengths.length === 0 && result.gaps.length === 0 && (
                       <p className="text-sm text-text-muted">Mixed results across dimensions. See details below.</p>
                     )}
                   </div>
@@ -455,9 +543,9 @@ export default function VoiceAnalyzer() {
                           <span className="text-sm font-medium text-text">{trait.label}</span>
                           <span className={cn(
                             'text-xs px-2 py-0.5 rounded-full font-medium',
-                            trait.status === 'strong' && 'bg-green-500/10 text-green-500',
-                            trait.status === 'moderate' && 'bg-amber-500/10 text-amber-600',
-                            trait.status === 'weak' && 'bg-red-500/10 text-red-400',
+                            trait.status === 'strong' && 'bg-success/10 text-success',
+                            trait.status === 'moderate' && 'bg-amber-400/10 text-amber-400',
+                            trait.status === 'weak' && 'bg-danger/10 text-danger',
                           )}>
                             {trait.value}
                           </span>

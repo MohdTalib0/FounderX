@@ -15,6 +15,12 @@ const MODELS = {
   fallback: 'openai/gpt-4o-mini',
 }
 
+/** Same default as `complete()` — set `OPENROUTER_MODEL_NAME` in Edge Function secrets (OpenRouter model id). */
+export function getDefaultOpenRouterModel(): string {
+  const fromEnv = Deno.env.get('OPENROUTER_MODEL_NAME')?.trim()
+  return fromEnv || MODELS.quality
+}
+
 const TIMEOUT_MS = 25_000 // 25 s - well under Supabase's 150 s wall-clock limit
 
 async function fetchWithTimeout(url: string, init: RequestInit): Promise<Response> {
@@ -57,8 +63,7 @@ export async function complete(
   const apiKey = Deno.env.get('OPENROUTER_API_KEY')
   if (!apiKey) throw new Error('OPENROUTER_API_KEY not set')
 
-  // OPENROUTER_MODEL_NAME overrides the default quality model if set
-  const defaultModel = Deno.env.get('OPENROUTER_MODEL_NAME') ?? MODELS.quality
+  const defaultModel = getDefaultOpenRouterModel()
   const model = options.model ?? defaultModel
   const body = {
     model,

@@ -29,7 +29,9 @@
       "WebFetch(domain:www.pensai.ai)",
       "Read(//c/Users/moham/.claude/projects/c--Users-moham-Project---FounderX/memory/**)",
       "Bash(npm run:*)",
-      "Bash(node -e \":*)"
+      "Bash(node -e \":*)",
+      "Bash(grep -c \"slug: ''hypefury-alternative''\" \"c:\\\\Users\\\\moham\\\\Project - FounderX\\\\src\\\\data\\\\comparisons.ts\")",
+      "Bash(grep -c \"slug: ''shield-analytics-alternative''\" \"c:\\\\Users\\\\moham\\\\Project - FounderX\\\\src\\\\data\\\\comparisons.ts\")"
     ],
     "additionalDirectories": [
       "c:\\Users\\moham\\.claude\\projects\\c--Users-moham-Project---FounderX\\memory"

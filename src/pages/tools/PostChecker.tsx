@@ -7,6 +7,29 @@ import PublicFooter from '@/components/layout/PublicFooter'
 import Button from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
 
+// ─── Supabase Edge Function ────────────────────────────────────────────────────
+
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+async function analyzeWithAI(text: string): Promise<PostResult> {
+  const res = await fetch(`${SUPABASE_URL}/functions/v1/analyze-tool`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+    },
+    body: JSON.stringify({ tool: 'post-checker', content: text }),
+  })
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}))
+    if (res.status === 429) throw new Error(data.message ?? 'Rate limit reached. Try again tomorrow.')
+    if (res.status === 503) throw new Error(data.message ?? 'Free AI is temporarily busy. Try again in a minute.')
+    throw new Error(data.message ?? 'Analysis failed. Please try again.')
+  }
+  return res.json()
+}
+
 // ─── Scoring engine ───────────────────────────────────────────────────────────
 
 interface Criterion {
@@ -26,6 +49,7 @@ interface PostResult {
   wordCount: number
   lineCount: number
   criteria: Criterion[]
+  improved_hook?: string
 }
 
 const WEAK_HOOKS = [
@@ -299,23 +323,50 @@ export default function PostChecker() {
   const [post, setPost] = useState('')
   const [result, setResult] = useState<PostResult | null>(null)
   const [hasAnalyzed, setHasAnalyzed] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const analyze = useCallback(() => {
+  const analyze = useCallback(async () => {
     if (!post.trim()) return
-    setResult(analyzePost(post))
-    setHasAnalyzed(true)
+    setLoading(true)
+    setError(null)
+    try {
+      const aiResult = await analyzeWithAI(post)
+      setResult(aiResult)
+      setHasAnalyzed(true)
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Analysis failed'
+      setResult(analyzePost(post))
+      setHasAnalyzed(true)
+      if (msg.includes('Rate limit')) setError(msg)
+    } finally {
+      setLoading(false)
+    }
   }, [post])
 
   const reset = () => {
     setPost('')
     setResult(null)
     setHasAnalyzed(false)
+    setError(null)
   }
 
-  const tryExample = (ex: string) => {
+  const tryExample = async (ex: string) => {
     setPost(ex)
-    setResult(analyzePost(ex))
-    setHasAnalyzed(true)
+    setLoading(true)
+    setError(null)
+    try {
+      const aiResult = await analyzeWithAI(ex)
+      setResult(aiResult)
+      setHasAnalyzed(true)
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Analysis failed'
+      setResult(analyzePost(ex))
+      setHasAnalyzed(true)
+      if (msg.includes('Rate limit')) setError(msg)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const toolSchema = JSON.stringify({
@@ -370,10 +421,7 @@ export default function PostChecker() {
             </label>
             <textarea
               value={post}
-              onChange={e => {
-                setPost(e.target.value)
-                if (hasAnalyzed) setResult(analyzePost(e.target.value))
-              }}
+              onChange={e => setPost(e.target.value)}
               placeholder={`e.g.\nWe almost ran out of runway last month.\n\nHere's what saved us - and what I'd do differently.\n\n...`}
               rows={9}
               className="w-full bg-transparent border-0 text-sm text-text placeholder:text-text-subtle resize-none focus:outline-none pb-4 leading-relaxed font-mono"
@@ -405,18 +453,21 @@ export default function PostChecker() {
               <Button
                 size="sm"
                 onClick={analyze}
-                disabled={!post.trim()}
+                disabled={!post.trim() || loading}
                 className="px-5"
               >
-                Check my post
-                <ArrowRight className="w-3.5 h-3.5" />
+                {loading ? (
+                  <span className="flex items-center gap-2"><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin shrink-0" />Analyzing...</span>
+                ) : (
+                  <span className="flex items-center gap-1.5">Check my post<ArrowRight className="w-3.5 h-3.5" /></span>
+                )}
               </Button>
             </div>
           </div>
         </div>
 
         {/* Try an example */}
-        {!hasAnalyzed && (
+        {!hasAnalyzed && !loading && (
           <div className="mb-10">
             <p className="text-xs text-text-subtle mb-3">Try an example:</p>
             <div className="flex flex-wrap gap-2">
@@ -437,9 +488,46 @@ export default function PostChecker() {
           </div>
         )}
 
+        {/* Loading skeleton */}
+        {loading && (
+          <div className="space-y-4 animate-pulse">
+            <div className="bg-surface border border-border rounded-card p-6 flex items-center gap-6">
+              <div className="w-20 h-20 rounded-2xl bg-surface-hover shrink-0" />
+              <div className="flex-1 space-y-3">
+                <div className="h-4 bg-surface-hover rounded w-3/4" />
+                <div className="h-3 bg-surface-hover rounded w-1/2" />
+                <div className="h-2 bg-surface-hover rounded-full w-full max-w-[280px] mt-3" />
+              </div>
+            </div>
+            <div className="bg-surface border border-border rounded-card overflow-hidden">
+              <div className="px-6 py-4 border-b border-border"><div className="h-4 bg-surface-hover rounded w-24" /></div>
+              {[1,2,3,4,5].map(i => (
+                <div key={i} className="px-6 py-4 border-b border-border last:border-0 flex gap-3">
+                  <div className="w-4 h-4 rounded-full bg-surface-hover shrink-0 mt-0.5" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-3 bg-surface-hover rounded w-32" />
+                    <div className="h-3 bg-surface-hover rounded w-full" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Results */}
-        {result && post.trim() && (
+        {!loading && result && post.trim() && (
           <div className="space-y-4">
+
+            {/* Error card */}
+            {error && (
+              <div className="bg-amber-500/[0.08] border border-amber-500/20 rounded-card p-4 flex items-start gap-3">
+                <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-medium text-text mb-0.5">AI analysis unavailable</p>
+                  <p className="text-xs text-text-muted">{error} Showing basic analysis below.</p>
+                </div>
+              </div>
+            )}
 
             {/* Score summary */}
             <div className="bg-surface border border-border rounded-card p-6 flex items-center gap-6">
@@ -470,6 +558,15 @@ export default function PostChecker() {
                 </div>
               </div>
             </div>
+
+            {/* AI Improved Hook */}
+            {result?.improved_hook && (
+              <div className="bg-primary/[0.04] border border-primary/20 rounded-card p-4">
+                <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-2">AI Improved Hook</p>
+                <p className="text-sm text-text leading-relaxed font-medium">"{result.improved_hook}"</p>
+                <p className="text-xs text-text-subtle mt-2">Replace your opening line with this to immediately increase scroll-stop rate.</p>
+              </div>
+            )}
 
             {/* Breakdown */}
             <div className="bg-surface border border-border rounded-card overflow-hidden">
@@ -587,10 +684,10 @@ export default function PostChecker() {
           <div>
             <h2 className="text-xl font-bold text-text mb-3">The problem with editing your own posts</h2>
             <p className="text-base text-text-muted leading-relaxed mb-4">
-              You can\'t objectively score your own writing when you wrote it. You know what you meant to say, so you read the intention into the words rather than what\'s actually there. That\'s why posts that feel good when you write them can still fall flat.
+              You can't objectively score your own writing when you wrote it. You know what you meant to say, so you read the intention into the words rather than what's actually there. That's why posts that feel good when you write them can still fall flat.
             </p>
             <p className="text-base text-text-muted leading-relaxed">
-              The better approach is to generate posts that are structured correctly from the start - hook first, specific body, clean close - rather than editing bad structure into good structure after the fact. Wrively generates that way by default, because it knows LinkedIn\'s format and your specific voice.
+              The better approach is to generate posts that are structured correctly from the start - hook first, specific body, clean close - rather than editing bad structure into good structure after the fact. Wrively generates that way by default, because it knows LinkedIn's format and your specific voice.
             </p>
             <Link
               to="/signup"
