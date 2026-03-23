@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "rasterize:favicon": "node scripts/rasterize-favicon.mjs",
+    "og:compress": "node scripts/og/compress-pngs.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

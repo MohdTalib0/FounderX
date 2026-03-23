@@ -6,8 +6,10 @@ import Button from '@/components/ui/Button'
 import PublicHeader from '@/components/layout/PublicHeader'
 import PublicFooter from '@/components/layout/PublicFooter'
 import { cn } from '@/lib/utils'
+import { useThemeStore } from '@/store/theme'
 
 export default function Landing() {
+  const { theme } = useThemeStore()
   return (
     <div className="min-h-screen bg-background text-text overflow-x-hidden">
       <Helmet>
@@ -87,9 +89,9 @@ export default function Landing() {
 
         {/* App preview */}
         <div className="px-4 sm:px-6 lg:px-10 max-w-7xl mx-auto">
-          <div className="relative rounded-2xl overflow-hidden shadow-[0_0_80px_rgba(99,102,241,0.12)]">
+          <div className="relative rounded-2xl overflow-hidden shadow-[0_0_80px_rgba(99,102,241,0.1)]">
             <img
-              src="/og/hero-preview.png"
+              src={theme === 'dark' ? '/og/hero-preview.png' : '/og/hero-preview-light.png'}
               alt="Wrively dashboard — today's post ready, weekly tracker, quick actions"
               width={1600}
               height={900}

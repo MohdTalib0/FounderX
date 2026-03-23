@@ -38,7 +38,8 @@
       "Read(//c/Users/moham/Project - FounderX/**)",
       "Bash(find '/c/Users/moham/Project - FounderX' -name .env* -o -name *.env)",
       "Bash(grep -n \"404\\\\|Coming soon\\\\|TODO\\\\|FIXME\" \"c:/Users/moham/Project - FounderX/src/pages\"/*.tsx)",
-      "Bash(grep -n \"referral\\\\|waitlist\\\\|Growth.Loop\" \"c:/Users/moham/Project - FounderX/src/pages\"/*.tsx)"
+      "Bash(grep -n \"referral\\\\|waitlist\\\\|Growth.Loop\" \"c:/Users/moham/Project - FounderX/src/pages\"/*.tsx)",
+      "Bash(node scripts/og/generate.mjs)"
     ],
     "additionalDirectories": [
       "c:\\Users\\moham\\.claude\\projects\\c--Users-moham-Project---FounderX\\memory"
