@@ -47,6 +47,8 @@ const LINKS = [
     items: [
       { label: 'Contact',           to: '/contact' },
       { label: 'Terms of Service',  to: '/terms' },
+      { label: 'Privacy Policy',    to: '/privacy' },
+      { label: 'Refund Policy',     to: '/refunds' },
     ],
   },
 ]
@@ -105,6 +107,8 @@ export default function PublicFooter() {
           <p className="text-xs text-text-subtle">© 2026 Wrively. All rights reserved.</p>
           <div className="flex items-center gap-4 text-xs text-text-subtle">
             <Link to="/terms" className="hover:text-text-muted transition-colors">Terms</Link>
+            <Link to="/privacy" className="hover:text-text-muted transition-colors">Privacy</Link>
+            <Link to="/refunds" className="hover:text-text-muted transition-colors">Refunds</Link>
             <Link to="/contact" className="hover:text-text-muted transition-colors">Contact</Link>
           </div>
         </div>

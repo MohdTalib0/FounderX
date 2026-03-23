@@ -2,6 +2,7 @@ import { useEffect, lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/auth'
+import { captureUtmSource } from '@/lib/toolTracking'
 
 // Eager - needed on first paint
 import Landing from '@/pages/Landing'
@@ -15,6 +16,8 @@ import GoogleAnalytics from '@/components/GoogleAnalytics'
 
 // Lazy - loaded on demand
 const Terms = lazy(() => import('@/pages/Terms'))
+const PrivacyPolicy = lazy(() => import('@/pages/PrivacyPolicy'))
+const RefundPolicy = lazy(() => import('@/pages/RefundPolicy'))
 const Contact = lazy(() => import('@/pages/Contact'))
 const ForIndividuals = lazy(() => import('@/pages/ForIndividuals'))
 const Pricing = lazy(() => import('@/pages/Pricing'))
@@ -44,6 +47,9 @@ const Upgrade = lazy(() => import('@/pages/dashboard/Upgrade'))
 
 export default function App() {
   const { setUser, setSession, setInitialized, fetchProfile, fetchCompany } = useAuthStore()
+
+  // Capture UTM source on first visit so landing-page → signup attribution works
+  useEffect(() => { captureUtmSource() }, [])
 
   // Mount once: Supabase session + auth listener (store actions are stable)
   useEffect(() => {
@@ -87,6 +93,8 @@ export default function App() {
           {/* Public */}
           <Route path="/" element={<Landing />} />
           <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/refunds" element={<RefundPolicy />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/for-individuals" element={<ForIndividuals />} />
           <Route path="/pricing" element={<Pricing />} />

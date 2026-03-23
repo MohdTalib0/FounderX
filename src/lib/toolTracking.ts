@@ -93,6 +93,21 @@ export function setAcquisitionSource(source: string): void {
   } catch { /* localStorage unavailable */ }
 }
 
+/**
+ * Call once on app mount. If the current URL has utm_source, store it as the
+ * acquisition source so landing-page visitors who go straight to /signup still
+ * get attributed (e.g. someone clicking an ad → wrively.com/?utm_source=linkedin).
+ * Stored as "linkedin", "twitter", etc. — just the source value.
+ * Won't overwrite a source already set (e.g. from a prior free-tool visit).
+ */
+export function captureUtmSource(): void {
+  try {
+    const p = new URLSearchParams(window.location.search)
+    const source = p.get('utm_source')?.trim()
+    if (source) setAcquisitionSource(source)
+  } catch { /* ignore */ }
+}
+
 export function getAcquisitionSource(): string | null {
   try {
     return localStorage.getItem(ACQ_SOURCE_KEY)
