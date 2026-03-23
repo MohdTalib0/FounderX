@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 1584px;
+      height: 396px;
+      overflow: hidden;
+      background: #0C0C0E;
+      font-family: 'Inter', -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .root {
+      position: relative;
+      width: 1584px;
+      height: 396px;
+      overflow: hidden;
+    }
+
+    /* ── Background ── */
+    .bg {
+      position: absolute;
+      inset: 0;
+      background: #0C0C0E;
+      background-image:
+        linear-gradient(rgba(99,102,241,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,102,241,0.035) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+
+    /* Large sweep glow from top-right — pulls eye to the content */
+    .glow-tr {
+      position: absolute;
+      top: -180px;
+      right: -60px;
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, rgba(99,102,241,0.20) 0%, transparent 60%);
+    }
+    /* Subtle warm glow bottom-center for depth */
+    .glow-bc {
+      position: absolute;
+      bottom: -120px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(139,92,246,0.08) 0%, transparent 65%);
+    }
+    /* Extra glow bottom-left — but kept dim so it doesn't compete with profile pic area */
+    .glow-bl {
+      position: absolute;
+      bottom: -80px;
+      left: 80px;
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 65%);
+    }
+
+    /* Top accent line */
+    .accent-top {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent 0%, #6366F1 25%, #A78BFA 55%, #C4B5FD 70%, transparent 100%);
+    }
+
+    /* ── Layout ── */
+    .content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      /* Left padding accounts for the profile picture safe zone (≈190px) */
+      padding: 0 80px 0 260px;
+      gap: 0;
+    }
+
+    /* ── Left: copy block ── */
+    .copy {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .eyebrow-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #6366F1;
+      box-shadow: 0 0 8px rgba(99,102,241,0.9);
+    }
+    .eyebrow-text {
+      font-size: 13px;
+      font-weight: 700;
+      color: #A5B4FC;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .headline {
+      font-size: 52px;
+      font-weight: 800;
+      color: #F0F0F2;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+    .headline .accent {
+      background: linear-gradient(135deg, #818CF8 0%, #C4B5FD 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .sub {
+      font-size: 18px;
+      font-weight: 400;
+      color: #52525B;
+      line-height: 1.5;
+    }
+
+    /* ── Right: post preview card ── */
+    .right {
+      flex-shrink: 0;
+      width: 420px;
+      margin-left: 64px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Three variation pill-cards side by side */
+    .variations {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .var-card {
+      background: #141418;
+      border: 1px solid #27272A;
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .var-card.active {
+      border-color: rgba(99,102,241,0.35);
+      background: linear-gradient(135deg, rgba(99,102,241,0.08) 0%, #141418 100%);
+    }
+
+    .var-badge {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 1px;
+    }
+    .badge-safe         { background: rgba(34,197,94,0.10);  color: #34D399; }
+    .badge-bold         { background: rgba(245,158,11,0.10); color: #F59E0B; }
+    .badge-contrarian   { background: rgba(239,68,68,0.10);  color: #F87171; }
+
+    .var-text {
+      font-size: 11px;
+      font-weight: 500;
+      color: #A1A1AA;
+      line-height: 1.5;
+      flex: 1;
+    }
+    .var-card.active .var-text { color: #D4D4D8; }
+
+    .copy-chip {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(99,102,241,0.12);
+      border: 1px solid rgba(99,102,241,0.22);
+      font-size: 9px;
+      font-weight: 600;
+      color: #818CF8;
+      margin-top: 1px;
+    }
+
+    /* ── Bottom-left: brand lockup (always visible, clear of profile pic) ── */
+    .brand {
+      position: absolute;
+      z-index: 3;
+      bottom: 28px;
+      left: 260px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-w {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #6366F1, #8B5CF6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      color: white;
+    }
+    .brand-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #3F3F46;
+    }
+    .brand-sep { width: 1px; height: 14px; background: #27272A; }
+    .brand-url {
+      font-size: 12px;
+      font-weight: 500;
+      color: #3F3F46;
+    }
+  </style>
+</head>
+<body>
+  <div class="root">
+    <div class="bg"></div>
+    <div class="glow-tr"></div>
+    <div class="glow-bc"></div>
+    <div class="glow-bl"></div>
+    <div class="accent-top"></div>
+
+    <div class="content">
+      <!-- Left: copy -->
+      <div class="copy">
+        <div class="eyebrow">
+          <div class="eyebrow-dot"></div>
+          <span class="eyebrow-text">Wrively · LinkedIn Writing for Founders</span>
+        </div>
+
+        <div class="headline">
+          Posts that sound<br />
+          like <span class="accent">you.</span>
+        </div>
+
+        <div class="sub">
+          3 variations. Your voice. Ready in minutes.
+        </div>
+      </div>
+
+      <!-- Right: 3 post variation preview -->
+      <div class="right">
+        <div class="variations">
+
+          <div class="var-card active">
+            <span class="var-badge badge-bold">Bold</span>
+            <span class="var-text">I spent 3 months building something nobody asked for. Here's what that taught me about product…</span>
+            <div class="copy-chip">Copy ✓</div>
+          </div>
+
+          <div class="var-card">
+            <span class="var-badge badge-safe">Safe</span>
+            <span class="var-text">After months of building in silence, I finally have something worth sharing about focus…</span>
+          </div>
+
+          <div class="var-card">
+            <span class="var-badge badge-contrarian">Contrarian</span>
+            <span class="var-text">"Ship fast" killed our product. The advice nobody tells early-stage founders…</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Brand lockup — positioned clear of profile picture -->
+    <div class="brand">
+      <div class="brand-w">W</div>
+      <span class="brand-name">Wrively</span>
+      <div class="brand-sep"></div>
+      <span class="brand-url">wrively.com</span>
+    </div>
+  </div>
+</body>
+</html>
