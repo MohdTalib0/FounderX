@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "rasterize:favicon": "node scripts/rasterize-favicon.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -49,6 +50,7 @@
     "globals": "^15.14.0",
     "postcss": "^8.4.49",
     "puppeteer": "^24.40.0",
+    "sharp": "^0.34.5",
     "tailwindcss": "^3.4.17",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.18.2",
