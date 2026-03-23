@@ -2,30 +2,12 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { corsHeaders } from '../_shared/cors.ts'
 
 // OpenRouter :free models only — no paid fallback
-const M = {
-  step: 'stepfun/step-3.5-flash:free',
-  gemma: 'google/gemma-3-27b-it:free',
-  llama: 'meta-llama/llama-3.3-70b-instruct:free',
-  nemotron: 'nvidia/nemotron-3-super-120b-a12b:free',
-  trinity: 'arcee-ai/trinity-large-preview:free',
-} as const
-
-/** Per-tool priority (fast / stable first for headline; heavy for post; creative for voice). */
-function modelsForTool(tool: string): string[] {
-  switch (tool) {
-    case 'headline':
-      return [M.step, M.gemma, M.llama, M.nemotron, M.trinity]
-    case 'post-checker':
-      return [M.nemotron, M.step, M.gemma, M.trinity, M.llama]
-    case 'voice':
-      return [M.trinity, M.gemma, M.step, M.nemotron, M.llama]
-    default:
-      return [M.step, M.gemma, M.llama, M.nemotron, M.trinity]
-  }
-}
+// Trinity first (better quality for structured analysis), Gemma as fallback.
+const PRIMARY_MODEL = 'arcee-ai/trinity-large-preview:free'
+const FALLBACK_MODEL = 'google/gemma-3-27b-it:free'
 
 const DAILY_LIMIT = 10
-const TIMEOUT_MS = 30_000
+const TIMEOUT_MS = 55_000 // Trinity is ~10 tps; 400-token response takes ~40 s — give it room
 const CACHE_TTL_MS = 10 * 60 * 1000 // 10 minutes
 
 /** Shown after a successful free analysis only — optional funnel; does not gate the tool. */
@@ -258,40 +240,18 @@ async function tryModel(apiKey: string, model: string, systemPrompt: string, use
   }
 }
 
-/**
- * Try the preferred model first (preserves quota on the happy path).
- * If it fails, race the remaining fallbacks simultaneously (fast recovery).
- * Only 1 model quota is consumed on success; fallbacks only fire when needed.
- */
+/** Try Trinity; if it errors, fall back to Gemma. Sequential — no racing. */
 async function callAnalysisModelRace(
   apiKey: string,
-  models: string[],
   systemPrompt: string,
   userContent: string,
 ): Promise<string> {
-  if (models.length === 0) throw new Error('No models configured')
-
-  // Try the preferred model first
   try {
-    return await tryModel(apiKey, models[0], systemPrompt, userContent)
-  } catch (firstErr) {
-    console.warn(`Primary model ${models[0]} failed, racing fallbacks:`, firstErr instanceof Error ? firstErr.message : firstErr)
+    return await tryModel(apiKey, PRIMARY_MODEL, systemPrompt, userContent)
+  } catch (primaryErr) {
+    console.warn('Trinity failed, trying Gemma:', primaryErr instanceof Error ? primaryErr.message : primaryErr)
   }
-
-  // Primary failed — race the remaining models simultaneously
-  const fallbacks = models.slice(1)
-  if (fallbacks.length === 0) throw new Error('All models failed')
-
-  const promises = fallbacks.map((m) => tryModel(apiKey, m, systemPrompt, userContent))
-  try {
-    return await Promise.any(promises)
-  } catch (e) {
-    if (e instanceof AggregateError && e.errors.length > 0) {
-      const first = e.errors[0]
-      throw first instanceof Error ? first : new Error(String(first))
-    }
-    throw e
-  }
+  return tryModel(apiKey, FALLBACK_MODEL, systemPrompt, userContent)
 }
 
 /** True when free tier is overloaded / flaky (OpenRouter shared :free pool). */
@@ -384,10 +344,9 @@ serve(async (req) => {
     const apiKey = Deno.env.get('OPENROUTER_API_KEY')
     if (!apiKey) throw new Error('OPENROUTER_API_KEY not configured')
 
-    const models = modelsForTool(tool)
     const systemPrompt = prompts[tool]
 
-    const runRace = () => callAnalysisModelRace(apiKey, models, systemPrompt, trimmed)
+    const runRace = () => callAnalysisModelRace(apiKey, systemPrompt, trimmed)
 
     let raw = await runRace()
     let parsed: Record<string, unknown>
