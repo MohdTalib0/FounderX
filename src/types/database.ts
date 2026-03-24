@@ -306,6 +306,25 @@ export type Database = {
         Update: Partial<Database['public']['Tables']['subscription_events']['Insert']>
         Relationships: []
       }
+      checkout_events: {
+        Row: {
+          id: number
+          user_id: string | null
+          event: string
+          price_id: string | null
+          metadata: Record<string, unknown> | null
+          created_at: string
+        }
+        Insert: {
+          user_id?: string | null
+          event: string
+          price_id?: string | null
+          metadata?: Record<string, unknown> | null
+          created_at?: string
+        }
+        Update: Partial<Database['public']['Tables']['checkout_events']['Insert']>
+        Relationships: []
+      }
       referrals: {
         Row: {
           id: string

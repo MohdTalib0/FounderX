@@ -1,8 +1,10 @@
 import { initializePaddle, type Paddle, type CheckoutEventsData } from '@paddle/paddle-js'
+import { supabase } from '@/lib/supabase'
 
 let paddleInstance: Paddle | undefined
 let paddlePromise: Promise<Paddle | undefined> | null = null
 let onCheckoutComplete: (() => void) | null = null
+let checkoutPriceId: string | null = null
 
 function isPaddleConfigured(): boolean {
   return Boolean(import.meta.env.VITE_PADDLE_CLIENT_TOKEN?.trim())
@@ -18,7 +20,24 @@ export function getPaddle(): Promise<Paddle | undefined> {
       environment: env,
       token,
       eventCallback: (event: { name?: string; data?: CheckoutEventsData }) => {
-        if (event.name === 'checkout.completed') {
+        const name = event.name ?? ''
+
+        // Log checkout funnel events (best-effort, non-blocking)
+        if (name.startsWith('checkout.')) {
+          supabase.auth.getUser().then(({ data }) => {
+            if (!data.user) return
+            supabase.from('checkout_events').insert({
+              user_id: data.user.id,
+              event: name,
+              price_id: checkoutPriceId,
+              metadata: name === 'checkout.error'
+                ? { error: (event.data as unknown as Record<string, unknown>)?.error ?? null }
+                : null,
+            }).then(() => {}, () => {})
+          })
+        }
+
+        if (name === 'checkout.completed') {
           // Auto-close the overlay after a brief pause so the user sees the checkmark
           setTimeout(() => paddleInstance?.Checkout.close(), 1500)
           onCheckoutComplete?.()
@@ -45,6 +64,7 @@ export async function openPaddleCheckout(opts: {
     throw new Error('Paddle is not configured (set VITE_PADDLE_* in .env)')
   }
   onCheckoutComplete = opts.onSuccess ?? null
+  checkoutPriceId = opts.priceId
   paddle.Checkout.open({
     items: [{ priceId: opts.priceId, quantity: 1 }],
     customer: { email: opts.email },
