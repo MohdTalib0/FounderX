@@ -28,3 +28,5 @@ create policy "Users can read own subscription events"
 
 -- Service role (used by webhook) bypasses RLS, so no insert policy needed for it.
 -- Block authenticated users from inserting/updating/deleting directly.
+
+grant select on table public.subscription_events to authenticated;

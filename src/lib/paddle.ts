@@ -1,5 +1,6 @@
 import { initializePaddle, type Paddle, type CheckoutEventsData } from '@paddle/paddle-js'
 
+let paddleInstance: Paddle | undefined
 let paddlePromise: Promise<Paddle | undefined> | null = null
 let onCheckoutComplete: (() => void) | null = null
 
@@ -18,10 +19,12 @@ export function getPaddle(): Promise<Paddle | undefined> {
       token,
       eventCallback: (event: { name?: string; data?: CheckoutEventsData }) => {
         if (event.name === 'checkout.completed') {
+          // Auto-close the overlay after a brief pause so the user sees the checkmark
+          setTimeout(() => paddleInstance?.Checkout.close(), 1500)
           onCheckoutComplete?.()
         }
       },
-    })
+    }).then((p) => { paddleInstance = p; return p })
   }
   return paddlePromise
 }
