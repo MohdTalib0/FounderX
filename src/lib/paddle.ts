@@ -16,7 +16,6 @@ export function getPaddle(): Promise<Paddle | undefined> {
     paddlePromise = initializePaddle({
       environment: env,
       token,
-      version: 'v1',
       eventCallback: (event: { name?: string; data?: CheckoutEventsData }) => {
         if (event.name === 'checkout.completed') {
           onCheckoutComplete?.()
