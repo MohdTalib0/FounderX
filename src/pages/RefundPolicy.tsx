@@ -11,16 +11,16 @@ const sections = [
     body: `The Wrively free plan costs nothing. There is nothing to refund. You can use the free plan indefinitely with no obligation to upgrade.`,
   },
   {
-    title: '2. Pro Plan — Monthly Billing',
-    body: `Wrively Pro is billed monthly. You can cancel your subscription at any time from Settings → Account → Manage Billing. Cancellation takes effect at the end of your current billing period — you will retain Pro access until that date and will not be charged again after that.`,
+    title: '2. Paid Plans — Monthly Billing',
+    body: `Wrively Starter and Pro are billed monthly. You can cancel your subscription at any time from Settings → Account → Manage Billing. Cancellation takes effect at the end of your current billing period — you will retain access until that date and will not be charged again after that.`,
   },
   {
     title: '3. Payments and Refunds',
-    body: `Payments for Wrively Pro are processed by Paddle, our authorised reseller. All refund requests are handled in accordance with the Paddle Buyer Terms (paddle.com/legal/buyers). To request a refund, contact us at hello@wrively.com and we will work with Paddle to process it promptly.`,
+    body: `Payments for Wrively Starter and Pro are processed by Paddle, our authorised reseller. All refund requests are handled in accordance with the Paddle Buyer Terms (paddle.com/legal/buyers). To request a refund, contact us at hello@wrively.com and we will work with Paddle to process it promptly.`,
   },
   {
     title: '4. EU / EEA and UK Consumers',
-    body: `If you are a consumer residing in the EU, EEA, or United Kingdom, you have the right to withdraw from your subscription within 14 days of purchase for a full refund, in accordance with applicable consumer law. If you have already started using Wrively Pro during that period, your right of withdrawal may be affected as permitted by law. To exercise this right, email hello@wrively.com.`,
+    body: `If you are a consumer residing in the EU, EEA, or United Kingdom, you have the right to withdraw from your subscription within 14 days of purchase for a full refund, in accordance with applicable consumer law. If you have already started using Wrively during that period, your right of withdrawal may be affected as permitted by law. To exercise this right, email hello@wrively.com.`,
   },
   {
     title: '5. Contact',
@@ -33,7 +33,7 @@ export default function RefundPolicy() {
     <div className="min-h-screen bg-background">
       <Helmet>
         <title>Refund Policy | Wrively</title>
-        <meta name="description" content="Read the Wrively Refund Policy. Understand when refunds apply and how to request one for your Wrively Pro subscription." />
+        <meta name="description" content="Read the Wrively Refund Policy. Understand when refunds apply and how to request one for your Wrively subscription." />
         <link rel="canonical" href="https://wrively.com/refunds" />
         <meta property="og:title" content="Refund Policy | Wrively" />
         <meta property="og:url" content="https://wrively.com/refunds" />
@@ -41,7 +41,7 @@ export default function RefundPolicy() {
         <meta name="robots" content="noindex, follow" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Refund Policy | Wrively" />
-        <meta name="twitter:description" content="Read the Wrively Refund Policy. Understand when refunds apply for your Wrively Pro subscription." />
+        <meta name="twitter:description" content="Read the Wrively Refund Policy. Understand when refunds apply for your Wrively subscription." />
         <meta name="twitter:image" content="https://wrively.com/og/home.png" />
       </Helmet>
 
@@ -74,7 +74,7 @@ export default function RefundPolicy() {
         {/* Intro */}
         <div className="bg-surface border border-border rounded-card px-5 py-4 mb-8">
           <p className="text-sm text-text-muted leading-relaxed">
-            Payments for Wrively Pro are processed by Paddle as our authorised reseller.
+            Payments for Wrively paid plans are processed by Paddle as our authorised reseller.
             Refunds are handled in accordance with the{' '}
             <a href="https://www.paddle.com/legal/buyers" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary-hover transition-colors">
               Paddle Buyer Terms

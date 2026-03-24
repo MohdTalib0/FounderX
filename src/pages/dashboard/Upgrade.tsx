@@ -114,8 +114,9 @@ export default function Upgrade() {
     rewrites: profile?.rewrites_this_month ?? 0,
   }
 
-  const now      = new Date()
-  const daysLeft = new Date(now.getFullYear(), now.getMonth() + 1, 1).getDate() - now.getDate() + 1
+  const now       = new Date()
+  const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1)
+  const daysLeft  = Math.ceil((nextMonth.getTime() - now.getTime()) / 86_400_000)
 
   // Pre-warm Paddle SDK so checkout opens instantly
   useEffect(() => { preloadPaddle() }, [])
@@ -204,7 +205,7 @@ export default function Upgrade() {
               <p className="text-xs text-text-muted mt-0.5">Update payment method, view invoices, or cancel</p>
             </div>
             <a
-              href="https://customer-portal.paddle.com/subscriptions"
+              href="{import.meta.env.VITE_PADDLE_ENVIRONMENT === 'production' ? 'https://customer-portal.paddle.com/subscriptions' : 'https://sandbox-customer-portal.paddle.com/subscriptions'}"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-hover transition-colors"
@@ -300,7 +301,7 @@ export default function Upgrade() {
 
           <p className="text-[11px] text-text-subtle text-center pt-1">
             Secure checkout with Paddle. Questions?{' '}
-            <a href="mailto:hello@writely.com" className="text-primary hover:text-primary-hover transition-colors">hello@wrively.com</a>
+            <a href="mailto:hello@wrively.com" className="text-primary hover:text-primary-hover transition-colors">hello@wrively.com</a>
           </p>
         </div>
       )}
