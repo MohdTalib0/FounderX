@@ -205,7 +205,7 @@ export default function Upgrade() {
               <p className="text-xs text-text-muted mt-0.5">Update payment method, view invoices, or cancel</p>
             </div>
             <a
-              href={import.meta.env.VITE_PADDLE_ENVIRONMENT === 'production' ? 'https://customer-portal.paddle.com/subscriptions' : 'https://sandbox-customer-portal.paddle.com/subscriptions'}
+              href={import.meta.env.VITE_PADDLE_ENVIRONMENT === 'production' ? 'https://customer-portal.paddle.com' : 'https://sandbox-customer-portal.paddle.com'}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-hover transition-colors"
