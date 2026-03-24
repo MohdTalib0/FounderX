@@ -17,7 +17,7 @@ function applyTheme(theme: Theme) {
 }
 
 // Apply immediately on module load to avoid flash
-const saved = (localStorage.getItem('theme') as Theme) ?? 'dark'
+const saved = (localStorage.getItem('theme') as Theme) ?? 'light'
 applyTheme(saved)
 
 export const useThemeStore = create<ThemeStore>((set) => ({
