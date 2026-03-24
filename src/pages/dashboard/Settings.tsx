@@ -276,6 +276,7 @@ function AccountTab({
     profile?.email_notifications ?? true
   )
   const [savingPrefs, setSavingPrefs] = useState(false)
+  const [portalLoading, setPortalLoading] = useState(false)
 
   const plan = profile?.plan ?? 'free'
   const planLabel =
@@ -322,15 +323,29 @@ function AccountTab({
               <p className="text-sm font-medium text-text">Billing</p>
               <p className="text-xs text-text-muted mt-0.5">Update payment method, view invoices, or cancel</p>
             </div>
-            <a
-              href={import.meta.env.VITE_PADDLE_ENVIRONMENT === 'production' ? 'https://customer-portal.paddle.com' : 'https://sandbox-customer-portal.paddle.com'}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-hover transition-colors"
+            <button
+              type="button"
+              disabled={portalLoading}
+              onClick={async () => {
+                setPortalLoading(true)
+                try {
+                  const { data, error } = await supabase.functions.invoke('paddle-portal')
+                  if (error || !data?.url) throw new Error(error?.message || 'Could not open billing portal')
+                  window.open(data.url, '_blank', 'noopener')
+                } catch (e) {
+                  toast.error(e instanceof Error ? e.message : 'Could not open billing portal')
+                } finally {
+                  setPortalLoading(false)
+                }
+              }}
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-hover transition-colors disabled:opacity-60"
             >
-              Manage
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
+              {portalLoading ? (
+                <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <>Manage <ExternalLink className="w-3.5 h-3.5" /></>
+              )}
+            </button>
           </div>
         </div>
       )}
