@@ -6,6 +6,7 @@ import { generatePersona } from '@/lib/ai/client'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import Textarea from '@/components/ui/Textarea'
+import { ExternalLink } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { Company, Profile } from '@/types/database'
 
@@ -55,7 +56,6 @@ export default function Settings() {
       {tab === 'account' && (
         <AccountTab
           profile={profile}
-          isIndividual={company?.is_individual ?? false}
           onSignOut={async () => {
             await supabase.auth.signOut()
             setProfile(null)
@@ -267,11 +267,9 @@ function BrandTab({ company, onUpdate }: {
 
 function AccountTab({
   profile,
-  isIndividual,
   onSignOut,
 }: {
   profile: Profile | null
-  isIndividual: boolean
   onSignOut: () => void
 }) {
   const [emailNotifications, setEmailNotifications] = useState(
@@ -279,9 +277,11 @@ function AccountTab({
   )
   const [savingPrefs, setSavingPrefs] = useState(false)
 
+  const plan = profile?.plan ?? 'free'
   const planLabel =
-    profile?.plan === 'pro'  ? 'Pro'  :
-    profile?.plan === 'beta' ? 'Beta' : 'Free'
+    plan === 'pro'  ? 'Pro'  :
+    plan === 'starter' ? 'Starter' : 'Free'
+  const isPaying = (plan === 'starter' || plan === 'pro') && profile?.paddle_subscription_id
 
   const handleToggleNotifications = async (enabled: boolean) => {
     setEmailNotifications(enabled)
@@ -314,18 +314,23 @@ function AccountTab({
         ))}
       </div>
 
-      {/* Beta banner */}
-      {profile?.plan === 'beta' && (
-        <div className="relative bg-surface border border-primary/20 rounded-card px-4 py-3.5 overflow-hidden">
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-          <div className="flex items-start gap-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0 animate-pulse" />
+      {/* Manage billing for paying subscribers */}
+      {isPaying && (
+        <div className="bg-surface border border-border rounded-card px-4 py-3.5">
+          <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-text mb-0.5">Beta: full access</p>
-              <p className="text-xs text-text-muted leading-relaxed">
-                You're one of the first 50 {isIndividual ? 'creators' : 'founders'}. All features are free during beta. Pro plan coming soon.
-              </p>
+              <p className="text-sm font-medium text-text">Billing</p>
+              <p className="text-xs text-text-muted mt-0.5">Update payment method, view invoices, or cancel</p>
             </div>
+            <a
+              href="https://customer-portal.paddle.com/subscriptions"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-hover transition-colors"
+            >
+              Manage
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
           </div>
         </div>
       )}

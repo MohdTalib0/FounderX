@@ -51,7 +51,7 @@ export default function Landing() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 text-xs font-medium text-text-muted border border-border rounded-full px-3.5 py-1.5 mb-8 bg-surface/60">
             <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse shrink-0" />
-            Free beta · 40+ founders posting weekly
+            Free to start · Founders posting weekly
           </div>
 
           <h1 className="text-[42px] sm:text-[60px] lg:text-[72px] font-bold leading-[1.04] tracking-[-0.03em] mb-6">
@@ -587,7 +587,7 @@ export default function Landing() {
             {[
               { value: '< 3 min', label: 'From open to first post copied' },
               { value: '3x/week', label: 'Posting rhythm the product is built around' },
-              { value: '40+', label: 'Founders in the beta' },
+              { value: '40+', label: 'Founders on Wrively' },
             ].map(({ value, label }) => (
               <div key={label}>
                 <p className="text-2xl sm:text-3xl font-bold text-text tracking-tight">{value}</p>

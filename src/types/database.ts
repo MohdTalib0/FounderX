@@ -10,7 +10,7 @@ export type Database = {
           full_name: string | null
           avatar_url: string | null
           onboarded: boolean
-          plan: 'free' | 'starter' | 'pro' | 'beta'
+          plan: 'free' | 'starter' | 'pro'
           posts_this_month: number
           comments_this_month: number
           rewrites_this_month: number
@@ -19,6 +19,9 @@ export type Database = {
           email_notifications: boolean
           acquisition_source: string | null
           streak_days: number
+          paddle_customer_id: string | null
+          paddle_subscription_id: string | null
+          subscription_status: string | null
           created_at: string
           updated_at: string
         }
@@ -28,7 +31,7 @@ export type Database = {
           full_name?: string | null
           avatar_url?: string | null
           onboarded?: boolean
-          plan?: 'free' | 'starter' | 'pro' | 'beta'
+          plan?: 'free' | 'starter' | 'pro'
           posts_this_month?: number
           comments_this_month?: number
           rewrites_this_month?: number
@@ -37,6 +40,9 @@ export type Database = {
           email_notifications?: boolean
           acquisition_source?: string | null
           streak_days?: number
+          paddle_customer_id?: string | null
+          paddle_subscription_id?: string | null
+          subscription_status?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -277,6 +283,29 @@ export type Database = {
         Update: Partial<Database['public']['Tables']['waitlist']['Insert']>
         Relationships: []
       }
+      subscription_events: {
+        Row: {
+          id: number
+          user_id: string
+          event_type: string
+          plan: string | null
+          status: string | null
+          paddle_subscription_id: string | null
+          paddle_customer_id: string | null
+          created_at: string
+        }
+        Insert: {
+          user_id: string
+          event_type: string
+          plan?: string | null
+          status?: string | null
+          paddle_subscription_id?: string | null
+          paddle_customer_id?: string | null
+          created_at?: string
+        }
+        Update: Partial<Database['public']['Tables']['subscription_events']['Insert']>
+        Relationships: []
+      }
       referrals: {
         Row: {
           id: string
@@ -313,5 +342,6 @@ export type CommentSuggestion = Database['public']['Tables']['comment_suggestion
 export type DraftRewrite = Database['public']['Tables']['draft_rewrites']['Row']
 export type RemixedPost  = Database['public']['Tables']['remixed_posts']['Row']
 export type ToolUse      = Database['public']['Tables']['tool_uses']['Row']
-export type WaitlistEntry = Database['public']['Tables']['waitlist']['Row']
-export type Referral     = Database['public']['Tables']['referrals']['Row']
+export type WaitlistEntry      = Database['public']['Tables']['waitlist']['Row']
+export type SubscriptionEvent  = Database['public']['Tables']['subscription_events']['Row']
+export type Referral           = Database['public']['Tables']['referrals']['Row']

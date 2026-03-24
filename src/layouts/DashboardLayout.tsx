@@ -29,7 +29,7 @@ function UserMenu() {
   const pct          = limit !== null ? Math.min(100, (postsUsed / limit) * 100) : 0
   const remaining    = limit !== null ? Math.max(0, limit - postsUsed) : null
   const showUpgrade  = plan === 'free' || plan === 'starter'
-  const planLabel    = plan === 'pro' ? 'Pro' : plan === 'beta' ? 'Beta' : plan === 'starter' ? 'Starter' : 'Free'
+  const planLabel    = plan === 'pro' ? 'Pro' : plan === 'starter' ? 'Starter' : 'Free'
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -76,7 +76,7 @@ function UserMenu() {
               </div>
               <span className={cn(
                 'text-[10px] font-bold px-1.5 py-0.5 rounded border tracking-widest uppercase shrink-0 ml-2',
-                plan === 'pro' || plan === 'beta' ? 'bg-primary/10 text-primary border-primary/20' : 'bg-surface-hover text-text-muted border-border'
+                plan === 'pro' ? 'bg-primary/10 text-primary border-primary/20' : 'bg-surface-hover text-text-muted border-border'
               )}>{planLabel}</span>
             </div>
           </div>
@@ -126,7 +126,7 @@ function UserMenu() {
                 </div>
                 <span className={cn(
                   'text-[10px] font-bold px-1.5 py-0.5 rounded border tracking-widest uppercase shrink-0 ml-2',
-                  plan === 'pro' || plan === 'beta' ? 'bg-primary/10 text-primary border-primary/20' : 'bg-surface-hover text-text-muted border-border'
+                  plan === 'pro' ? 'bg-primary/10 text-primary border-primary/20' : 'bg-surface-hover text-text-muted border-border'
                 )}>{planLabel}</span>
               </div>
             </div>

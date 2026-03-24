@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async'
 import { Check, ChevronDown, ArrowRight, Shield, RefreshCw } from 'lucide-react'
 import PublicHeader from '@/components/layout/PublicHeader'
 import PublicFooter from '@/components/layout/PublicFooter'
+import { useAuthStore } from '@/store/auth'
 import { cn } from '@/lib/utils'
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
@@ -104,6 +105,9 @@ const FAQ = [
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function Pricing() {
+  const { user } = useAuthStore()
+  const isLoggedIn = Boolean(user)
+
   return (
     <div className="min-h-screen bg-background text-text overflow-x-hidden">
       <Helmet>
@@ -142,7 +146,7 @@ export default function Pricing() {
       <section className="max-w-3xl mx-auto px-5 pt-16 pb-14 text-center">
         <div className="inline-flex items-center gap-2 mb-6 border border-primary/25 bg-primary/[0.06] text-primary text-xs font-medium px-3 py-1.5 rounded-full">
           <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-          Beta: free for the first 50 founders
+          Start free — upgrade when you're ready
         </div>
 
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-text mb-4 leading-tight">
@@ -171,15 +175,15 @@ export default function Pricing() {
         {/* Mobile: stacked, Starter on top via order */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
           {/* Free */}
-          <PlanCard plan={PLANS[0]} />
+          <PlanCard plan={PLANS[0]} isLoggedIn={isLoggedIn} />
 
           {/* Starter - featured, elevated on desktop */}
           <div className="sm:-mt-4">
-            <PlanCard plan={PLANS[1]} />
+            <PlanCard plan={PLANS[1]} isLoggedIn={isLoggedIn} />
           </div>
 
           {/* Pro */}
-          <PlanCard plan={PLANS[2]} />
+          <PlanCard plan={PLANS[2]} isLoggedIn={isLoggedIn} />
         </div>
 
         <p className="text-center text-xs text-text-subtle mt-6">
@@ -289,8 +293,9 @@ export default function Pricing() {
 
 // ─── Plan Card ────────────────────────────────────────────────────────────────
 
-function PlanCard({ plan }: { plan: typeof PLANS[number] }) {
+function PlanCard({ plan, isLoggedIn }: { plan: typeof PLANS[number]; isLoggedIn: boolean }) {
   const badge = 'badge' in plan ? plan.badge : undefined
+  const ctaTo = isLoggedIn && plan.key !== 'free' ? '/upgrade' : plan.ctaTo
 
   return (
     <div className={cn(
@@ -345,7 +350,7 @@ function PlanCard({ plan }: { plan: typeof PLANS[number] }) {
 
         {/* CTA */}
         <Link
-          to={plan.ctaTo}
+          to={ctaTo}
           className={cn(
             'flex items-center justify-center gap-1.5 w-full py-3 rounded-btn text-sm font-semibold transition-colors',
             plan.featured

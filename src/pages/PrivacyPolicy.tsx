@@ -8,7 +8,7 @@ const LAST_UPDATED = 'March 23, 2026'
 const sections = [
   {
     title: '1. What We Collect',
-    body: `When you create an account, we collect your name and email address. When you use Wrively, we store the content you generate (posts, comments, rewrites) and your founder profile data (company, stage, persona). We also collect basic usage data — which features you use and when — to improve the product. If you upgrade, our payment processor (Stripe) handles billing; we do not store your card details.`,
+    body: `When you create an account, we collect your name and email address. When you use Wrively, we store the content you generate (posts, comments, rewrites) and your founder profile data (company, stage, persona). We also collect basic usage data — which features you use and when — to improve the product. If you upgrade, our payment processor (Paddle) handles billing; we do not store your card details.`,
   },
   {
     title: '2. How We Use Your Data',
@@ -24,7 +24,7 @@ const sections = [
   },
   {
     title: '5. Data Sharing',
-    body: `We share data with a small number of trusted services necessary to operate Wrively: Supabase (database and authentication), OpenRouter (AI inference — prompts and responses are not stored by us after generation), Stripe (payment processing), and Google Analytics (anonymised usage analytics). All processors are under contractual obligations to protect your data.`,
+    body: `We share data with a small number of trusted services necessary to operate Wrively: Supabase (database and authentication), OpenRouter (AI inference — prompts and responses are not stored by us after generation), Paddle (payment processing), and Google Analytics (anonymised usage analytics). All processors are under contractual obligations to protect your data.`,
   },
   {
     title: '6. Data Retention',

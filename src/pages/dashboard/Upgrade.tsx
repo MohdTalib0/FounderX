@@ -1,21 +1,33 @@
-import { Check, Zap, ArrowRight } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Check, Zap, ArrowRight, ExternalLink, AlertTriangle } from 'lucide-react'
 import { useAuthStore } from '@/store/auth'
 import { cn } from '@/lib/utils'
+import { openPaddleCheckout, preloadPaddle } from '@/lib/paddle'
+import { toast } from '@/store/toast'
 
 const LIMITS = {
   free:    { posts: 12,   comments: 15,  rewrites: 5  },
   starter: { posts: 80,   comments: 100, rewrites: 40 },
   pro:     { posts: null, comments: null, rewrites: null },
-  beta:    { posts: null, comments: null, rewrites: null },
 }
 
 const PLAN_LABELS: Record<string, string> = {
-  free: 'Free', starter: 'Starter', pro: 'Pro', beta: 'Beta',
+  free: 'Free', starter: 'Starter', pro: 'Pro',
 }
 
-const PLANS = [
+const PLANS: {
+  key: 'starter' | 'pro'
+  priceId: string
+  name: string
+  price: string
+  period: string
+  tagline: string
+  badge: string | null
+  features: string[]
+}[] = [
   {
     key: 'starter',
+    priceId: import.meta.env.VITE_PADDLE_PRICE_ID_STARTER ?? '',
     name: 'Starter',
     price: '$9',
     period: '/mo',
@@ -31,6 +43,7 @@ const PLANS = [
   },
   {
     key: 'pro',
+    priceId: import.meta.env.VITE_PADDLE_PRICE_ID_PRO ?? '',
     name: 'Pro',
     price: '$19',
     period: '/mo',
@@ -86,11 +99,14 @@ function UsageRow({ label, used, limit }: { label: string; used: number; limit: 
 }
 
 export default function Upgrade() {
-  const { profile } = useAuthStore()
+  const { profile, user, fetchProfile } = useAuthStore()
+  const [checkoutLoading, setCheckoutLoading] = useState(false)
 
   const plan         = profile?.plan ?? 'free'
   const limits       = LIMITS[plan as keyof typeof LIMITS] ?? LIMITS.free
-  const isFullAccess = plan === 'pro' || plan === 'beta'
+  const isFullAccess = plan === 'pro'
+  const isPaying     = plan === 'starter' || plan === 'pro'
+  const isPastDue    = profile?.subscription_status === 'past_due'
 
   const used = {
     posts:    profile?.posts_this_month    ?? 0,
@@ -101,6 +117,39 @@ export default function Upgrade() {
   const now      = new Date()
   const daysLeft = new Date(now.getFullYear(), now.getMonth() + 1, 1).getDate() - now.getDate() + 1
 
+  // Pre-warm Paddle SDK so checkout opens instantly
+  useEffect(() => { preloadPaddle() }, [])
+
+  const handleCheckout = async (priceId: string) => {
+    if (!user?.id || !profile?.email) {
+      toast.error('Sign in again to continue checkout.')
+      return
+    }
+    if (!priceId.trim()) {
+      toast.error('Billing is not configured yet. Email hello@wrively.com.')
+      return
+    }
+    setCheckoutLoading(true)
+    try {
+      await openPaddleCheckout({
+        priceId: priceId.trim(),
+        email: profile.email,
+        supabaseUserId: user.id,
+        onSuccess: () => {
+          toast.success('Welcome aboard! Your plan is being activated.')
+          // Give the webhook a moment to process, then refresh profile
+          setTimeout(() => fetchProfile(), 3000)
+          setTimeout(() => fetchProfile(), 8000)
+        },
+      })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : 'Checkout failed'
+      toast.error(msg)
+    } finally {
+      setCheckoutLoading(false)
+    }
+  }
+
   return (
     <div className="max-w-2xl mx-auto space-y-6">
 
@@ -108,10 +157,23 @@ export default function Upgrade() {
       <div>
         <h1 className="text-xl font-bold text-text">Plans & usage</h1>
         <p className="text-sm text-text-muted mt-0.5">
-          You're on <span className="font-semibold text-text">{PLAN_LABELS[plan]}</span>.
+          You're on <span className="font-semibold text-text">{PLAN_LABELS[plan] ?? plan}</span>.
           {!isFullAccess && ` Resets in ${daysLeft} day${daysLeft !== 1 ? 's' : ''}.`}
         </p>
       </div>
+
+      {/* Past-due warning */}
+      {isPastDue && (
+        <div className="bg-warning/[0.08] border border-warning/25 rounded-card px-4 py-3.5 flex items-start gap-3">
+          <AlertTriangle className="w-4 h-4 text-warning shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-semibold text-text">Payment issue</p>
+            <p className="text-xs text-text-muted mt-0.5">
+              Your last payment didn't go through. Please update your payment method to keep your plan active.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Usage */}
       <div className="bg-surface border border-border rounded-card overflow-hidden">
@@ -128,8 +190,29 @@ export default function Upgrade() {
       {/* Already on full access */}
       {isFullAccess && (
         <div className="bg-success/[0.05] border border-success/20 rounded-card px-4 py-3.5">
-          <p className="text-sm font-semibold text-success">You're on {PLAN_LABELS[plan]}. No limits.</p>
+          <p className="text-sm font-semibold text-success">You're on Pro. No limits.</p>
           <p className="text-xs text-text-muted mt-0.5">Keep posting. The habit compounds.</p>
+        </div>
+      )}
+
+      {/* Manage billing for paying subscribers */}
+      {isPaying && profile?.paddle_subscription_id && (
+        <div className="bg-surface border border-border rounded-card px-4 py-3.5">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-text">Billing</p>
+              <p className="text-xs text-text-muted mt-0.5">Update payment method, view invoices, or cancel</p>
+            </div>
+            <a
+              href="https://customer-portal.paddle.com/subscriptions"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-hover transition-colors"
+            >
+              Manage
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          </div>
         </div>
       )}
 
@@ -153,13 +236,11 @@ export default function Upgrade() {
                     isCurrent && 'opacity-55'
                   )}
                 >
-                  {/* Top accent strip for recommended plan */}
                   {isNext && (
                     <div className="h-0.5 bg-gradient-to-r from-primary/60 via-primary to-primary/60" />
                   )}
 
                   <div className="p-5 flex flex-col gap-4 flex-1">
-                    {/* Plan name + price */}
                     <div>
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-sm font-bold text-text">{p.name}</span>
@@ -181,7 +262,6 @@ export default function Upgrade() {
                       <p className="text-xs text-text-muted mt-1">{p.tagline}</p>
                     </div>
 
-                    {/* Feature list */}
                     <ul className="space-y-2 flex-1">
                       {p.features.map(f => (
                         <li key={f} className="flex items-start gap-2 text-xs text-text-muted">
@@ -191,22 +271,26 @@ export default function Upgrade() {
                       ))}
                     </ul>
 
-                    {/* CTA */}
                     {!isCurrent && (
-                      <a
-                        href={`mailto:hello@wrively.com?subject=Upgrade to ${p.name}&body=Hi, I'd like to upgrade to the ${p.name} plan.`}
+                      <button
+                        type="button"
+                        disabled={checkoutLoading}
+                        onClick={() => handleCheckout(p.priceId)}
                         className={cn(
-                          'flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-btn text-sm font-semibold transition-colors',
+                          'flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-btn text-sm font-semibold transition-colors disabled:opacity-60',
                           isNext
                             ? 'bg-primary text-white hover:bg-primary-hover'
                             : 'bg-surface-hover border border-border text-text hover:bg-surface hover:border-border-hover'
                         )}
                       >
-                        {isNext
-                          ? <><Zap className="w-3.5 h-3.5" /> Get {p.name}</>
-                          : <>Get {p.name} <ArrowRight className="w-3.5 h-3.5" /></>
-                        }
-                      </a>
+                        {checkoutLoading ? (
+                          <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                        ) : isNext ? (
+                          <><Zap className="w-3.5 h-3.5" /> Subscribe to {p.name}</>
+                        ) : (
+                          <>Subscribe to {p.name} <ArrowRight className="w-3.5 h-3.5" /></>
+                        )}
+                      </button>
                     )}
                   </div>
                 </div>
@@ -215,7 +299,8 @@ export default function Upgrade() {
           </div>
 
           <p className="text-[11px] text-text-subtle text-center pt-1">
-            Questions? Email <a href="mailto:hello@wrively.com" className="text-primary hover:text-primary-hover transition-colors">hello@wrively.com</a>
+            Secure checkout with Paddle. Questions?{' '}
+            <a href="mailto:hello@writely.com" className="text-primary hover:text-primary-hover transition-colors">hello@wrively.com</a>
           </p>
         </div>
       )}

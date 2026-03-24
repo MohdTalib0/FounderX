@@ -1,0 +1,51 @@
+import { initializePaddle, type Paddle, type CheckoutEventsData } from '@paddle/paddle-js'
+
+let paddlePromise: Promise<Paddle | undefined> | null = null
+let onCheckoutComplete: (() => void) | null = null
+
+function isPaddleConfigured(): boolean {
+  return Boolean(import.meta.env.VITE_PADDLE_CLIENT_TOKEN?.trim())
+}
+
+/** Lazy-init Paddle.js (Billing). Returns undefined if env is not set (local dev). */
+export function getPaddle(): Promise<Paddle | undefined> {
+  if (!isPaddleConfigured()) return Promise.resolve(undefined)
+  const token = import.meta.env.VITE_PADDLE_CLIENT_TOKEN!.trim()
+  const env = import.meta.env.VITE_PADDLE_ENVIRONMENT === 'production' ? 'production' : 'sandbox'
+  if (!paddlePromise) {
+    paddlePromise = initializePaddle({
+      environment: env,
+      token,
+      version: 'v1',
+      eventCallback: (event: { name?: string; data?: CheckoutEventsData }) => {
+        if (event.name === 'checkout.completed') {
+          onCheckoutComplete?.()
+        }
+      },
+    })
+  }
+  return paddlePromise
+}
+
+/** Pre-warm the SDK so checkout opens instantly on click. */
+export function preloadPaddle(): void {
+  getPaddle()
+}
+
+export async function openPaddleCheckout(opts: {
+  priceId: string
+  email: string
+  supabaseUserId: string
+  onSuccess?: () => void
+}): Promise<void> {
+  const paddle = await getPaddle()
+  if (!paddle) {
+    throw new Error('Paddle is not configured (set VITE_PADDLE_* in .env)')
+  }
+  onCheckoutComplete = opts.onSuccess ?? null
+  paddle.Checkout.open({
+    items: [{ priceId: opts.priceId, quantity: 1 }],
+    customer: { email: opts.email },
+    customData: { supabase_user_id: opts.supabaseUserId },
+  })
+}

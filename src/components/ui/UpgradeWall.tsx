@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface UpgradeWallProps {
-  plan: 'free' | 'starter' | 'pro' | 'beta'
+  plan: 'free' | 'starter' | 'pro'
   postsGenerated: number
   postsCopied: number
   postsPublished: number
@@ -21,7 +21,7 @@ export default function UpgradeWall({
   postsLimit,
   compact = false,
 }: UpgradeWallProps) {
-  const isFullAccess = plan === 'beta' || plan === 'pro'
+  const isFullAccess = plan === 'pro'
   const remaining = postsLimit !== null ? Math.max(0, postsLimit - postsUsed) : null
   const showScarcity = !isFullAccess && remaining !== null
 

@@ -126,7 +126,7 @@ Bigger because real people are using something you built. Smaller because the an
 
 We've been building in private for 8 months. Today was the first day the thing existed outside our heads.
 
-Thank you to the 40 beta users who helped us get here.
+Thank you to everyone who showed up early and helped us get here.
 
 What was your launch day like?`,
         why: 'Real numbers (227, 3, 1, 2am, 8 months) ground the story. Emotional honesty about what launch day actually feels like. Ends with gratitude and a question.',

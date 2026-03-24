@@ -7,7 +7,6 @@
 --   free:    posts=12,  comments=15,  rewrites=5
 --   starter: posts=80,  comments=100, rewrites=40
 --   pro:     unlimited
---   beta:    unlimited
 
 -- Drop old 2-arg signature
 drop function if exists increment_usage(text, int);
@@ -89,7 +88,7 @@ begin
       when 'rewrites' then 40
     end;
   else
-    v_limit := null; -- pro / beta: unlimited
+    v_limit := null; -- pro: unlimited
   end if;
 
   -- Gate check (skip for the onboarding welcome post)

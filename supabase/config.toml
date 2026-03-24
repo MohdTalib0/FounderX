@@ -31,3 +31,6 @@ verify_jwt = false
 
 [functions.analyze-tool]
 verify_jwt = false
+
+[functions.paddle-webhook]
+verify_jwt = false
