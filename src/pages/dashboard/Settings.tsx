@@ -277,6 +277,7 @@ function AccountTab({
   )
   const [savingPrefs, setSavingPrefs] = useState(false)
   const [portalLoading, setPortalLoading] = useState(false)
+  const [portalStep, setPortalStep] = useState('')
 
   const plan = profile?.plan ?? 'free'
   const planLabel =
@@ -318,35 +319,46 @@ function AccountTab({
       {/* Manage billing for paying subscribers */}
       {isPaying && (
         <div className="bg-surface border border-border rounded-card px-4 py-3.5">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-text">Billing</p>
-              <p className="text-xs text-text-muted mt-0.5">Update payment method, view invoices, or cancel</p>
+          {portalLoading ? (
+            <div className="flex items-center gap-3 py-1">
+              <span className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin shrink-0" />
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-text">{portalStep}</p>
+                <p className="text-xs text-text-muted">This usually takes a few seconds</p>
+              </div>
             </div>
-            <button
-              type="button"
-              disabled={portalLoading}
-              onClick={async () => {
-                setPortalLoading(true)
-                try {
-                  const { data, error } = await supabase.functions.invoke('paddle-portal')
-                  if (error || !data?.url) throw new Error(error?.message || 'Could not open billing portal')
-                  window.open(data.url, '_blank', 'noopener')
-                } catch (e) {
-                  toast.error(e instanceof Error ? e.message : 'Could not open billing portal')
-                } finally {
-                  setPortalLoading(false)
-                }
-              }}
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-hover transition-colors disabled:opacity-60"
-            >
-              {portalLoading ? (
-                <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <>Manage <ExternalLink className="w-3.5 h-3.5" /></>
-              )}
-            </button>
-          </div>
+          ) : (
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-text">Billing</p>
+                <p className="text-xs text-text-muted mt-0.5">Update payment method, view invoices, or cancel</p>
+              </div>
+              <button
+                type="button"
+                onClick={async () => {
+                  setPortalLoading(true)
+                  setPortalStep('Connecting to billing...')
+                  try {
+                    await new Promise(r => setTimeout(r, 400))
+                    setPortalStep('Loading your account...')
+                    const { data, error } = await supabase.functions.invoke('paddle-portal')
+                    if (error || !data?.url) throw new Error(error?.message || 'Could not open billing portal')
+                    setPortalStep('Opening billing portal...')
+                    await new Promise(r => setTimeout(r, 300))
+                    window.open(data.url, '_blank', 'noopener')
+                  } catch (e) {
+                    toast.error(e instanceof Error ? e.message : 'Could not open billing portal')
+                  } finally {
+                    setPortalLoading(false)
+                    setPortalStep('')
+                  }
+                }}
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-hover transition-colors"
+              >
+                Manage <ExternalLink className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
         </div>
       )}
 
