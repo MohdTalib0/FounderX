@@ -15,11 +15,20 @@ export default function Landing() {
       <Helmet>
         <title>Wrively • AI That Sounds Like You | LinkedIn Voice Layer</title>
         <meta name="description" content="Wrively is the Voice Layer for LinkedIn. Build your voice once in 4 questions. Get posts that sound like you, every week, in under 3 minutes. Free to start." />
+        <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://wrively.com/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Wrively" />
         <meta property="og:title" content="Wrively • AI That Sounds Like You | LinkedIn Voice Layer" />
         <meta property="og:description" content="Wrively is the Voice Layer for LinkedIn. Build your voice once. Get posts that sound like you, every week, in under 3 minutes." />
         <meta property="og:url" content="https://wrively.com/" />
         <meta property="og:image" content="https://wrively.com/og/home.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Wrively • AI That Sounds Like You | LinkedIn Voice Layer" />
+        <meta name="twitter:description" content="Wrively is the Voice Layer for LinkedIn. Build your voice once. Get posts that sound like you, every week, in under 3 minutes." />
+        <meta name="twitter:image" content="https://wrively.com/og/home.png" />
         <script type="application/ld+json">{JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'Organization',
