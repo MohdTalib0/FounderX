@@ -22,7 +22,7 @@ const PLANS = [
     features: [
       '12 posts per month',
       '15 comment suggestions',
-      '5 draft rewrites',
+      '5 rewrites & remixes',
       'Founder persona',
       '30-day content history',
     ],
@@ -40,7 +40,7 @@ const PLANS = [
     features: [
       '80 posts per month',
       '100 comment suggestions',
-      '40 draft rewrites',
+      '40 rewrites & remixes',
       'Persona regeneration',
       '90-day content history',
     ],
@@ -125,8 +125,8 @@ export default function Pricing() {
           applicationCategory: 'BusinessApplication',
           operatingSystem: 'Web',
           offers: [
-            { '@type': 'Offer', name: 'Free', price: '0', priceCurrency: 'USD', description: '12 posts per month, 15 comment suggestions, 5 draft rewrites. No credit card required.' },
-            { '@type': 'Offer', name: 'Starter', price: '9', priceCurrency: 'USD', description: '80 posts per month, 100 comment suggestions, 40 draft rewrites, persona regeneration.' },
+            { '@type': 'Offer', name: 'Free', price: '0', priceCurrency: 'USD', description: '12 posts per month, 15 comment suggestions, 5 rewrites & remixes. No credit card required.' },
+            { '@type': 'Offer', name: 'Starter', price: '9', priceCurrency: 'USD', description: '80 posts per month, 100 comment suggestions, 40 rewrites & remixes, persona regeneration.' },
             { '@type': 'Offer', name: 'Pro', price: '19', priceCurrency: 'USD', description: 'Unlimited posts, comments, and rewrites with performance insights and priority AI.' },
           ],
         })}</script>

@@ -37,7 +37,7 @@ const PLANS: {
     features: [
       '80 posts / month',
       '100 comment suggestions',
-      '40 draft rewrites',
+      '40 rewrites & remixes',
       'Persona regeneration',
       '90-day content history',
     ],
@@ -187,7 +187,7 @@ export default function Upgrade() {
         <div className="px-4 pb-2">
           <UsageRow label="Posts generated"     used={used.posts}    limit={limits.posts} />
           <UsageRow label="Comment suggestions" used={used.comments} limit={limits.comments} />
-          <UsageRow label="Draft rewrites"      used={used.rewrites} limit={limits.rewrites} />
+          <UsageRow label="Rewrites & remixes"   used={used.rewrites} limit={limits.rewrites} />
         </div>
       </div>
 

@@ -55,6 +55,16 @@ serve(async (req) => {
       })
     }
 
+    // Remixes share the rewrites usage bucket
+    const usageRes = await supabase.rpc('increment_usage', { p_field: 'rewrites' })
+    if (usageRes.error) throw new Error(usageRes.error.message)
+    if (!usageRes.data.allowed) {
+      return new Response(
+        JSON.stringify({ error: 'limit_reached', limit: usageRes.data.limit }),
+        { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
     const raw = await complete(
       [
         { role: 'system', content: buildBrandContext(company) },

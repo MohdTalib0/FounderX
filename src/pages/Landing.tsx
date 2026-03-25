@@ -33,7 +33,7 @@ export default function Landing() {
           '@context': 'https://schema.org',
           '@type': 'FAQPage',
           mainEntity: [
-            { '@type': 'Question', name: 'Is Wrively free?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. The free plan includes 12 posts per month, 15 comment suggestions, and 5 draft rewrites. No credit card required. You can start posting today without entering payment details.' } },
+            { '@type': 'Question', name: 'Is Wrively free?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. The free plan includes 12 posts per month, 15 comment suggestions, and 5 rewrites & remixes. No credit card required. You can start posting today without entering payment details.' } },
             { '@type': 'Question', name: 'How is Wrively different from ChatGPT?', acceptedAnswer: { '@type': 'Answer', text: 'ChatGPT starts from a blank page every session - you have to re-explain yourself every time and the output sounds generic. Wrively builds a Voice Layer from your onboarding answers once, then every post it generates comes from that model permanently. You never brief the AI twice.' } },
             { '@type': 'Question', name: 'Do my posts actually sound like me?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Wrively builds a persona from your company, stage, audience, and writing personality. Every generation pulls from that model. The output sounds like you on a clear-headed day, not like a LinkedIn influencer template.' } },
             { '@type': 'Question', name: 'How long does the setup take?', acceptedAnswer: { '@type': 'Answer', text: 'Four questions. About two minutes. You tell Wrively about your startup, your stage, your audience, and your writing personality. That is it: Wrively builds your Voice Layer and generates your first post before you reach the dashboard.' } },
@@ -623,7 +623,7 @@ export default function Landing() {
               <p className="text-xs text-text-muted mt-2">For founders just starting out.</p>
             </div>
             <ul className="space-y-2.5 flex-1">
-              {['12 posts / month', '15 comment suggestions', '5 draft rewrites', 'Voice Layer persona', '30-day history'].map(f => (
+              {['12 posts / month', '15 comment suggestions', '5 rewrites & remixes', 'Voice Layer persona', '30-day history'].map(f => (
                 <li key={f} className="flex items-center gap-2.5 text-sm text-text-muted">
                   <Check className="w-3.5 h-3.5 text-success shrink-0" />
                   {f}
@@ -652,7 +652,7 @@ export default function Landing() {
               <p className="text-xs text-text-muted mt-2">For founders building the habit.</p>
             </div>
             <ul className="space-y-2.5 flex-1">
-              {['80 posts / month', '100 comment suggestions', '40 draft rewrites', 'Persona regeneration', '90-day history'].map(f => (
+              {['80 posts / month', '100 comment suggestions', '40 rewrites & remixes', 'Persona regeneration', '90-day history'].map(f => (
                 <li key={f} className="flex items-center gap-2.5 text-sm text-text-muted">
                   <Check className="w-3.5 h-3.5 text-primary shrink-0" />
                   {f}
@@ -772,7 +772,7 @@ function WritePostDemo() {
 const LANDING_FAQ = [
   {
     q: 'Is Wrively free?',
-    a: 'Yes. The free plan includes 12 posts per month, 15 comment suggestions, and 5 draft rewrites. No credit card required.',
+    a: 'Yes. The free plan includes 12 posts per month, 15 comment suggestions, and 5 rewrites & remixes. No credit card required.',
   },
   {
     q: 'How is Wrively different from ChatGPT?',
