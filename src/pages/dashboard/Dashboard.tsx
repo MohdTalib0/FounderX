@@ -166,6 +166,13 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
 
+      {/* ─── Past-due payment warning ────────────────────────────────────── */}
+      {profile?.subscription_status === 'past_due' && (
+        <Link to="/dashboard/upgrade" className="block bg-warning/[0.08] border border-warning/25 rounded-card px-4 py-3 hover:bg-warning/[0.12] transition-colors">
+          <p className="text-sm font-semibold text-text">Payment issue — update your billing to keep your plan.</p>
+        </Link>
+      )}
+
       {/* ─── Greeting ─────────────────────────────────────────────────────── */}
       <div>
         <h1 className="text-xl font-bold text-text">

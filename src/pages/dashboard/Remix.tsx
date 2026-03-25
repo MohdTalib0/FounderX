@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Shuffle } from 'lucide-react'
 import { useAuthStore } from '@/store/auth'
-import { remixPost } from '@/lib/ai/client'
+import { remixPost, LimitReachedError } from '@/lib/ai/client'
 import { toast } from '@/store/toast'
 import Button from '@/components/ui/Button'
 import Textarea from '@/components/ui/Textarea'
@@ -35,8 +35,12 @@ export default function Remix() {
       setResult(data)
       setInputCollapsed(true)
     } catch (err: unknown) {
-      console.error('Remix error:', err)
-      setError('Failed to remix. Please try again.')
+      if (err instanceof LimitReachedError) {
+        setError(`You've used all your rewrites & remixes this month. Upgrade to keep going.`)
+      } else {
+        console.error('Remix error:', err)
+        setError('Failed to remix. Please try again.')
+      }
     } finally {
       setGenerating(false)
     }
