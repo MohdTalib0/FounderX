@@ -385,9 +385,123 @@ function AccountTab({
         </div>
       </div>
 
+      {/* Change password */}
+      <ChangePasswordSection />
+
       <Button variant="secondary" onClick={onSignOut} className="w-full">
         Sign out
       </Button>
+    </div>
+  )
+}
+
+// ─── Change Password ─────────────────────────────────────────────────────────
+
+function ChangePasswordSection() {
+  const [mode, setMode] = useState<'idle' | 'form' | 'reset-sent'>('idle')
+  const [newPassword, setNewPassword] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleChangePassword = async () => {
+    setError('')
+    if (newPassword.length < 8) {
+      setError('Password must be at least 8 characters.')
+      return
+    }
+    setSaving(true)
+    const { error: updateError } = await supabase.auth.updateUser({ password: newPassword })
+    setSaving(false)
+    if (updateError) {
+      setError(updateError.message)
+      return
+    }
+    toast.success('Password updated.')
+    setMode('idle')
+    setNewPassword('')
+  }
+
+  const handleForgotPassword = async () => {
+    setSaving(true)
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user?.email) {
+      toast.error('Could not find your email.')
+      setSaving(false)
+      return
+    }
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(user.email, {
+      redirectTo: `${window.location.origin}/auth/callback?next=/dashboard/settings`,
+    })
+    setSaving(false)
+    if (resetError) {
+      toast.error(resetError.message)
+      return
+    }
+    setMode('reset-sent')
+  }
+
+  if (mode === 'reset-sent') {
+    return (
+      <div className="bg-surface border border-border rounded-card px-4 py-3.5">
+        <p className="text-sm font-medium text-text mb-1">Check your email</p>
+        <p className="text-xs text-text-muted">We sent a password reset link. Click it to set a new password.</p>
+      </div>
+    )
+  }
+
+  if (mode === 'form') {
+    return (
+      <div className="bg-surface border border-border rounded-card px-4 py-4 space-y-3">
+        <p className="text-sm font-medium text-text">Change password</p>
+        <input
+          type="password"
+          placeholder="New password (min 8 characters)"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          className="w-full text-sm bg-background border border-border rounded-btn px-3 py-2 text-text placeholder:text-text-subtle focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+        />
+        {error && (
+          <p className="text-xs text-danger">{error}</p>
+        )}
+        <div className="flex items-center gap-2">
+          <Button size="sm" loading={saving} onClick={handleChangePassword}>
+            Update password
+          </Button>
+          <button
+            type="button"
+            onClick={() => { setMode('idle'); setError('') }}
+            className="text-xs text-text-muted hover:text-text transition-colors"
+          >
+            Cancel
+          </button>
+        </div>
+        <button
+          type="button"
+          onClick={handleForgotPassword}
+          disabled={saving}
+          className="text-xs text-primary hover:text-primary-hover transition-colors disabled:opacity-60"
+        >
+          Forgot your password? Send a reset link instead
+        </button>
+      </div>
+    )
+  }
+
+  return (
+    <div className="bg-surface border border-border rounded-card px-4 py-3.5">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-sm font-medium text-text">Password</p>
+          <p className="text-xs text-text-muted mt-0.5">Change your account password</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setMode('form')}
+          className="text-sm font-semibold text-primary hover:text-primary-hover transition-colors"
+        >
+          Change
+        </button>
+      </div>
     </div>
   )
 }
