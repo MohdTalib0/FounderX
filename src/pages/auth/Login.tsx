@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Zap, ArrowLeft, Eye, EyeOff } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { useAuthStore } from '@/store/auth'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 
@@ -17,7 +18,13 @@ type FormData = z.infer<typeof schema>
 export default function Login() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
+  const { user, initialized } = useAuthStore()
   const [showPassword, setShowPassword] = useState(false)
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (initialized && user) navigate('/dashboard', { replace: true })
+  }, [initialized, user, navigate])
   const [info] = useState(
     searchParams.get('reason') === 'session_expired'
       ? 'Your session ended. Sign in to continue.'

@@ -35,7 +35,7 @@ export default function AuthCallback() {
       // token exchange is still in progress (mobile browsers, slow networks).
       const { data: { subscription } } = supabase.auth.onAuthStateChange(
         (event, session) => {
-          if (event === 'SIGNED_IN' && session) {
+          if ((event === 'SIGNED_IN' || event === 'PASSWORD_RECOVERY') && session) {
             subscription.unsubscribe()
             resolveAndNavigate(session.user.id)
           }

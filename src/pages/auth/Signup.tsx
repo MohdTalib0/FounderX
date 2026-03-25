@@ -46,23 +46,27 @@ export default function Signup() {
       }
       return
     }
-    // Attribute any pre-signup tool uses to this new user (best-effort, non-blocking)
+    // Attribute any pre-signup tool uses to this new user (best-effort, non-blocking).
+    // Small delay to let the DB trigger create the profile row first.
     if (authData.user) {
+      const userId = authData.user.id
       const sessionId         = getSessionId()
       const acquisitionSource = getAcquisitionSource() ?? 'organic'
 
-      supabase
-        .from('tool_uses')
-        .update({ user_id: authData.user.id })
-        .eq('session_id', sessionId)
-        .is('user_id', null)
-        .then(() => {}, () => {})
+      setTimeout(() => {
+        supabase
+          .from('tool_uses')
+          .update({ user_id: userId })
+          .eq('session_id', sessionId)
+          .is('user_id', null)
+          .then(() => {}, () => {})
 
-      supabase
-        .from('profiles')
-        .update({ acquisition_source: acquisitionSource })
-        .eq('id', authData.user.id)
-        .then(() => { clearAcquisitionSource() }, () => {})
+        supabase
+          .from('profiles')
+          .update({ acquisition_source: acquisitionSource })
+          .eq('id', userId)
+          .then(() => { clearAcquisitionSource() }, () => {})
+      }, 2000)
     }
 
     if (authData.session) {
