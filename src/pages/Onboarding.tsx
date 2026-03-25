@@ -147,16 +147,7 @@ const GENERATING_STEPS = [
   'Writing your first post...',
 ]
 
-function GeneratingScreen({ mode }: { mode: Mode }) {
-  const [activeStep, setActiveStep] = useState(0)
-
-  useEffect(() => {
-    const timings = [0, 2800, 5500, 8000]
-    const timers = timings.map((ms, i) =>
-      setTimeout(() => setActiveStep(i), ms)
-    )
-    return () => timers.forEach(clearTimeout)
-  }, [])
+function GeneratingScreen({ mode, activeStep }: { mode: Mode; activeStep: number }) {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
@@ -219,7 +210,7 @@ function GeneratingScreen({ mode }: { mode: Mode }) {
 
 export default function Onboarding() {
   const navigate = useNavigate()
-  const { user, setProfile, setCompany } = useAuthStore()
+  const { user, setProfile, setCompany, fetchProfile } = useAuthStore()
 
   const [step, setStep] = useState<Step>(0)
   const [form, setForm] = useState<FormData>({
@@ -234,10 +225,12 @@ export default function Onboarding() {
     keywords: '',
   })
   const [error, setError] = useState('')
+  const [generatingStep, setGeneratingStep] = useState(0)
 
   // Reveal screen state
   const [persona, setPersona] = useState<{ statement: string; pillars: string[] } | null>(null)
   const [firstPost, setFirstPost] = useState<string>('')
+  const [postExpanded, setPostExpanded] = useState(false)
   const [firstPostId, setFirstPostId] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
   const [typewriterDone, setTypewriterDone] = useState(false)
@@ -271,6 +264,7 @@ export default function Onboarding() {
   const handleFinish = async () => {
     if (!user) return
     setError('')
+    setGeneratingStep(0)
     setStep('generating')
 
     try {
@@ -279,7 +273,7 @@ export default function Onboarding() {
         .map(k => k.trim())
         .filter(Boolean)
 
-      // Save company first (without persona) so Edge Functions have a company_id
+      // Step 0: Save company
       const { data: company, error: companyErr } = await supabase
         .from('companies')
         .insert({
@@ -300,10 +294,15 @@ export default function Onboarding() {
 
       if (companyErr) throw companyErr
 
-      // Generate persona via Edge Function (also saves to company)
+      // Step 1: Generate persona
+      setGeneratingStep(1)
       const personaResult = await generatePersona({ company_id: company.id })
 
-      // Generate first post using top content pillar
+      // Step 2: Build content pillars (done as part of persona)
+      setGeneratingStep(2)
+
+      // Step 3: Generate first post
+      setGeneratingStep(3)
       const firstPillar = personaResult.content_pillars[0] ?? form.founder_personality
       const postResult = await generatePost({
         topic: firstPillar,
@@ -344,25 +343,32 @@ export default function Onboarding() {
   const handleCopy = () => {
     navigator.clipboard.writeText(firstPost)
     setCopied(true)
-    // After a beat, navigate to dashboard so they can go post
-    setTimeout(() => navigate('/dashboard?onboarded=1'), 1800)
+    // Ensure store has updated profile, then navigate after a beat
+    fetchProfile().then(() => {
+      setTimeout(() => navigate('/dashboard?onboarded=1'), 1800)
+    })
   }
 
   const handleSeeVariations = () => {
-    const url = firstPostId
-      ? `/dashboard/write?postId=${firstPostId}`
-      : '/dashboard/write'
-    navigate(url)
+    // Ensure the store has the updated profile before navigating to a guarded route
+    fetchProfile().then(() => {
+      const url = firstPostId
+        ? `/dashboard/write?postId=${firstPostId}`
+        : '/dashboard/write'
+      navigate(url)
+    })
   }
 
   const handleSkip = () => {
-    navigate('/dashboard?onboarded=1')
+    fetchProfile().then(() => {
+      navigate('/dashboard?onboarded=1')
+    })
   }
 
   // ─── Render steps ──────────────────────────────────────────────────────────
 
   if (step === 'generating') {
-    return <GeneratingScreen mode={form.mode} />
+    return <GeneratingScreen mode={form.mode} activeStep={generatingStep} />
   }
 
   if (step === 'reveal' && persona) {
@@ -436,9 +442,22 @@ export default function Onboarding() {
                 <span className="text-xs text-text-muted">Your first post</span>
               </div>
 
-              <p className="text-text text-sm leading-relaxed whitespace-pre-wrap px-5 py-4 line-clamp-6">
-                {firstPost}
-              </p>
+              <div className="px-5 py-4">
+                <p className={cn(
+                  'text-text text-sm leading-relaxed whitespace-pre-wrap',
+                  !postExpanded && 'line-clamp-6'
+                )}>
+                  {firstPost}
+                </p>
+                {firstPost.split('\n').length > 6 && (
+                  <button
+                    onClick={() => setPostExpanded(p => !p)}
+                    className="text-xs text-primary hover:text-primary-hover transition-colors mt-2 font-medium"
+                  >
+                    {postExpanded ? 'Show less' : 'See full post'}
+                  </button>
+                )}
+              </div>
 
               {/* Single primary CTA */}
               <div className="px-5 pb-5">
