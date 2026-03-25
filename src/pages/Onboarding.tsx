@@ -294,20 +294,27 @@ export default function Onboarding() {
 
       if (companyErr) throw companyErr
 
-      // Step 1: Generate persona
+      // Step 1+3: Generate persona and first post in parallel
+      // Post uses the founder's personality + first keyword as topic (no need to wait for pillars)
       setGeneratingStep(1)
-      const personaResult = await generatePersona({ company_id: company.id })
+      const firstKeyword = form.keywords.split(',').map(k => k.trim()).filter(Boolean)[0]
+      const postTopic = firstKeyword
+        ? `${firstKeyword} from the perspective of a ${form.founder_personality}`
+        : form.founder_personality === 'contrarian' ? 'A belief in your industry that most people get wrong'
+        : form.founder_personality === 'storyteller' ? 'A moment that changed how you think about your work'
+        : form.founder_personality === 'analyst' ? 'A pattern you\'ve noticed that others are missing'
+        : 'What you\'re building and why it matters'
 
-      // Step 2: Build content pillars (done as part of persona)
+      const [personaResult, postResult] = await Promise.all([
+        generatePersona({ company_id: company.id }),
+        generatePost({ topic: postTopic, company_id: company.id }).then(r => {
+          setGeneratingStep(3)
+          return r
+        }),
+      ])
+
+      // Step 2 is implicit — persona includes content pillars
       setGeneratingStep(2)
-
-      // Step 3: Generate first post
-      setGeneratingStep(3)
-      const firstPillar = personaResult.content_pillars[0] ?? form.founder_personality
-      const postResult = await generatePost({
-        topic: firstPillar,
-        company_id: company.id,
-      })
 
       const boldPost = postResult.variation_bold || postResult.variation_safe
       setFirstPostId(postResult.id)
