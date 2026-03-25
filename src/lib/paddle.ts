@@ -22,8 +22,8 @@ export function getPaddle(): Promise<Paddle | undefined> {
       eventCallback: (event: { name?: string; data?: CheckoutEventsData }) => {
         const name = event.name ?? ''
 
-        // Log checkout funnel events (best-effort, non-blocking)
-        if (name.startsWith('checkout.')) {
+        // Log only actionable events: abandoned checkout + payment errors
+        if (name === 'checkout.closed' || name === 'checkout.error') {
           supabase.auth.getUser().then(({ data }) => {
             if (!data.user) return
             supabase.from('checkout_events').insert({
