@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import {
   PenLine, RefreshCw, MessageSquare, Shuffle,
-  Clock, ArrowRight, Check, ImageDown, CheckCircle2, Circle,
+  Clock, ArrowRight, Check, ImageDown, ExternalLink, CheckCircle2, Circle,
   Zap, Lightbulb, Hammer, TrendingUp, Sparkles, Star, Copy,
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { toast } from '@/store/toast'
 import { useAuthStore } from '@/store/auth'
 import Button from '@/components/ui/Button'
 import CopyButton from '@/components/ui/CopyButton'
@@ -563,6 +564,19 @@ export default function Dashboard() {
                         className="p-2 text-text-muted hover:text-text hover:bg-surface-hover rounded-lg transition-colors"
                       >
                         <ImageDown className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(text)
+                          toast.success('Copied - paste in LinkedIn')
+                          setTimeout(() => {
+                            window.open('https://www.linkedin.com/feed/?shareActive=true', '_blank')
+                          }, 300)
+                        }}
+                        title="Copy & open LinkedIn"
+                        className="p-2 text-text-muted hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
                       </button>
                       <CopyButton text={text} size="sm" />
                     </div>
