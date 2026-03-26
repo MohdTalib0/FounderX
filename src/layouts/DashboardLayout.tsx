@@ -46,10 +46,11 @@ function UserMenu() {
   }, [open])
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
+    window.__manualSignOut = true
     setProfile(null)
     setCompany(null)
     navigate('/')
+    await supabase.auth.signOut()
   }
 
   return (

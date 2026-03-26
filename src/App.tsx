@@ -65,13 +65,7 @@ export default function App() {
     })
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      // If the session expired while the user was on a protected page, redirect to login
-      // with a reason so the login page can show a contextual message.
-      if (event === 'SIGNED_OUT' && window.location.pathname.startsWith('/dashboard')) {
-        window.location.replace('/login?reason=session_expired')
-        return
-      }
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
       setUser(session?.user ?? null)
       if (session?.user) {
