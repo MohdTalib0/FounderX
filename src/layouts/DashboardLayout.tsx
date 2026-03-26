@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Outlet, useNavigate, Link } from 'react-router-dom'
-import { Zap, Settings, LogOut, Sun, Moon } from 'lucide-react'
+import { Zap, Settings, LogOut, Sun, Moon, ChevronDown, CreditCard } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/auth'
 import { useThemeStore } from '@/store/theme'
@@ -57,12 +57,13 @@ function UserMenu() {
       {/* Trigger */}
       <button
         onClick={() => setOpen(v => !v)}
-        className="flex items-center gap-2 h-8 px-2 rounded-lg text-sm font-medium text-text-muted hover:text-text hover:bg-surface-hover transition-colors"
+        className="flex items-center gap-1.5 h-9 pl-1.5 pr-2.5 rounded-lg border border-border text-sm font-medium text-text-muted hover:text-text hover:bg-surface-hover hover:border-border-hover transition-colors"
       >
         <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-[10px] font-bold text-primary shrink-0">
           {initials}
         </div>
         <span className="text-sm font-semibold text-text">{firstName}</span>
+        <ChevronDown className={cn('w-3.5 h-3.5 text-text-subtle transition-transform', open && 'rotate-180')} />
       </button>
 
       {/* Desktop dropdown (no portal needed) */}
@@ -98,10 +99,16 @@ function UserMenu() {
             <button onClick={() => { navigate('/dashboard/settings'); setOpen(false) }} className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm text-text-muted hover:bg-surface-hover hover:text-text transition-colors text-left">
               <Settings className="w-4 h-4 shrink-0" /> Settings
             </button>
+            {!showUpgrade && (
+              <button onClick={() => { navigate('/dashboard/upgrade'); setOpen(false) }} className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm text-text-muted hover:bg-surface-hover hover:text-text transition-colors text-left">
+                <CreditCard className="w-4 h-4 shrink-0" /> Manage billing
+              </button>
+            )}
             <button onClick={() => { toggle(); setOpen(false) }} className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm text-text-muted hover:bg-surface-hover hover:text-text transition-colors text-left">
               {theme === 'dark' ? <Sun className="w-4 h-4 shrink-0" /> : <Moon className="w-4 h-4 shrink-0" />}
               {theme === 'dark' ? 'Light mode' : 'Dark mode'}
             </button>
+            <div className="mx-2.5 border-t border-border" />
             <button onClick={handleSignOut} className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm text-danger hover:bg-danger/10 transition-colors text-left">
               <LogOut className="w-4 h-4 shrink-0" /> Sign out
             </button>
@@ -157,10 +164,16 @@ function UserMenu() {
               <button onClick={() => { navigate('/dashboard/settings'); setOpen(false) }} className="w-full flex items-center gap-3 px-3 py-3.5 rounded-xl text-sm text-text-muted hover:bg-surface-hover hover:text-text transition-colors text-left">
                 <Settings className="w-4 h-4 shrink-0" /> Settings
               </button>
+              {!showUpgrade && (
+                <button onClick={() => { navigate('/dashboard/upgrade'); setOpen(false) }} className="w-full flex items-center gap-3 px-3 py-3.5 rounded-xl text-sm text-text-muted hover:bg-surface-hover hover:text-text transition-colors text-left">
+                  <CreditCard className="w-4 h-4 shrink-0" /> Manage billing
+                </button>
+              )}
               <button onClick={() => { toggle(); setOpen(false) }} className="w-full flex items-center gap-3 px-3 py-3.5 rounded-xl text-sm text-text-muted hover:bg-surface-hover hover:text-text transition-colors text-left">
                 {theme === 'dark' ? <Sun className="w-4 h-4 shrink-0" /> : <Moon className="w-4 h-4 shrink-0" />}
                 {theme === 'dark' ? 'Light mode' : 'Dark mode'}
               </button>
+              <div className="mx-3 border-t border-border" />
               <button onClick={handleSignOut} className="w-full flex items-center gap-3 px-3 py-3.5 rounded-xl text-sm text-danger hover:bg-danger/10 transition-colors text-left">
                 <LogOut className="w-4 h-4 shrink-0" /> Sign out
               </button>

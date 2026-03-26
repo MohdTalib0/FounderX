@@ -285,7 +285,7 @@ export default function Upgrade() {
                         )}
                       </div>
                       <div className="flex items-baseline gap-0.5">
-                        <span className="text-[28px] font-bold text-text leading-none">{p.price}</span>
+                        <span className="text-2xl sm:text-[28px] font-bold text-text leading-none">{p.price}</span>
                         <span className="text-sm text-text-muted">{p.period}</span>
                       </div>
                       <p className="text-xs text-text-muted mt-1">{p.tagline}</p>
@@ -293,7 +293,7 @@ export default function Upgrade() {
 
                     <ul className="space-y-2 flex-1">
                       {p.features.map(f => (
-                        <li key={f} className="flex items-start gap-2 text-xs text-text-muted">
+                        <li key={f} className="flex items-start gap-2 text-xs sm:text-sm text-text-muted">
                           <Check className="w-3.5 h-3.5 text-success shrink-0 mt-px" />
                           {f}
                         </li>

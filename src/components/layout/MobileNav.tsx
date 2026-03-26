@@ -1,13 +1,13 @@
 import { NavLink } from 'react-router-dom'
-import { Home, PenLine, MessageSquare, History, Shuffle } from 'lucide-react'
+import { Home, PenLine, MessageSquare, History, Wrench } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const items = [
-  { to: '/dashboard',        label: 'Home',    icon: Home,         end: true },
-  { to: '/dashboard/write',  label: 'Write',   icon: PenLine },
-  { to: '/dashboard/engage', label: 'Comments', icon: MessageSquare },
-  { to: '/dashboard/remix',  label: 'Remix',   icon: Shuffle },
-  { to: '/dashboard/history',label: 'History', icon: History },
+  { to: '/dashboard',         label: 'Home',    icon: Home,           end: true },
+  { to: '/dashboard/write',   label: 'Write',   icon: PenLine },
+  { to: '/dashboard/engage',  label: 'Engage',  icon: MessageSquare },
+  { to: '/dashboard/rewrite', label: 'Rewrite', icon: Wrench },
+  { to: '/dashboard/history', label: 'History',  icon: History },
 ]
 
 export default function MobileNav() {

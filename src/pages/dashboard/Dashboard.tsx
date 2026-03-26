@@ -181,8 +181,8 @@ export default function Dashboard() {
             : `${greeting}, ${firstName}.`}
         </h1>
         {company && !isFirstVisit && (
-          <div className="flex items-center gap-2 mt-1">
-            <span className="text-sm text-text-muted">{company.name}</span>
+          <div className="flex items-center gap-2 mt-1 min-w-0">
+            <span className="text-sm text-text-muted truncate">{company.name}</span>
             <StageBadge stage={company.stage} isIndividual={company.is_individual} />
           </div>
         )}
@@ -538,37 +538,40 @@ export default function Dashboard() {
                 : post.variation_safe
 
               return (
-                <div key={post.id} className="bg-surface border border-border rounded-card px-4 py-3 flex items-start justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <VariationBadge variation={variation} />
-                      <span className="text-xs text-text-muted flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        {relativeTime(post.created_at)}
-                      </span>
+                <Link
+                  key={post.id}
+                  to={`/dashboard/write?postId=${post.id}`}
+                  className="block bg-surface border border-border rounded-card px-4 py-3 hover:border-border-hover hover:bg-surface-hover/50 transition-colors group"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <VariationBadge variation={variation} />
+                        <span className="text-xs text-text-muted flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          {relativeTime(post.created_at)}
+                        </span>
+                      </div>
+                      <p className="text-sm text-text-muted leading-snug group-hover:text-text transition-colors">
+                        {truncate(text, 90)}
+                      </p>
                     </div>
-                    <p className="text-sm text-text-muted leading-snug">
-                      {truncate(text, 90)}
-                    </p>
+                    <div className="flex items-center gap-1 shrink-0" onClick={e => e.preventDefault()}>
+                      <button
+                        onClick={() => setQuoteCard({ text, variation: variation as 'safe' | 'bold' | 'controversial' })}
+                        title="Get quote card"
+                        className="p-2 text-text-muted hover:text-text hover:bg-surface-hover rounded-lg transition-colors"
+                      >
+                        <ImageDown className="w-3.5 h-3.5" />
+                      </button>
+                      <CopyButton text={text} size="sm" />
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    <Link
-                      to={`/dashboard/write?postId=${post.id}`}
-                      title="Open in Write"
-                      className="p-1.5 text-text-muted hover:text-text hover:bg-surface-hover rounded-lg transition-colors"
-                    >
-                      <PenLine className="w-3.5 h-3.5" />
-                    </Link>
-                    <button
-                      onClick={() => setQuoteCard({ text, variation: variation as 'safe' | 'bold' | 'controversial' })}
-                      title="Get quote card"
-                      className="p-1.5 text-text-muted hover:text-text hover:bg-surface-hover rounded-lg transition-colors"
-                    >
-                      <ImageDown className="w-3.5 h-3.5" />
-                    </button>
-                    <CopyButton text={text} size="sm" />
+                  <div className="flex items-center justify-between mt-2">
+                    <span className="text-[11px] text-primary font-medium">See all variations</span>
+                    <ArrowRight className="w-3 h-3 text-primary group-hover:translate-x-0.5 transition-transform" />
                   </div>
-                </div>
+                </Link>
               )
             })}
           </div>

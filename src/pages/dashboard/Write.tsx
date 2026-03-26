@@ -232,7 +232,7 @@ export default function Write() {
           </div>
           <button
             onClick={() => setInputCollapsed(false)}
-            className="text-xs font-medium text-primary hover:text-primary-hover shrink-0 transition-colors"
+            className="text-xs font-medium text-primary hover:text-primary-hover shrink-0 transition-colors px-2 py-1.5 -mr-2 rounded-btn"
           >
             Change
           </button>
@@ -574,13 +574,13 @@ function PostCard({
                   setPostingToLinkedIn(false)
                 }
               }}
-              className="text-xs font-semibold text-success hover:text-success/80 transition-colors disabled:opacity-50"
+              className="text-xs font-semibold text-success hover:text-success/80 transition-colors disabled:opacity-50 px-2.5 py-1.5 rounded-btn"
             >
               Yes, posted
             </button>
             <button
               onClick={() => setShowPostedPrompt(false)}
-              className="text-xs text-text-subtle hover:text-text-muted transition-colors"
+              className="text-xs text-text-subtle hover:text-text-muted transition-colors px-2.5 py-1.5 rounded-btn"
             >
               Not yet
             </button>

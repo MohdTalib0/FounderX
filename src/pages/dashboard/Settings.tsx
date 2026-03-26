@@ -372,15 +372,17 @@ function AccountTab({
           <button
             onClick={() => handleToggleNotifications(!emailNotifications)}
             disabled={savingPrefs}
-            className={cn(
-              'relative w-10 h-6 rounded-full transition-colors shrink-0 disabled:opacity-60',
-              emailNotifications ? 'bg-primary' : 'bg-border'
-            )}
+            className="p-2 -m-2 shrink-0"
           >
-            <span className={cn(
-              'absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform',
-              emailNotifications ? 'translate-x-5' : 'translate-x-1'
-            )} />
+            <div className={cn(
+              'relative w-11 h-7 rounded-full transition-colors disabled:opacity-60',
+              emailNotifications ? 'bg-primary' : 'bg-border'
+            )}>
+              <span className={cn(
+                'absolute top-1 w-5 h-5 rounded-full bg-white shadow transition-transform',
+                emailNotifications ? 'translate-x-[18px]' : 'translate-x-1'
+              )} />
+            </div>
           </button>
         </div>
       </div>

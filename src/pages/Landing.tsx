@@ -63,7 +63,7 @@ export default function Landing() {
             Free to start · Founders posting weekly
           </div>
 
-          <h1 className="text-[42px] sm:text-[60px] lg:text-[72px] font-bold leading-[1.04] tracking-[-0.03em] mb-6">
+          <h1 className="text-[34px] sm:text-[52px] lg:text-[72px] font-bold leading-[1.06] tracking-[-0.03em] mb-6">
             Sound like yourself.<br />
             <span className="text-primary">Every time.</span>
           </h1>
@@ -73,9 +73,9 @@ export default function Landing() {
             what you believe, and how you sound when you're at your best.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-5">
-            <Link to="/signup">
-              <Button size="lg" className="px-8 gap-2">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-5 w-full sm:w-auto">
+            <Link to="/signup" className="w-full sm:w-auto">
+              <Button size="lg" className="w-full sm:w-auto px-8 gap-2">
                 Start free in 2 minutes
                 <ArrowRight className="w-4 h-4" />
               </Button>
