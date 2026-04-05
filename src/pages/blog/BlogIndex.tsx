@@ -37,6 +37,18 @@ export default function BlogIndex() {
         <meta name="twitter:title" content="Wrively Blog • LinkedIn Strategy and Voice for Founders" />
         <meta name="twitter:description" content="Practical guides on LinkedIn content, founder voice, and AI writing. Learn how to post consistently, sound like yourself, and build an audience that converts." />
         <meta name="twitter:image" content="https://wrively.com/og/blog.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:type" content="website" />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'Blog',
+          name: 'Wrively Blog',
+          description: 'Practical guides on LinkedIn content, founder voice, and AI writing.',
+          url: 'https://wrively.com/blog',
+          publisher: { '@type': 'Organization', name: 'Wrively', url: 'https://wrively.com' },
+        })}</script>
       </Helmet>
 
       <PublicHeader />

@@ -21,6 +21,7 @@ interface FormData {
   target_audience: string
   founder_goal: string
   founder_personality: string
+  tone: string
   keywords: string
 }
 
@@ -53,6 +54,13 @@ const GOALS = [
   { value: 'build_audience', label: 'Build audience & credibility' },
   { value: 'raise_funds', label: 'Attract investors' },
   { value: 'hire', label: 'Hire great people' },
+]
+
+const TONES = [
+  { value: 'professional', label: 'Professional', description: 'Clear, authoritative, measured' },
+  { value: 'casual', label: 'Casual', description: 'Conversational, direct, approachable' },
+  { value: 'bold', label: 'Bold', description: 'Provocative, opinionated, high-energy' },
+  { value: 'educational', label: 'Educational', description: 'Structured, insightful, teacher-like' },
 ]
 
 const PERSONALITIES = [
@@ -222,6 +230,7 @@ export default function Onboarding() {
     target_audience: '',
     founder_goal: '',
     founder_personality: '',
+    tone: 'casual',
     keywords: '',
   })
   const [error, setError] = useState('')
@@ -234,6 +243,9 @@ export default function Onboarding() {
   const [firstPostId, setFirstPostId] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
   const [typewriterDone, setTypewriterDone] = useState(false)
+  const [voiceSample, setVoiceSample] = useState('')
+  const [voiceSaved, setVoiceSaved] = useState(false)
+  const [voiceSaving, setVoiceSaving] = useState(false)
 
   const update = (key: keyof FormData, value: string | string[]) =>
     setForm(prev => ({ ...prev, [key]: value }))
@@ -284,7 +296,7 @@ export default function Onboarding() {
           industry: form.industry,
           stage: form.stage as 'idea' | 'mvp' | 'live' | 'scale',
           founder_goal: form.founder_goal as 'get_users' | 'build_audience' | 'raise_funds' | 'hire',
-          tone: 'casual' as const,
+          tone: form.tone as 'professional' | 'casual' | 'bold' | 'educational',
           founder_personality: form.founder_personality as 'builder' | 'storyteller' | 'analyst' | 'contrarian',
           keywords: keywords.length > 0 ? keywords : null,
           is_individual: form.mode === 'individual',
@@ -306,15 +318,15 @@ export default function Onboarding() {
         : 'What you\'re building and why it matters'
 
       const [personaResult, postResult] = await Promise.all([
-        generatePersona({ company_id: company.id }),
-        generatePost({ topic: postTopic, company_id: company.id }).then(r => {
-          setGeneratingStep(3)
+        generatePersona({ company_id: company.id }).then(r => {
+          setGeneratingStep(2)
           return r
         }),
+        generatePost({ topic: postTopic, company_id: company.id }),
       ])
 
-      // Step 2 is implicit — persona includes content pillars
-      setGeneratingStep(2)
+      // Both done — move to final step
+      setGeneratingStep(3)
 
       const boldPost = postResult.variation_bold || postResult.variation_safe
       setFirstPostId(postResult.id)
@@ -480,6 +492,72 @@ export default function Onboarding() {
                   )}
                 </Button>
               </div>
+            </motion.div>
+          )}
+
+          {/* Voice sample — optional, appears after first post */}
+          {typewriterDone && !voiceSaved && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25, delay: 0.15 }}
+              className="bg-surface border border-border rounded-card p-5"
+            >
+              <p className="text-sm font-semibold text-text mb-1">Want it to sound even more like you?</p>
+              <p className="text-xs text-text-muted mb-3">Paste one of your best LinkedIn posts. We'll learn your writing style.</p>
+              <textarea
+                value={voiceSample}
+                onChange={e => setVoiceSample(e.target.value)}
+                placeholder="Paste a LinkedIn post you're proud of..."
+                rows={4}
+                className="w-full bg-background border border-border rounded-input px-3 py-2.5 text-sm text-text placeholder:text-text-subtle focus:outline-none focus:border-primary/50 focus:shadow-input-focus transition-colors resize-none mb-3"
+              />
+              <div className="flex items-center gap-3">
+                <Button
+                  onClick={async () => {
+                    if (!voiceSample.trim() || voiceSaving) return
+                    setVoiceSaving(true)
+                    try {
+                      const company = useAuthStore.getState().company
+                      if (company) {
+                        await supabase
+                          .from('companies')
+                          .update({ voice_samples: [voiceSample.trim()] })
+                          .eq('id', company.id)
+                        setVoiceSaved(true)
+                      }
+                    } catch {
+                      // silently fail — non-critical
+                    } finally {
+                      setVoiceSaving(false)
+                    }
+                  }}
+                  disabled={voiceSample.trim().length < 20 || voiceSaving}
+                  size="sm"
+                  className="gap-1.5"
+                >
+                  {voiceSaving ? 'Saving...' : <><Sparkles className="w-3.5 h-3.5" /> Teach Wrively my voice</>}
+                </Button>
+                <button
+                  onClick={() => setVoiceSaved(true)}
+                  className="text-xs text-text-subtle hover:text-text-muted transition-colors"
+                >
+                  Skip
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {voiceSaved && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex items-center gap-2 justify-center py-2"
+            >
+              <Check className="w-3.5 h-3.5 text-success" />
+              <p className="text-xs text-text-muted">
+                {voiceSample.trim() ? 'Voice sample saved. Future posts will match your style.' : ''}
+              </p>
             </motion.div>
           )}
 
@@ -933,6 +1011,33 @@ function StepFour({
             </div>
           </button>
         ))}
+      </div>
+
+      {/* Tone */}
+      <div className="space-y-2">
+        <label className="text-sm text-text-muted">How should your posts sound?</label>
+        <div className="grid grid-cols-2 gap-2">
+          {TONES.map(t => (
+            <button
+              key={t.value}
+              onClick={() => update('tone', t.value)}
+              className={cn(
+                'px-3 py-2.5 rounded-card border text-left transition-all active:scale-[0.97]',
+                form.tone === t.value
+                  ? 'border-primary bg-primary/10'
+                  : 'border-border bg-surface hover:border-border-hover hover:bg-surface-hover'
+              )}
+            >
+              <p className={cn(
+                'text-sm font-semibold',
+                form.tone === t.value ? 'text-primary' : 'text-text'
+              )}>
+                {t.label}
+              </p>
+              <p className="text-[11px] text-text-muted mt-0.5 leading-snug">{t.description}</p>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Keywords (optional) */}

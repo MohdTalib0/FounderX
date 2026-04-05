@@ -32,15 +32,17 @@ const PLANS = [
     name: 'Starter',
     price: '$9',
     period: '/mo',
-    tagline: 'Build the habit.',
+    tagline: 'Fine-tune every post.',
     cta: 'Get Starter',
     ctaTo: '/signup',
     featured: true,
     badge: 'Most popular',
     features: [
-      '80 posts per month',
-      '100 comment suggestions',
-      '40 rewrites & remixes',
+      '40 posts per month',
+      '50 comment suggestions',
+      '20 rewrites & remixes',
+      'Refine & regenerate per post',
+      'Voice sample training',
       'Persona regeneration',
       '90-day content history',
     ],
@@ -57,6 +59,8 @@ const PLANS = [
     features: [
       'Unlimited posts',
       'Unlimited comments and rewrites',
+      'Refine & regenerate per post',
+      'Voice sample training',
       'Persona regeneration',
       'Full content history',
       'Priority AI (faster)',
@@ -118,6 +122,14 @@ export default function Pricing() {
         <meta property="og:description" content="Start free with 12 posts per month. Upgrade to Starter ($9/mo) or Pro ($19/mo) for unlimited LinkedIn posts in your voice." />
         <meta property="og:url" content="https://wrively.com/pricing" />
         <meta property="og:image" content="https://wrively.com/og/pricing.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Wrively Pricing • AI LinkedIn Post Generator Plans" />
+        <meta name="twitter:description" content="Start free with 12 posts per month. Upgrade to Starter ($9/mo) or Pro ($19/mo) for unlimited LinkedIn posts in your voice." />
+        <meta name="twitter:image" content="https://wrively.com/og/pricing.png" />
         <script type="application/ld+json">{JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'SoftwareApplication',
@@ -150,7 +162,7 @@ export default function Pricing() {
         </div>
 
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-text mb-4 leading-tight">
-          Simple pricing,<br className="hidden sm:block" /> no surprises.
+          LinkedIn AI that grows<br className="hidden sm:block" /> with you.
         </h1>
         <p className="text-base sm:text-lg text-text-muted leading-relaxed max-w-xl mx-auto">
           Start free. Upgrade when you're posting consistently.

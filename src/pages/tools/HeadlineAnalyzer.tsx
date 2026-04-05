@@ -355,16 +355,20 @@ export default function HeadlineAnalyzer() {
   return (
     <div className="min-h-screen bg-background text-text overflow-x-hidden">
       <Helmet>
-        <title>LinkedIn Headline Analyzer | Free Score and Suggestions | Wrively</title>
-        <meta name="description" content="Paste your LinkedIn headline and get an instant score. See exactly what's weak, what's strong, and how to fix it. Free, no signup required." />
+        <title>Free LinkedIn Headline Analyzer — Score & Improve Your Headline | Wrively</title>
+        <meta name="description" content="Analyze your LinkedIn headline in seconds. Get a score out of 100, see what's weak, and get an AI-rewritten version. Free, no signup required." />
         <link rel="canonical" href="https://wrively.com/tools/linkedin-headline-analyzer" />
-        <meta property="og:title" content="LinkedIn Headline Analyzer | Free Score and Suggestions" />
-        <meta property="og:description" content="Paste your LinkedIn headline and get an instant score across 5 criteria. Free, no signup required." />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Free LinkedIn Headline Analyzer — Score & Improve Your Headline" />
+        <meta property="og:description" content="Analyze your LinkedIn headline in seconds. Score out of 100, specific feedback, and an AI-rewritten version. Free, no signup." />
         <meta property="og:url" content="https://wrively.com/tools/linkedin-headline-analyzer" />
         <meta property="og:image" content="https://wrively.com/og/tools.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:locale" content="en_US" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="LinkedIn Headline Analyzer | Free Score and Suggestions" />
-        <meta name="twitter:description" content="Paste your LinkedIn headline and get an instant score across 5 criteria. Free, no signup required." />
+        <meta name="twitter:title" content="Free LinkedIn Headline Analyzer — Score & Improve Your Headline" />
+        <meta name="twitter:description" content="Analyze your LinkedIn headline in seconds. Score out of 100, specific feedback, and an AI-rewritten version. Free, no signup." />
         <meta name="twitter:image" content="https://wrively.com/og/tools.png" />
         <script type="application/ld+json">{toolSchema}</script>
       </Helmet>

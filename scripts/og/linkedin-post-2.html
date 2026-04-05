@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1200px; height: 1200px; background: #09090B; font-family: 'Inter', sans-serif; overflow: hidden; }
+  .root {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 100px;
+    position: relative;
+  }
+  .accent {
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, #6366F1, #818cf8, #6366F1);
+  }
+  .comparison {
+    width: 100%; display: flex; flex-direction: column; gap: 40px;
+  }
+  .row {
+    display: flex; align-items: center; gap: 32px; width: 100%;
+  }
+  .label {
+    font-size: 15px; font-weight: 600; color: #52525B; text-transform: uppercase;
+    letter-spacing: 0.12em; width: 120px; flex-shrink: 0;
+  }
+  .bar {
+    flex: 1; height: 80px; border-radius: 16px; display: flex; align-items: center;
+    padding: 0 32px; font-size: 20px; font-weight: 500; color: #A1A1AA;
+  }
+  .bar-every { background: #18181B; border: 1px solid #27272A; }
+  .bar-writely { background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(99,102,241,0.06)); border: 1px solid rgba(99,102,241,0.25); color: #C7D2FE; }
+  .vs {
+    width: 100%; text-align: center; font-size: 14px; font-weight: 600;
+    color: #3F3F46; text-transform: uppercase; letter-spacing: 0.2em;
+    padding: 8px 0;
+  }
+  .headline {
+    font-size: 56px; font-weight: 800; color: #FAFAFA;
+    line-height: 1.15; letter-spacing: -0.03em; text-align: center;
+    margin-bottom: 64px;
+  }
+  .headline em { font-style: normal; color: #6366F1; }
+  .arrow { color: #6366F1; font-size: 20px; margin: 0 8px; }
+  .logo-row {
+    position: absolute; bottom: 80px; left: 100px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .logo-mark {
+    width: 36px; height: 36px; border-radius: 9px;
+    background: linear-gradient(135deg, #6d6ff5, #6366F1);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-mark svg { width: 20px; height: 20px; }
+  .logo-text { font-size: 18px; font-weight: 700; color: #A1A1AA; letter-spacing: -0.01em; }
+</style>
+</head>
+<body>
+<div class="root">
+  <div class="accent"></div>
+
+  <h1 class="headline">The problem isn't <em>AI.</em><br/>It's the blank prompt.</h1>
+
+  <div class="comparison">
+    <div>
+      <div class="label" style="margin-bottom:12px;">Every AI</div>
+      <div class="row">
+        <div class="bar bar-every">You</div>
+        <span class="arrow">→</span>
+        <div class="bar bar-every">Blank prompt</div>
+        <span class="arrow">→</span>
+        <div class="bar bar-every">Generic output</div>
+      </div>
+    </div>
+    <div class="vs">vs</div>
+    <div>
+      <div class="label" style="margin-bottom:12px; color: #6366F1;">Wrively</div>
+      <div class="row">
+        <div class="bar bar-writely">You</div>
+        <span class="arrow">→</span>
+        <div class="bar bar-writely">Voice Layer</div>
+        <span class="arrow">→</span>
+        <div class="bar bar-writely">You — but faster</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <div class="logo-mark">
+      <svg viewBox="0 0 32 32" fill="none"><path d="M18 5L8 18h8l-2 9 10-13h-8l2-9z" fill="white" stroke="white" stroke-width="0.5" stroke-linejoin="round"/></svg>
+    </div>
+    <span class="logo-text">wrively.com</span>
+  </div>
+</div>
+</body>
+</html>

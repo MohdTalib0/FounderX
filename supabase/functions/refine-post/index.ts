@@ -71,7 +71,11 @@ serve(async (req) => {
         })
       }
 
-      const userPrompt = buildRefinePrompt(post, refinement, company.name, company.stage)
+      const userPrompt = buildRefinePrompt(post, refinement, company.name, company.stage, {
+        persona: company.persona_statement,
+        audience: company.target_audience,
+        industry: company.industry,
+      })
 
       const raw = await complete(
         [

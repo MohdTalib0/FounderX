@@ -361,19 +361,20 @@ export default function VoiceAnalyzer() {
   return (
     <>
       <Helmet>
-        <title>LinkedIn Voice Analyzer | Does Your Writing Sound Like You? | Wrively</title>
-        <meta
-          name="description"
-          content="Free tool. Paste your LinkedIn writing sample and get an instant voice profile: first-person presence, rhythm, specificity, jargon score, and actionable fixes."
-        />
+        <title>Free LinkedIn Voice Analyzer — Does Your Writing Sound Like You? | Wrively</title>
+        <meta name="description" content="Is your LinkedIn writing authentic or AI-sounding? Paste a sample and get an instant voice profile with scores on rhythm, specificity, and personality. Free tool." />
         <link rel="canonical" href="https://wrively.com/tools/linkedin-voice-analyzer" />
-        <meta property="og:title" content="LinkedIn Voice Analyzer | Does Your Writing Sound Like You?" />
-        <meta property="og:description" content="Free tool. Paste your LinkedIn writing sample and get an instant voice profile: first-person presence, rhythm, specificity, jargon score, and actionable fixes." />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Free LinkedIn Voice Analyzer — Does Your Writing Sound Like You?" />
+        <meta property="og:description" content="Is your LinkedIn writing authentic or AI-sounding? Get an instant voice profile with scores on rhythm, specificity, and personality. Free tool." />
         <meta property="og:url" content="https://wrively.com/tools/linkedin-voice-analyzer" />
         <meta property="og:image" content="https://wrively.com/og/tools.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:locale" content="en_US" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="LinkedIn Voice Analyzer | Does Your Writing Sound Like You?" />
-        <meta name="twitter:description" content="Paste your LinkedIn writing sample and get an instant voice profile. Free, no signup required." />
+        <meta name="twitter:title" content="Free LinkedIn Voice Analyzer — Does Your Writing Sound Like You?" />
+        <meta name="twitter:description" content="Is your LinkedIn writing authentic or AI-sounding? Get an instant voice profile. Free, no signup." />
         <meta name="twitter:image" content="https://wrively.com/og/tools.png" />
         <script type="application/ld+json">{JSON.stringify({
           '@context': 'https://schema.org',

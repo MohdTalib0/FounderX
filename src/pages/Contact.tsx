@@ -60,17 +60,28 @@ export default function Contact() {
   return (
     <div className="min-h-screen bg-background text-text">
       <Helmet>
-        <title>Contact Wrively • Get in Touch</title>
-        <meta name="description" content="Have a question, feedback, or idea? Contact the Wrively team. We read every message and respond within one business day." />
+        <title>Contact Wrively • Support & Feedback for LinkedIn AI Tool</title>
+        <meta name="description" content="Have a question about Wrively? Need help with your LinkedIn posts? Contact the Wrively team. We respond within one business day." />
         <link rel="canonical" href="https://wrively.com/contact" />
-        <meta property="og:title" content="Contact Wrively • Get in Touch" />
-        <meta property="og:description" content="Have a question, feedback, or idea? Contact the Wrively team. We read every message." />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Contact Wrively • Support & Feedback" />
+        <meta property="og:description" content="Have a question about Wrively? Need help with your LinkedIn posts? Contact us." />
         <meta property="og:url" content="https://wrively.com/contact" />
         <meta property="og:image" content="https://wrively.com/og/home.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:locale" content="en_US" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Contact Wrively • Get in Touch" />
-        <meta name="twitter:description" content="Have a question, feedback, or idea? Contact the Wrively team. We read every message and respond within one business day." />
+        <meta name="twitter:title" content="Contact Wrively • Support & Feedback" />
+        <meta name="twitter:description" content="Have a question about Wrively? Need help with your LinkedIn posts? Contact the Wrively team." />
         <meta name="twitter:image" content="https://wrively.com/og/home.png" />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'ContactPage',
+          name: 'Contact Wrively',
+          url: 'https://wrively.com/contact',
+          mainEntity: { '@type': 'Organization', name: 'Wrively', email: 'hello@wrively.com', url: 'https://wrively.com' },
+        })}</script>
       </Helmet>
       <PublicHeader />
 

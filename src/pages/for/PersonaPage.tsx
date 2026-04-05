@@ -32,6 +32,10 @@ export default function PersonaPage() {
         <meta property="og:description" content={data.metaDescription} />
         <meta property="og:url" content={`https://wrively.com/for/${data.slug}`} />
         <meta property="og:image" content="https://wrively.com/og/home.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={data.metaTitle} />
         <meta name="twitter:description" content={data.metaDescription} />

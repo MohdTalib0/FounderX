@@ -172,6 +172,24 @@ export default function HookExamplesPage() {
           </div>
         </section>
 
+        {/* Internal links to free tools */}
+        <section className="mt-16 pt-10 border-t border-border">
+          <h2 className="text-lg font-bold text-text mb-2">Sharpen your LinkedIn writing</h2>
+          <p className="text-sm text-text-muted mb-6">Use these free tools to level up every post before you publish.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {[
+              { to: '/tools/linkedin-headline-analyzer', label: 'Headline Analyzer', desc: 'Score your headline out of 100' },
+              { to: '/tools/linkedin-post-checker', label: 'Post Checker', desc: 'Check hook, length, structure, CTA' },
+              { to: '/tools/linkedin-voice-analyzer', label: 'Voice Analyzer', desc: 'Does your writing sound like you?' },
+            ].map(tool => (
+              <Link key={tool.to} to={tool.to} className="group bg-surface border border-border rounded-lg p-4 hover:border-primary/50 transition-colors">
+                <p className="text-sm font-medium text-text group-hover:text-primary transition-colors">{tool.label}</p>
+                <p className="text-xs text-text-muted mt-1">{tool.desc}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+
       </main>
 
       <PublicFooter />

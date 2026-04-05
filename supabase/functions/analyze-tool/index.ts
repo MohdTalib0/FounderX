@@ -142,6 +142,29 @@ Strong specificity: real numbers, names, dates, concrete examples rather than va
 Good question usage: occasional rhetorical or direct questions to engage the reader.
 Good jargon avoidance: no buzzwords like leverage, synergy, paradigm shift, thought leader, game-changer.`
 
+const DRAFT_TRANSFORM_PROMPT = `You are a LinkedIn ghostwriter for founders. Transform a rough idea into a polished LinkedIn post.
+
+The input has two parts separated by "---":
+1. What the person does (their context)
+2. A rough thought or idea they want to post about
+
+Return ONLY a valid JSON object. No markdown, no code fences, no explanation — just the raw JSON.
+
+Required structure:
+{
+  "hook": "<A compelling first line that stops the scroll. Max 15 words. Bold, specific, or surprising.>",
+  "post": "<Full LinkedIn post. 120-160 words. Short paragraphs (1-3 lines each), blank line between paragraphs. Use the person's context to make it specific. End with a question or strong CTA. Include the hook as the first line.>",
+  "tone": "<One word: the tone of the post (e.g. direct, reflective, bold, honest)>"
+}
+
+Rules:
+- Use their context (what they do) to make the post specific and personal. Mention their domain.
+- Sound human: contractions, rough edges, varied sentence length
+- NEVER use: "In today's world", "Game-changer", "Leverage", "Delve", "As a founder", "Key takeaway"
+- NEVER use em dashes
+- The post must feel like a real person sharing a real experience, not like a template
+- Include at least one concrete detail: a number, a specific situation, a named tool/concept`
+
 // ─── OpenRouter call ──────────────────────────────────────────────────────────
 
 /** Single user message: some free providers (e.g. Google Gemma) reject role=system. */
@@ -306,9 +329,9 @@ serve(async (req) => {
       )
     }
 
-    if (!['headline', 'post-checker', 'voice'].includes(tool)) {
+    if (!['headline', 'post-checker', 'voice', 'draft-transform'].includes(tool)) {
       return new Response(
-        JSON.stringify({ error: 'Invalid tool. Must be headline, post-checker, or voice.' }),
+        JSON.stringify({ error: 'Invalid tool. Must be headline, post-checker, voice, or draft-transform.' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
       )
     }
@@ -339,6 +362,7 @@ serve(async (req) => {
       'headline': HEADLINE_PROMPT,
       'post-checker': POST_CHECKER_PROMPT,
       'voice': VOICE_PROMPT,
+      'draft-transform': DRAFT_TRANSFORM_PROMPT,
     }
 
     const apiKey = Deno.env.get('OPENROUTER_API_KEY')

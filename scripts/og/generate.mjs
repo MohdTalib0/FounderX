@@ -31,6 +31,12 @@ const IMAGES = [
   { html: 'linkedin-banner.html', out: 'linkedin-banner.png', width: 1584, height: 396  },
   { html: 'hero-preview.html',       out: 'hero-preview.png',       width: 1600, height: 900  },
   { html: 'hero-preview-light.html', out: 'hero-preview-light.png', width: 1600, height: 900  },
+  // LinkedIn post visuals (1200×1200 square)
+  { html: 'linkedin-post-1.html',   out: 'linkedin-post-1.png',    width: 1200, height: 1200 },
+  { html: 'linkedin-post-2.html',   out: 'linkedin-post-2.png',    width: 1200, height: 1200 },
+  { html: 'linkedin-post-3.html',   out: 'linkedin-post-3.png',    width: 1200, height: 1200 },
+  { html: 'linkedin-post-4.html',   out: 'linkedin-post-4.png',    width: 1200, height: 1200 },
+  { html: 'linkedin-post-5.html',   out: 'linkedin-post-5.png',    width: 1200, height: 1200 },
 ]
 
 if (!existsSync(outDir)) mkdirSync(outDir, { recursive: true })

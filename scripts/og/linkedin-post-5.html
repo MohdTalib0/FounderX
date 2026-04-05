@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1200px; height: 1200px; background: #09090B; font-family: 'Inter', sans-serif; overflow: hidden; }
+  .root {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 100px;
+    position: relative;
+    text-align: center;
+  }
+  .accent {
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, #6366F1, #818cf8, #6366F1);
+  }
+  /* Radial glow behind logo */
+  .glow {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -60%);
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .logo-big {
+    width: 88px; height: 88px; border-radius: 22px;
+    background: linear-gradient(135deg, #6d6ff5, #6366F1);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 48px; position: relative; z-index: 1;
+    box-shadow: 0 0 60px rgba(99,102,241,0.2);
+  }
+  .logo-big svg { width: 48px; height: 48px; }
+  .headline {
+    font-size: 64px; font-weight: 800; color: #FAFAFA;
+    line-height: 1.1; letter-spacing: -0.03em;
+    margin-bottom: 24px; position: relative; z-index: 1;
+  }
+  .headline em { font-style: normal; color: #6366F1; }
+  .sub {
+    font-size: 24px; font-weight: 400; color: #71717A;
+    line-height: 1.5; max-width: 700px;
+    margin-bottom: 64px; position: relative; z-index: 1;
+  }
+  .cta {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: #6366F1; color: white;
+    font-size: 22px; font-weight: 700; letter-spacing: -0.01em;
+    padding: 20px 48px; border-radius: 14px;
+    position: relative; z-index: 1;
+    box-shadow: 0 4px 24px rgba(99,102,241,0.3);
+  }
+  .cta-arrow { font-size: 20px; }
+  .details {
+    margin-top: 32px; position: relative; z-index: 1;
+    display: flex; gap: 32px;
+  }
+  .detail {
+    font-size: 15px; font-weight: 500; color: #52525B;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .detail-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: #6366F1;
+  }
+</style>
+</head>
+<body>
+<div class="root">
+  <div class="accent"></div>
+  <div class="glow"></div>
+
+  <div class="logo-big">
+    <svg viewBox="0 0 32 32" fill="none"><path d="M18 5L8 18h8l-2 9 10-13h-8l2-9z" fill="white" stroke="white" stroke-width="0.5" stroke-linejoin="round"/></svg>
+  </div>
+
+  <h1 class="headline">Sound like <em>yourself.</em><br/>Every time.</h1>
+  <p class="sub">Build your Voice Layer in 4 questions.<br/>Get your first post before you reach the dashboard.</p>
+
+  <div class="cta">wrively.com <span class="cta-arrow">→</span></div>
+
+  <div class="details">
+    <div class="detail"><div class="detail-dot"></div> Free to start</div>
+    <div class="detail"><div class="detail-dot"></div> No credit card</div>
+    <div class="detail"><div class="detail-dot"></div> Under 3 minutes</div>
+  </div>
+</div>
+</body>
+</html>

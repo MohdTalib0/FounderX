@@ -66,7 +66,10 @@ serve(async (req) => {
     const raw = await complete(
       [
         { role: 'system', content: buildBrandContext(company) },
-        { role: 'user', content: buildCommentPrompt(source_post) },
+        { role: 'user', content: buildCommentPrompt(source_post, {
+          persona: company.persona_statement,
+          industry: company.industry,
+        }) },
       ],
       { temperature: 0.85, max_tokens: 600 }
     )

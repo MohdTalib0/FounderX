@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1200px; height: 1200px; background: #09090B; font-family: 'Inter', sans-serif; overflow: hidden; }
+  .root {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+    padding: 120px 100px;
+    position: relative;
+  }
+  /* Subtle grid texture */
+  .root::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  /* Top accent line */
+  .accent {
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, #6366F1, #818cf8, #6366F1);
+  }
+  .quote-mark {
+    font-size: 180px; font-weight: 800; color: #6366F1; opacity: 0.15;
+    line-height: 1; margin-bottom: -40px; position: relative; z-index: 1;
+  }
+  .headline {
+    font-size: 72px; font-weight: 800; color: #FAFAFA;
+    line-height: 1.1; letter-spacing: -0.03em;
+    max-width: 900px; position: relative; z-index: 1;
+  }
+  .headline em {
+    font-style: normal; color: #6366F1;
+  }
+  .sub {
+    margin-top: 40px; font-size: 24px; font-weight: 400; color: #71717A;
+    line-height: 1.5; max-width: 700px; position: relative; z-index: 1;
+  }
+  .logo-row {
+    position: absolute; bottom: 80px; left: 100px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .logo-mark {
+    width: 36px; height: 36px; border-radius: 9px;
+    background: linear-gradient(135deg, #6d6ff5, #6366F1);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-mark svg { width: 20px; height: 20px; }
+  .logo-text { font-size: 18px; font-weight: 700; color: #A1A1AA; letter-spacing: -0.01em; }
+</style>
+</head>
+<body>
+<div class="root">
+  <div class="accent"></div>
+  <div class="quote-mark">"</div>
+  <h1 class="headline">I stopped posting.<br/>Not because I had<br/>nothing to <em>say.</em></h1>
+  <p class="sub">It just never sounded like me.</p>
+  <div class="logo-row">
+    <div class="logo-mark">
+      <svg viewBox="0 0 32 32" fill="none"><path d="M18 5L8 18h8l-2 9 10-13h-8l2-9z" fill="white" stroke="white" stroke-width="0.5" stroke-linejoin="round"/></svg>
+    </div>
+    <span class="logo-text">wrively.com</span>
+  </div>
+</div>
+</body>
+</html>

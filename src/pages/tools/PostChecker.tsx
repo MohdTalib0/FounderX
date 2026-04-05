@@ -393,16 +393,20 @@ export default function PostChecker() {
   return (
     <div className="min-h-screen bg-background text-text overflow-x-hidden">
       <Helmet>
-        <title>LinkedIn Post Checker | Free Score Before You Publish | Wrively</title>
-        <meta name="description" content="Paste your LinkedIn post and get an instant score on hook strength, length, formatting, structure, and CTA. Free, no signup. Know if it's ready before you hit post." />
+        <title>Free LinkedIn Post Checker — Score Your Post Before Publishing | Wrively</title>
+        <meta name="description" content="Check your LinkedIn post before you publish. Get a score on hook strength, length, formatting, structure, and CTA. Free, instant, no signup required." />
         <link rel="canonical" href="https://wrively.com/tools/linkedin-post-checker" />
-        <meta property="og:title" content="LinkedIn Post Checker | Free Score Before You Publish" />
-        <meta property="og:description" content="Instant score on 5 criteria: hook, length, formatting, structure, and CTA. Free, no signup." />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Free LinkedIn Post Checker — Score Your Post Before Publishing" />
+        <meta property="og:description" content="Check your LinkedIn post before you publish. Score on hook, length, formatting, structure, and CTA. Free, instant." />
         <meta property="og:url" content="https://wrively.com/tools/linkedin-post-checker" />
         <meta property="og:image" content="https://wrively.com/og/tools.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:locale" content="en_US" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="LinkedIn Post Checker | Free Score Before You Publish" />
-        <meta name="twitter:description" content="Instant score on 5 criteria: hook, length, formatting, structure, and CTA. Free, no signup." />
+        <meta name="twitter:title" content="Free LinkedIn Post Checker — Score Your Post Before Publishing" />
+        <meta name="twitter:description" content="Check your LinkedIn post before you publish. Score on hook, length, formatting, structure, and CTA. Free, instant." />
         <meta name="twitter:image" content="https://wrively.com/og/tools.png" />
         <script type="application/ld+json">{toolSchema}</script>
       </Helmet>

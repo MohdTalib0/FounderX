@@ -5,6 +5,7 @@ import { ArrowRight, Copy, Check, PenLine, RefreshCw, MessageSquare, Sparkles, A
 import Button from '@/components/ui/Button'
 import PublicHeader from '@/components/layout/PublicHeader'
 import PublicFooter from '@/components/layout/PublicFooter'
+import LiveDemo from '@/components/landing/LiveDemo'
 import { cn } from '@/lib/utils'
 import { useThemeStore } from '@/store/theme'
 
@@ -25,6 +26,7 @@ export default function Landing() {
         <meta property="og:image" content="https://wrively.com/og/home.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
+        <meta property="og:locale" content="en_US" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Wrively • AI That Sounds Like You | LinkedIn Voice Layer" />
         <meta name="twitter:description" content="Wrively is the Voice Layer for LinkedIn. Build your voice once. Get posts that sound like you, every week, in under 3 minutes." />
@@ -64,8 +66,8 @@ export default function Landing() {
           </div>
 
           <h1 className="text-[34px] sm:text-[52px] lg:text-[72px] font-bold leading-[1.06] tracking-[-0.03em] mb-6">
-            Sound like yourself.<br />
-            <span className="text-primary">Every time.</span>
+            AI LinkedIn posts that<br />
+            <span className="text-primary">sound like you.</span>
           </h1>
 
           <p className="text-base sm:text-lg text-text-muted leading-relaxed max-w-xl mx-auto mb-10">
@@ -110,6 +112,9 @@ export default function Landing() {
           </div>
         </div>
       </section>
+
+      {/* Live Demo — try before signup */}
+      <LiveDemo />
 
       {/* Featured testimonial */}
       <section className="border-y border-border bg-surface">
@@ -658,10 +663,10 @@ export default function Landing() {
                 <p className="text-4xl font-bold text-text">$9</p>
                 <p className="text-sm text-text-muted">/mo</p>
               </div>
-              <p className="text-xs text-text-muted mt-2">For founders building the habit.</p>
+              <p className="text-xs text-text-muted mt-2">Fine-tune every post until it's perfect.</p>
             </div>
             <ul className="space-y-2.5 flex-1">
-              {['80 posts / month', '100 comment suggestions', '40 rewrites & remixes', 'Persona regeneration', '90-day history'].map(f => (
+              {['40 posts / month', 'Refine & regenerate per post', 'Voice sample training', 'Persona regeneration', '90-day history'].map(f => (
                 <li key={f} className="flex items-center gap-2.5 text-sm text-text-muted">
                   <Check className="w-3.5 h-3.5 text-primary shrink-0" />
                   {f}

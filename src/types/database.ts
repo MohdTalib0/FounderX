@@ -67,6 +67,8 @@ export type Database = {
           website_url: string | null
           linkedin_url: string | null
           is_individual: boolean
+          voice_samples: string[]
+          voice_profile: Record<string, unknown> | null
           created_at: string
           updated_at: string
         }
@@ -87,6 +89,8 @@ export type Database = {
           website_url?: string | null
           linkedin_url?: string | null
           is_individual?: boolean
+          voice_samples?: string[]
+          voice_profile?: Record<string, unknown> | null
           created_at?: string
           updated_at?: string
         }

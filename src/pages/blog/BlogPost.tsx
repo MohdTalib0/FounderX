@@ -129,6 +129,9 @@ export default function BlogPost() {
         <meta property="og:url" content={`https://wrively.com/blog/${article.slug}`} />
         <meta property="og:type" content="article" />
         <meta property="og:image" content="https://wrively.com/og/blog.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:locale" content="en_US" />
         <meta property="article:published_time" content={article.date} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={article.title} />

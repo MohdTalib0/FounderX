@@ -46,6 +46,23 @@ export default function ToolsIndex() {
         <meta name="twitter:title" content="Free LinkedIn Tools for Founders | Wrively" />
         <meta name="twitter:description" content="Free LinkedIn tools built for founders: Headline Analyzer, Post Checker, and Voice Analyzer. No signup required. Instant results." />
         <meta name="twitter:image" content="https://wrively.com/og/tools.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:type" content="website" />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'ItemList',
+          name: 'Free LinkedIn Tools for Founders',
+          description: 'Free LinkedIn tools: Headline Analyzer, Post Checker, and Voice Analyzer.',
+          url: 'https://wrively.com/tools',
+          numberOfItems: 3,
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'LinkedIn Headline Analyzer', url: 'https://wrively.com/tools/linkedin-headline-analyzer' },
+            { '@type': 'ListItem', position: 2, name: 'LinkedIn Post Checker', url: 'https://wrively.com/tools/linkedin-post-checker' },
+            { '@type': 'ListItem', position: 3, name: 'LinkedIn Voice Analyzer', url: 'https://wrively.com/tools/linkedin-voice-analyzer' },
+          ],
+        })}</script>
       </Helmet>
 
       <PublicHeader />

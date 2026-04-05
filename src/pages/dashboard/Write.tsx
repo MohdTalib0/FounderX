@@ -12,6 +12,8 @@ import { QuoteCardModal } from '@/components/ui/QuoteCard'
 import UpgradeWall from '@/components/ui/UpgradeWall'
 import { cn } from '@/lib/utils'
 import type { Company } from '@/types/database'
+import { Link } from 'react-router-dom'
+import { Lock } from 'lucide-react'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -324,6 +326,7 @@ export default function Write() {
               text={results[variation]}
               topic={topic}
               company={company!}
+              plan={profile?.plan ?? 'free'}
               isExpanded={expanded[variation]}
               isRefining={refining === variation}
               isNewUser={proofData.copied === 0 && proofData.published === 0}
@@ -401,6 +404,7 @@ function PostCard({
   isExpanded,
   isRefining,
   isNewUser,
+  plan,
   onToggleExpand,
   onCopy,
   onMarkPosted,
@@ -412,6 +416,7 @@ function PostCard({
   text: string
   topic: string
   company: Company
+  plan: 'free' | 'starter' | 'pro'
   isExpanded: boolean
   isRefining: boolean
   isNewUser: boolean
@@ -422,6 +427,7 @@ function PostCard({
   onRegenerate: () => void
   onQuoteCard: () => void
 }) {
+  const isFree = plan === 'free'
   const [showRefine, setShowRefine] = useState(false)
   const [showPostedPrompt, setShowPostedPrompt] = useState(false)
   const [markedPosted, setMarkedPosted] = useState(false)
@@ -511,28 +517,51 @@ function PostCard({
       {/* ── Action bar ──────────────────────────────────────────────── */}
       <div className="flex items-center justify-between gap-2 px-4 py-2.5 border-t border-border">
         <div className="flex items-center gap-0.5">
-          <button
-            onClick={onRegenerate}
-            disabled={isRefining}
-            title="Regenerate"
-            className="p-2 text-text-muted hover:text-text hover:bg-surface-hover rounded-lg transition-colors"
-          >
-            <RefreshCw className="w-3.5 h-3.5" />
-          </button>
-          {!isNewUser && (
-            <button
-              onClick={() => setShowRefine(v => !v)}
-              title="Adjust"
-              className={cn(
-                'p-2 rounded-lg transition-colors flex items-center gap-1.5 text-xs',
-                showRefine
-                  ? 'text-primary bg-primary/10'
-                  : 'text-text-muted hover:text-text hover:bg-surface-hover'
-              )}
+          {isFree ? (
+            <Link
+              to="/dashboard/upgrade"
+              title="Upgrade to regenerate"
+              className="p-2 text-text-subtle hover:text-primary rounded-lg transition-colors flex items-center gap-1.5 text-xs"
             >
-              <Sliders className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline font-medium">Adjust</span>
+              <Lock className="w-3 h-3" />
+              <RefreshCw className="w-3.5 h-3.5" />
+            </Link>
+          ) : (
+            <button
+              onClick={onRegenerate}
+              disabled={isRefining}
+              title="Regenerate"
+              className="p-2 text-text-muted hover:text-text hover:bg-surface-hover rounded-lg transition-colors"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
             </button>
+          )}
+          {!isNewUser && (
+            isFree ? (
+              <Link
+                to="/dashboard/upgrade"
+                title="Upgrade to adjust posts"
+                className="p-2 rounded-lg transition-colors flex items-center gap-1.5 text-xs text-text-subtle hover:text-primary"
+              >
+                <Lock className="w-3 h-3" />
+                <Sliders className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline font-medium">Adjust</span>
+              </Link>
+            ) : (
+              <button
+                onClick={() => setShowRefine(v => !v)}
+                title="Adjust"
+                className={cn(
+                  'p-2 rounded-lg transition-colors flex items-center gap-1.5 text-xs',
+                  showRefine
+                    ? 'text-primary bg-primary/10'
+                    : 'text-text-muted hover:text-text hover:bg-surface-hover'
+                )}
+              >
+                <Sliders className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline font-medium">Adjust</span>
+              </button>
+            )
           )}
           <button
             onClick={onQuoteCard}
