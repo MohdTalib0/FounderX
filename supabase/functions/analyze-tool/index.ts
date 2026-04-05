@@ -1,13 +1,12 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { corsHeaders } from '../_shared/cors.ts'
 
-// OpenRouter :free models only — no paid fallback
-// Trinity first (better quality for structured analysis), Gemma as fallback.
-const PRIMARY_MODEL = 'arcee-ai/trinity-large-preview:free'
-const FALLBACK_MODEL = 'google/gemma-3-27b-it:free'
+// GPT-4.1 Nano for free tools — fast, high quality, great at structured JSON
+const PRIMARY_MODEL = 'openai/gpt-4.1-nano'
+const FALLBACK_MODEL = 'openai/gpt-4.1-nano'
 
 const DAILY_LIMIT = 10
-const TIMEOUT_MS = 55_000 // Trinity is ~10 tps; 400-token response takes ~40 s — give it room
+const TIMEOUT_MS = 30_000 // GPT-4.1 Nano is fast — 30s is plenty
 const CACHE_TTL_MS = 10 * 60 * 1000 // 10 minutes
 
 /** Shown after a successful free analysis only — optional funnel; does not gate the tool. */
@@ -167,7 +166,7 @@ Rules:
 
 // ─── OpenRouter call ──────────────────────────────────────────────────────────
 
-/** Single user message: some free providers (e.g. Google Gemma) reject role=system. */
+/** Single user message for compatibility with all providers. */
 function buildCombinedUserMessage(systemPrompt: string, userContent: string): string {
   return `${systemPrompt.trim()}
 
@@ -263,7 +262,7 @@ async function tryModel(apiKey: string, model: string, systemPrompt: string, use
   }
 }
 
-/** Try Trinity; if it errors, fall back to Gemma. Sequential — no racing. */
+/** Try primary model; retry once on failure. */
 async function callAnalysisModelRace(
   apiKey: string,
   systemPrompt: string,
@@ -272,7 +271,7 @@ async function callAnalysisModelRace(
   try {
     return await tryModel(apiKey, PRIMARY_MODEL, systemPrompt, userContent)
   } catch (primaryErr) {
-    console.warn('Trinity failed, trying Gemma:', primaryErr instanceof Error ? primaryErr.message : primaryErr)
+    console.warn('Primary model failed, retrying:', primaryErr instanceof Error ? primaryErr.message : primaryErr)
   }
   return tryModel(apiKey, FALLBACK_MODEL, systemPrompt, userContent)
 }
