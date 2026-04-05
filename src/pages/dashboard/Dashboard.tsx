@@ -573,29 +573,35 @@ export default function Dashboard() {
                   to={`/dashboard/write?postId=${post.id}`}
                   className="block bg-surface border border-border rounded-card px-4 py-3 hover:border-border-hover hover:bg-surface-hover/50 transition-colors group"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <VariationBadge variation={variation} />
-                        <span className="text-xs text-text-muted flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {relativeTime(post.created_at)}
-                        </span>
-                      </div>
-                      <p className="text-sm text-text font-medium leading-snug group-hover:text-primary transition-colors">
-                        {text.split('\n')[0]?.slice(0, 80) || truncate(text, 80)}
-                      </p>
-                      {text.split('\n').length > 1 && (
-                        <p className="text-xs text-text-muted mt-0.5 leading-snug">
-                          {truncate(text.split('\n').slice(1).join(' ').trim(), 60)}
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-1 shrink-0" onClick={e => e.preventDefault()}>
+                  {/* Meta row */}
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <VariationBadge variation={variation} />
+                    <span className="text-xs text-text-muted flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      {relativeTime(post.created_at)}
+                    </span>
+                  </div>
+
+                  {/* Hook — full width */}
+                  <p className="text-sm text-text font-medium leading-snug group-hover:text-primary transition-colors">
+                    {text.split('\n')[0]?.slice(0, 120) || truncate(text, 120)}
+                  </p>
+
+                  {/* Body preview — full width */}
+                  {text.split('\n').length > 1 && (
+                    <p className="text-xs text-text-muted mt-1 leading-relaxed">
+                      {truncate(text.split('\n').slice(1).join(' ').trim(), 100)}
+                    </p>
+                  )}
+
+                  {/* Actions — separate row */}
+                  <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-border/50">
+                    <span className="text-[11px] text-primary font-medium">See all variations</span>
+                    <div className="flex items-center gap-1" onClick={e => e.preventDefault()}>
                       <button
                         onClick={() => setQuoteCard({ text, variation: variation as 'safe' | 'bold' | 'controversial' })}
                         title="Get quote card"
-                        className="p-2 text-text-muted hover:text-text hover:bg-surface-hover rounded-lg transition-colors"
+                        className="p-1.5 text-text-muted hover:text-text hover:bg-surface-hover rounded-lg transition-colors"
                       >
                         <ImageDown className="w-3.5 h-3.5" />
                       </button>
@@ -608,16 +614,12 @@ export default function Dashboard() {
                           }, 300)
                         }}
                         title="Copy & open LinkedIn"
-                        className="p-2 text-text-muted hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+                        className="p-1.5 text-text-muted hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
                       </button>
                       <CopyButton text={text} size="sm" />
                     </div>
-                  </div>
-                  <div className="flex items-center justify-between mt-2">
-                    <span className="text-[11px] text-primary font-medium">See all variations</span>
-                    <ArrowRight className="w-3 h-3 text-primary group-hover:translate-x-0.5 transition-transform" />
                   </div>
                 </Link>
               )

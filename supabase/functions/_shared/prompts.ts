@@ -77,7 +77,7 @@ WHO YOU ARE WRITING AS:
 
 This is their identity. Every post must sound like it came from this specific person, not from a generic founder.
 
-GROUNDING FACTS (use these to make posts specific — reference them naturally):
+GROUNDING FACTS (use these to make posts specific, reference them naturally):
 - Brand: ${brandLine}
 - Audience: ${company.target_audience}
 - Industry: ${company.industry.join(', ')}
@@ -94,7 +94,7 @@ ${extras?.hookType ? `\nHOOK TYPE THIS TIME: ${extras.hookType}` : ''}
 ${extras?.performanceSummary ? `\nCONTENT SIGNAL HISTORY:\n${extras.performanceSummary}` : ''}
 
 ${company.voice_samples?.length ? `
-VOICE REFERENCE (this is the founder's actual writing — match this tone, rhythm, and style):
+VOICE REFERENCE (this is the founder's actual writing. Match this tone, rhythm, and style):
 """
 ${company.voice_samples[0]}
 """
@@ -196,6 +196,7 @@ HARD RULES:
 
 STYLE RULES:
 - Short paragraphs, 1-3 lines each, blank line between paragraphs
+- NEVER use em dashes (the long dash character). Use commas, periods, or colons instead. This is a hard rule.
 - NEVER start with: "I still remember", "The truth is", "When I started", "In the early days"
 - No vague advice like "consistency is key" or "authenticity matters" or "it's a marathon not a sprint"
 - Do NOT repeat opening phrases across variations
@@ -238,6 +239,8 @@ ${post}
 
 Instruction: ${instructions[refinement]}
 
+NEVER use em dashes. Use commas, periods, or colons instead.
+
 Return ONLY the refined post. No labels, no explanation, no preamble.`
 }
 
@@ -277,6 +280,7 @@ Rules:
 - Reference something specific from the post: a word, a claim, a number
 - Draw from your own domain expertise to add real value
 - Max 80 words per comment
+- NEVER use em dashes. Use commas, periods, or colons instead.
 - Sound like a thoughtful person, not a marketing bot`
 }
 
@@ -315,7 +319,8 @@ Rules:
 - Keep the founder's ideas, intent, and any specific details (names, numbers, situations). Don't change what they're saying, only how they say it
 - If the draft mentions their company, product, or a real experience, keep those references
 - The rewritten post should use Hook option 1 as its opening line
-- User can swap to Hook option 2 or 3 without regenerating the body`
+- User can swap to Hook option 2 or 3 without regenerating the body
+- NEVER use em dashes. Use commas, periods, or colons instead.`
 }
 
 // ─── Parse helpers ──────────────────────────────────────────────────────────
@@ -401,7 +406,8 @@ Rules:
 - The adapted version must use the SAME structure as the original
 - Replace every concrete detail (numbers, company names, situations) with the founder's own context
 - The result should not be recognisable as derivative of the original
-- Do NOT start with "I". Vary the opening`
+- Do NOT start with "I". Vary the opening
+- NEVER use em dashes. Use commas, periods, or colons instead.`
 }
 
 export function parseRemix(content: string) {

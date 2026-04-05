@@ -62,7 +62,7 @@ async function setCachedResult(tool: string, content: string, value: Record<stri
 
 // ─── System prompts ───────────────────────────────────────────────────────────
 
-const HEADLINE_PROMPT = `You are a LinkedIn profile expert. Analyze the LinkedIn headline and return ONLY a valid JSON object. No markdown, no code fences, no explanation — just the raw JSON.
+const HEADLINE_PROMPT = `You are a LinkedIn profile expert. Analyze the LinkedIn headline and return ONLY a valid JSON object. No markdown, no code fences, no explanation . Return only the raw JSON.
 
 Required structure:
 {
@@ -88,14 +88,14 @@ Scoring rules:
 - grade: A=85+, B=70-84, C=55-69, D=35-54, F=0-34
 - score = sum of the 5 criterion scores`
 
-const POST_CHECKER_PROMPT = `You are a LinkedIn content expert for founders. Analyze the LinkedIn post and return ONLY a valid JSON object. No markdown, no code fences, no explanation — just the raw JSON.
+const POST_CHECKER_PROMPT = `You are a LinkedIn content expert for founders. Analyze the LinkedIn post and return ONLY a valid JSON object. No markdown, no code fences, no explanation . Return only the raw JSON.
 
 Required structure:
 {
   "score": <integer 0-100>,
   "grade": <"A"|"B"|"C"|"D"|"F">,
   "summary": "<1-2 sentence overall verdict>",
-  "improved_hook": "<rewrite of just the first line to make it stronger — keep it under 120 chars>",
+  "improved_hook": "<rewrite of just the first line to make it stronger, keep it under 120 chars>",
   "wordCount": <integer>,
   "lineCount": <integer>,
   "criteria": [
@@ -116,7 +116,7 @@ Scoring rules:
 - grade: A=85+, B=70-84, C=55-69, D=35-54, F=0-34
 - score = sum of all 5 criterion scores`
 
-const VOICE_PROMPT = `You are a LinkedIn voice coach for founders. Analyze these writing samples and return ONLY a valid JSON object. No markdown, no code fences, no explanation — just the raw JSON.
+const VOICE_PROMPT = `You are a LinkedIn voice coach for founders. Analyze these writing samples and return ONLY a valid JSON object. No markdown, no code fences, no explanation . Return only the raw JSON.
 
 Required structure:
 {
@@ -147,7 +147,7 @@ The input has two parts separated by "---":
 1. What the person does (their context)
 2. A rough thought or idea they want to post about
 
-Return ONLY a valid JSON object. No markdown, no code fences, no explanation — just the raw JSON.
+Return ONLY a valid JSON object. No markdown, no code fences, no explanation . Return only the raw JSON.
 
 Required structure:
 {
@@ -162,7 +162,8 @@ Rules:
 - NEVER use: "In today's world", "Game-changer", "Leverage", "Delve", "As a founder", "Key takeaway"
 - NEVER use em dashes
 - The post must feel like a real person sharing a real experience, not like a template
-- Include at least one concrete detail: a number, a specific situation, a named tool/concept`
+- Include at least one concrete detail: a number, a specific situation, a named tool/concept
+- NEVER use em dashes (the long dash). Use commas, periods, or colons instead.`
 
 // ─── OpenRouter call ──────────────────────────────────────────────────────────
 
