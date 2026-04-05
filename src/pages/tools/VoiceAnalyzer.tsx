@@ -361,11 +361,11 @@ export default function VoiceAnalyzer() {
   return (
     <>
       <Helmet>
-        <title>Free LinkedIn Voice Analyzer — Does Your Writing Sound Like You? | Wrively</title>
+        <title>Free LinkedIn Voice Analyzer: Does Your Writing Sound Like You? | Wrively</title>
         <meta name="description" content="Is your LinkedIn writing authentic or AI-sounding? Paste a sample and get an instant voice profile with scores on rhythm, specificity, and personality. Free tool." />
         <link rel="canonical" href="https://wrively.com/tools/linkedin-voice-analyzer" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Free LinkedIn Voice Analyzer — Does Your Writing Sound Like You?" />
+        <meta property="og:title" content="Free LinkedIn Voice Analyzer: Does Your Writing Sound Like You?" />
         <meta property="og:description" content="Is your LinkedIn writing authentic or AI-sounding? Get an instant voice profile with scores on rhythm, specificity, and personality. Free tool." />
         <meta property="og:url" content="https://wrively.com/tools/linkedin-voice-analyzer" />
         <meta property="og:image" content="https://wrively.com/og/tools.png" />
@@ -373,7 +373,7 @@ export default function VoiceAnalyzer() {
         <meta property="og:image:height" content="630" />
         <meta property="og:locale" content="en_US" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Free LinkedIn Voice Analyzer — Does Your Writing Sound Like You?" />
+        <meta name="twitter:title" content="Free LinkedIn Voice Analyzer: Does Your Writing Sound Like You?" />
         <meta name="twitter:description" content="Is your LinkedIn writing authentic or AI-sounding? Get an instant voice profile. Free, no signup." />
         <meta name="twitter:image" content="https://wrively.com/og/tools.png" />
         <script type="application/ld+json">{JSON.stringify({
@@ -649,10 +649,10 @@ export default function VoiceAnalyzer() {
             <div>
               <h2 className="text-xl font-bold text-text mb-4">Why voice is harder to fix than structure</h2>
               <p className="text-base text-text-muted leading-relaxed mb-4">
-                Most LinkedIn advice focuses on structure: hook, body, CTA. Structure is fixable in an afternoon. Voice takes longer because it's not a formula — it's the accumulated weight of specific word choices: the ratio of "I" to "we," whether you cite real numbers or vague claims, whether your sentences breathe or run together.
+                Most LinkedIn advice focuses on structure: hook, body, CTA. Structure is fixable in an afternoon. Voice takes longer because it's not a formula. It's the accumulated weight of specific word choices: the ratio of "I" to "we," whether you cite real numbers or vague claims, whether your sentences breathe or run together.
               </p>
               <p className="text-base text-text-muted leading-relaxed">
-                The practical problem: when founders switch to AI-assisted writing, voice is the first thing to disappear. The content becomes structurally correct and utterly forgettable. Posts score well on every metric except the one that actually builds an audience — they could have been written by anyone. This LinkedIn Voice Analyzer specifically flags that problem so you can correct it before it becomes a habit.
+                The practical problem: when founders switch to AI-assisted writing, voice is the first thing to disappear. The content becomes structurally correct and utterly forgettable. Posts score well on every metric except the one that actually builds an audience: they could have been written by anyone. This LinkedIn Voice Analyzer specifically flags that problem so you can correct it before it becomes a habit.
               </p>
             </div>
 
@@ -694,7 +694,7 @@ export default function VoiceAnalyzer() {
                   },
                   {
                     q: 'How is this different from a grammar checker?',
-                    a: 'Grammar checkers catch technical errors. This LinkedIn Voice Analyzer measures authenticity signals — the patterns that separate writing that sounds like a specific founder from writing that sounds like content produced at scale. The two problems are entirely unrelated.',
+                    a: 'Grammar checkers catch technical errors. This LinkedIn Voice Analyzer measures authenticity signals: the patterns that separate writing that sounds like a specific founder from writing that sounds like content produced at scale. The two problems are entirely unrelated.',
                   },
                   {
                     q: 'Does this tool work for non-founders?',

@@ -18,7 +18,7 @@ export default function ForIndividuals() {
         <meta property="og:image" content="https://wrively.com/og/home.png" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Wrively for Individuals • Personal Brand on LinkedIn" />
-        <meta name="twitter:description" content="Build your personal brand on LinkedIn without spending hours on content. Wrively writes in your voice — for consultants, executives, freelancers, and creators." />
+        <meta name="twitter:description" content="Build your personal brand on LinkedIn without spending hours on content. Wrively writes in your voice: for consultants, executives, freelancers, and creators." />
         <meta name="twitter:image" content="https://wrively.com/og/home.png" />
       </Helmet>
 

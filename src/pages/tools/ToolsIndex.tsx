@@ -129,7 +129,7 @@ export default function ToolsIndex() {
               {
                 signal: "You're not getting profile visits from search or comments",
                 tool: 'Start with the LinkedIn Headline Analyzer',
-                reason: "Your headline is the primary signal LinkedIn uses to surface you in search results and in every comment you leave on other posts. A generic headline means people scroll past without clicking — even if the comment itself is good.",
+                reason: "Your headline is the primary signal LinkedIn uses to surface you in search results and in every comment you leave on other posts. A generic headline means people scroll past without clicking, even if the comment itself is good.",
                 to: '/tools/linkedin-headline-analyzer',
               },
               {
@@ -141,7 +141,7 @@ export default function ToolsIndex() {
               {
                 signal: 'Your posts feel generic or indistinguishable from AI content',
                 tool: 'Start with the LinkedIn Voice Analyzer',
-                reason: 'Voice problems are harder to spot than structure problems. This tool identifies whether your writing reads as a specific person with a specific perspective — or as interchangeable content — and tells you exactly what to change.',
+                reason: 'Voice problems are harder to spot than structure problems. This tool identifies whether your writing reads as a specific person with a specific perspective, or as interchangeable content, and tells you exactly what to change.',
                 to: '/tools/linkedin-voice-analyzer',
               },
             ].map(item => (
@@ -171,7 +171,7 @@ export default function ToolsIndex() {
                 },
                 {
                   q: 'How accurate are the scores?',
-                  a: "The scoring criteria are based on the patterns that consistently separate high-performing LinkedIn content from low-performing content: hook mechanics, mobile formatting behavior, structural arc, and specificity signals. These aren't arbitrary — they reflect how LinkedIn's algorithm and real readers actually respond to content.",
+                  a: "The scoring criteria are based on the patterns that consistently separate high-performing LinkedIn content from low-performing content: hook mechanics, mobile formatting behavior, structural arc, and specificity signals. These aren't arbitrary. They reflect how LinkedIn's algorithm and real readers actually respond to content.",
                 },
                 {
                   q: 'Can I use these tools on my phone?',
@@ -179,7 +179,7 @@ export default function ToolsIndex() {
                 },
                 {
                   q: 'Do I need a Wrively account to use these tools?',
-                  a: "No. The free tools work without an account and always will. If you want to go further — generating posts in your specific voice, building a founder persona, getting comment suggestions — that's what Wrively is built for.",
+                  a: "No. The free tools work without an account and always will. If you want to go further (generating posts in your specific voice, building a founder persona, getting comment suggestions), that's what Wrively is built for.",
                 },
                 {
                   q: "What's the difference between the Post Checker and the Voice Analyzer?",

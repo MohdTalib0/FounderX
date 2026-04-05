@@ -1303,7 +1303,7 @@ export const articles: BlogArticle[] = [
 
       { type: 'divider', content: '' },
 
-      { type: 'h2', content: '1. Wrively — Best for founders who want posts that sound like them' },
+      { type: 'h2', content: '1. Wrively: Best forfounders who want posts that sound like them' },
       { type: 'p', content: 'Wrively takes a different approach from most generators. Instead of giving you a blank prompt box, it builds a "Voice Layer" during onboarding: four questions about your company, stage, audience, and personality. Every post it generates after that pulls from this model.' },
       { type: 'p', content: 'The result is noticeably more specific than other tools. When we tested it, the output referenced the founder\'s stage, mentioned the product by name, and used the kind of language a real person would use. Not perfect on every generation, but consistently closer to "sounds like me" than anything else we tested.' },
       { type: 'ul', content: [
@@ -1315,7 +1315,7 @@ export const articles: BlogArticle[] = [
       ]},
       { type: 'p', content: 'Best for: Founders and consultants who tried ChatGPT, got generic output, and want something that actually remembers who they are.' },
 
-      { type: 'h2', content: '2. Taplio — Best for LinkedIn growth with analytics' },
+      { type: 'h2', content: '2. Taplio: Best forLinkedIn growth with analytics' },
       { type: 'p', content: 'Taplio is the most established tool in this space. It combines AI post generation with scheduling, analytics, and a library of 4M+ viral posts you can study for inspiration.' },
       { type: 'p', content: 'The AI generation is solid but broad. It uses GPT-4 under the hood and produces competent posts. The main value of Taplio isn\'t the generation quality; it\'s the ecosystem around it. Viral post library, engagement tracking, and auto-comment scheduling make it a full growth platform.' },
       { type: 'ul', content: [
@@ -1326,7 +1326,7 @@ export const articles: BlogArticle[] = [
       ]},
       { type: 'p', content: 'Best for: Power users who want an all-in-one LinkedIn growth platform and are willing to pay $39+/month.' },
 
-      { type: 'h2', content: '3. MagicPost — Best free option for quick drafts' },
+      { type: 'h2', content: '3. MagicPost: Best free option for quick drafts' },
       { type: 'p', content: 'MagicPost is purpose-built for LinkedIn and offers a generous free tier. It analyzes viral post patterns and generates content using structures proven to drive engagement.' },
       { type: 'p', content: 'The output quality is decent for quick drafts. It tends toward engagement-optimized formats (numbered lists, contrarian hooks) which work on LinkedIn but can feel formulaic after a while. Good starting point if you need volume.' },
       { type: 'ul', content: [
@@ -1337,7 +1337,7 @@ export const articles: BlogArticle[] = [
       ]},
       { type: 'p', content: 'Best for: People who want quick, engagement-optimized drafts and don\'t mind editing heavily.' },
 
-      { type: 'h2', content: '4. RedactAI — Best for voice matching from past posts' },
+      { type: 'h2', content: '4. RedactAI: Best forvoice matching from past posts' },
       { type: 'p', content: 'RedactAI focuses on learning your writing style from your existing LinkedIn posts. You connect your profile, it analyzes your past content, and generates new posts that match your established voice.' },
       { type: 'p', content: 'This works well if you already have 20+ posts on LinkedIn. If you\'re starting from scratch, there\'s not enough data for it to learn from, and the output defaults to generic.' },
       { type: 'ul', content: [
@@ -1348,7 +1348,7 @@ export const articles: BlogArticle[] = [
       ]},
       { type: 'p', content: 'Best for: People who already post regularly on LinkedIn and want AI that matches their established voice.' },
 
-      { type: 'h2', content: '5. EasyGen — Best for data-driven creators' },
+      { type: 'h2', content: '5. EasyGen: Best fordata-driven creators' },
       { type: 'p', content: 'EasyGen was built specifically for LinkedIn and uses performance data to optimize content. It tracks which posts perform best and adjusts its suggestions accordingly.' },
       { type: 'p', content: 'The writing style customization is flexible, letting you adjust tone and context. The learning curve is slightly steeper than simpler tools, but the data-driven approach pays off for consistent posters.' },
       { type: 'ul', content: [
@@ -1359,7 +1359,7 @@ export const articles: BlogArticle[] = [
       ]},
       { type: 'p', content: 'Best for: Creators who post frequently and want data-informed content optimization.' },
 
-      { type: 'h2', content: '6. ContentIn — Best for content inspiration' },
+      { type: 'h2', content: '6. ContentIn: Best forcontent inspiration' },
       { type: 'p', content: 'ContentIn focuses on helping you find topics and angles that resonate. It combines AI generation with a content discovery layer that surfaces trending topics in your niche.' },
       { type: 'p', content: 'The generation quality is average, but the ideation features are genuinely useful. If your problem is "I don\'t know what to write about" more than "my posts sound generic," ContentIn addresses that well.' },
       { type: 'ul', content: [
@@ -1370,7 +1370,7 @@ export const articles: BlogArticle[] = [
       ]},
       { type: 'p', content: 'Best for: People who struggle with topic ideation more than writing quality.' },
 
-      { type: 'h2', content: '7. Hootsuite LinkedIn Post Generator — Best for teams already on Hootsuite' },
+      { type: 'h2', content: '7. Hootsuite LinkedIn Post Generator: Best forteams already on Hootsuite' },
       { type: 'p', content: 'Hootsuite offers a free LinkedIn post generator that\'s decent for quick drafts. It\'s not specialized for founders or voice matching; it\'s a general-purpose tool that happens to have a LinkedIn template.' },
       { type: 'p', content: 'If you\'re already using Hootsuite for social scheduling, the integrated generation saves a step. But the output is generic and requires heavy editing.' },
       { type: 'ul', content: [

@@ -103,7 +103,7 @@ export default function Landing() {
           <div className="relative rounded-2xl overflow-hidden shadow-[0_0_80px_rgba(99,102,241,0.1)]">
             <img
               src={theme === 'dark' ? '/og/hero-preview.png' : '/og/hero-preview-light.png'}
-              alt="Wrively dashboard — today's post ready, weekly tracker, quick actions"
+              alt="Wrively dashboard: today's post ready, weekly tracker, quick actions"
               width={1600}
               height={900}
               className="w-full h-auto block"

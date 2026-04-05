@@ -170,7 +170,7 @@ export default function Dashboard() {
       {/* ─── Past-due payment warning ────────────────────────────────────── */}
       {profile?.subscription_status === 'past_due' && (
         <Link to="/dashboard/upgrade" className="block bg-warning/[0.08] border border-warning/25 rounded-card px-4 py-3 hover:bg-warning/[0.12] transition-colors">
-          <p className="text-sm font-semibold text-text">Payment issue — update your billing to keep your plan.</p>
+          <p className="text-sm font-semibold text-text">Payment issue: update your billing to keep your plan.</p>
         </Link>
       )}
 
@@ -504,11 +504,11 @@ export default function Dashboard() {
           {
             label: 'Posts this month',
             value: String(profile?.posts_this_month ?? totalPosts),
-            sub: totalPosts <= 3 ? 'Keep going — consistency compounds' : `${totalPosts} total generated`,
+            sub: totalPosts <= 3 ? 'Keep going, consistency compounds' : `${totalPosts} total generated`,
           },
           {
             label: 'Copy rate',
-            value: copiedCount > 0 ? `${copyRate}%` : '—',
+            value: copiedCount > 0 ? `${copyRate}%` : '-',
             sub: copiedCount > 0 ? `${copiedCount} posts you actually used` : 'Copy a post to start tracking',
           },
           {
@@ -518,7 +518,7 @@ export default function Dashboard() {
               : `${weeksWithPosts} week${weeksWithPosts !== 1 ? 's' : ''}`,
             sub: topVariation && copiedCount >= 3
               ? `Your ${topVarLabel} posts resonate most`
-              : weeksWithPosts >= 3 ? 'Great momentum — keep it up' : 'Post weekly to build your streak',
+              : weeksWithPosts >= 3 ? 'Great momentum. Keep it up!' : 'Post weekly to build your streak',
           },
         ]
 

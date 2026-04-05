@@ -158,7 +158,7 @@ export default function Pricing() {
       <section className="max-w-3xl mx-auto px-5 pt-16 pb-14 text-center">
         <div className="inline-flex items-center gap-2 mb-6 border border-primary/25 bg-primary/[0.06] text-primary text-xs font-medium px-3 py-1.5 rounded-full">
           <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-          Start free — upgrade when you're ready
+          Start free, upgrade when you're ready
         </div>
 
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-text mb-4 leading-tight">

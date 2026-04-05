@@ -8,7 +8,7 @@ const LAST_UPDATED = 'March 23, 2026'
 const sections = [
   {
     title: '1. What We Collect',
-    body: `When you create an account, we collect your name and email address. When you use Wrively, we store the content you generate (posts, comments, rewrites) and your founder profile data (company, stage, persona). We also collect basic usage data — which features you use and when — to improve the product. If you upgrade, our payment processor (Paddle) handles billing; we do not store your card details.`,
+    body: `When you create an account, we collect your name and email address. When you use Wrively, we store the content you generate (posts, comments, rewrites) and your founder profile data (company, stage, persona). We also collect basic usage data.which features you use and when.to improve the product. If you upgrade, our payment processor (Paddle) handles billing; we do not store your card details.`,
   },
   {
     title: '2. How We Use Your Data',
@@ -24,7 +24,7 @@ const sections = [
   },
   {
     title: '5. Data Sharing',
-    body: `We share data with a small number of trusted services necessary to operate Wrively: Supabase (database and authentication), OpenRouter (AI inference — prompts and responses are not stored by us after generation), Paddle (payment processing), and Google Analytics (anonymised usage analytics). All processors are under contractual obligations to protect your data.`,
+    body: `We share data with a small number of trusted services necessary to operate Wrively: Supabase (database and authentication), OpenRouter (AI inference.prompts and responses are not stored by us after generation), Paddle (payment processing), and Google Analytics (anonymised usage analytics). All processors are under contractual obligations to protect your data.`,
   },
   {
     title: '6. Data Retention',
@@ -36,7 +36,7 @@ const sections = [
   },
   {
     title: '8. Data Security',
-    body: `All data is transmitted over HTTPS. Your account password is hashed and never stored in plain text. Database access is protected by row-level security — your data is only accessible to you. We use industry-standard practices but no system is completely immune to breach. If a breach affects your data, we will notify you promptly.`,
+    body: `All data is transmitted over HTTPS. Your account password is hashed and never stored in plain text. Database access is protected by row-level security.your data is only accessible to you. We use industry-standard practices but no system is completely immune to breach. If a breach affects your data, we will notify you promptly.`,
   },
   {
     title: '9. Children',
@@ -99,7 +99,7 @@ export default function PrivacyPolicy() {
         <div className="bg-surface border border-border rounded-card px-5 py-4 mb-8">
           <p className="text-sm text-text-muted leading-relaxed">
             Your privacy matters to us. This policy explains what data we collect, why we collect
-            it, and how you can control it. We keep it short and plain — no legal maze.
+            it, and how you can control it. We keep it short and plain.no legal maze.
             Questions? Email{' '}
             <a href="mailto:hello@wrively.com" className="text-primary hover:text-primary-hover transition-colors">
               hello@wrively.com

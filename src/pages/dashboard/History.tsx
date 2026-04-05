@@ -201,7 +201,7 @@ export default function History() {
         </div>
       ) : filtered.length === 0 ? (
         <div className="border border-dashed border-border rounded-card p-10 text-center space-y-2">
-          <p className="text-sm font-medium text-text">Your content library is empty — for now.</p>
+          <p className="text-sm font-medium text-text">Your content library is empty, for now.</p>
           <p className="text-xs text-text-muted leading-relaxed max-w-sm mx-auto">
             {filter === 'all'
               ? 'Every post you generate lives here. You\'ll see your copy rate, top-performing variations, and posting patterns over time.'

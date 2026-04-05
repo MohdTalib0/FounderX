@@ -41,7 +41,7 @@ export function ToolUpgradeCta({ cta, source, cached, className }: ToolUpgradeCt
     <div className={cn('space-y-3', className)}>
       {cached && (
         <p className="text-xs text-text-subtle">
-          Instant result — same input was analyzed recently.
+          Instant result: same input was analyzed recently.
         </p>
       )}
 
@@ -62,7 +62,7 @@ export function ToolUpgradeCta({ cta, source, cached, className }: ToolUpgradeCt
         {status === 'done' ? (
           <p className="text-xs text-text-muted flex items-center gap-1.5">
             <Check className="w-3.5 h-3.5 text-success shrink-0" />
-            You're on the list — we'll keep you posted.
+            You're on the list. We'll keep you posted.
           </p>
         ) : (
           <form onSubmit={handleWaitlist} className="flex items-center gap-2">

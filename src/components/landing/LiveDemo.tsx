@@ -83,7 +83,7 @@ export default function LiveDemo() {
             {/* Input state */}
             <div className="flex items-center gap-2 mb-5">
               <Sparkles className="w-4 h-4 text-primary" />
-              <p className="text-sm font-semibold text-primary">Try it now — no signup needed</p>
+              <p className="text-sm font-semibold text-primary">Try it now, no signup needed</p>
             </div>
 
             <h3 className="text-lg sm:text-xl font-bold text-text mb-1.5">

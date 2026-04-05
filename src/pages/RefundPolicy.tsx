@@ -11,8 +11,8 @@ const sections = [
     body: `The Wrively free plan costs nothing. There is nothing to refund. You can use the free plan indefinitely with no obligation to upgrade.`,
   },
   {
-    title: '2. Paid Plans — Monthly Billing',
-    body: `Wrively Starter and Pro are billed monthly. You can cancel your subscription at any time from Settings → Account → Manage Billing. Cancellation takes effect at the end of your current billing period — you will retain access until that date and will not be charged again after that.`,
+    title: '2. Paid Plans:Monthly Billing',
+    body: `Wrively Starter and Pro are billed monthly. You can cancel your subscription at any time from Settings → Account → Manage Billing. Cancellation takes effect at the end of your current billing period:you will retain access until that date and will not be charged again after that.`,
   },
   {
     title: '3. Payments and Refunds',

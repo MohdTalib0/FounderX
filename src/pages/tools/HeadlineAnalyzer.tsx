@@ -355,11 +355,11 @@ export default function HeadlineAnalyzer() {
   return (
     <div className="min-h-screen bg-background text-text overflow-x-hidden">
       <Helmet>
-        <title>Free LinkedIn Headline Analyzer — Score & Improve Your Headline | Wrively</title>
+        <title>Free LinkedIn Headline Analyzer: Score & Improve Your Headline | Wrively</title>
         <meta name="description" content="Analyze your LinkedIn headline in seconds. Get a score out of 100, see what's weak, and get an AI-rewritten version. Free, no signup required." />
         <link rel="canonical" href="https://wrively.com/tools/linkedin-headline-analyzer" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Free LinkedIn Headline Analyzer — Score & Improve Your Headline" />
+        <meta property="og:title" content="Free LinkedIn Headline Analyzer: Score & Improve Your Headline" />
         <meta property="og:description" content="Analyze your LinkedIn headline in seconds. Score out of 100, specific feedback, and an AI-rewritten version. Free, no signup." />
         <meta property="og:url" content="https://wrively.com/tools/linkedin-headline-analyzer" />
         <meta property="og:image" content="https://wrively.com/og/tools.png" />
@@ -367,7 +367,7 @@ export default function HeadlineAnalyzer() {
         <meta property="og:image:height" content="630" />
         <meta property="og:locale" content="en_US" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Free LinkedIn Headline Analyzer — Score & Improve Your Headline" />
+        <meta name="twitter:title" content="Free LinkedIn Headline Analyzer: Score & Improve Your Headline" />
         <meta name="twitter:description" content="Analyze your LinkedIn headline in seconds. Score out of 100, specific feedback, and an AI-rewritten version. Free, no signup." />
         <meta name="twitter:image" content="https://wrively.com/og/tools.png" />
         <script type="application/ld+json">{toolSchema}</script>
