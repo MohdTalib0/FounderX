@@ -165,6 +165,24 @@ export default function Remix() {
                   label="Copy post"
                 />
               </div>
+
+              {/* Post-copy next steps */}
+              <div className="flex items-center justify-between px-4 py-2.5 border-t border-primary/15 bg-primary/[0.03]">
+                <a
+                  href="https://www.linkedin.com/feed/?shareActive=true"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs font-medium text-primary hover:text-primary-hover transition-colors"
+                >
+                  Open LinkedIn to paste ↗
+                </a>
+                <button
+                  onClick={() => { setResult(null); setSourcePost('') }}
+                  className="text-xs text-text-muted hover:text-text transition-colors"
+                >
+                  Remix another post →
+                </button>
+              </div>
             </div>
           </div>
 

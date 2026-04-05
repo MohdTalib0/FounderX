@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { RefreshCw, Check } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/auth'
@@ -204,6 +205,21 @@ export default function Rewrite() {
                 Regenerate
               </button>
               <CopyButton text={currentPost} label="Copy post" />
+            </div>
+
+            {/* Post-copy next steps */}
+            <div className="flex items-center justify-between px-4 py-2.5 border-t border-primary/15 bg-primary/[0.03]">
+              <a
+                href="https://www.linkedin.com/feed/?shareActive=true"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-medium text-primary hover:text-primary-hover transition-colors"
+              >
+                Open LinkedIn to paste ↗
+              </a>
+              <Link to="/dashboard/write" className="text-xs text-text-muted hover:text-text transition-colors">
+                Write a fresh post →
+              </Link>
             </div>
           </div>
 

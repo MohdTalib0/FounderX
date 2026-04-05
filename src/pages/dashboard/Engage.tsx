@@ -123,8 +123,8 @@ export default function Engage() {
 
       {/* Page header */}
       <div>
-        <h1 className="text-xl font-bold text-text">Get Comment Suggestions</h1>
-        <p className="text-sm text-text-muted mt-0.5">Paste any post, get 3 ready-to-use comments in seconds</p>
+        <h1 className="text-xl font-bold text-text">Build Relationships Through Comments</h1>
+        <p className="text-sm text-text-muted mt-0.5">Every thoughtful comment puts you on someone's radar. Paste any post, get 3 smart replies.</p>
       </div>
 
       {/* ─── Weekly goal tracker ───────────────────────────────────────── */}
@@ -137,7 +137,7 @@ export default function Engage() {
         )}>
           <div className="flex items-center justify-between mb-2.5">
             <p className="text-sm font-medium text-text">
-              {goalComplete ? 'Weekly goal hit!' : `Comment on ${COMMENT_GOAL} posts this week`}
+              {goalComplete ? 'Goal hit! Your visibility is compounding.' : `Build ${COMMENT_GOAL} relationships this week`}
             </p>
             <span className={cn(
               'text-xs font-semibold',
@@ -167,7 +167,7 @@ export default function Engage() {
             })}
             {goalComplete && (
               <p className="text-xs text-success font-medium ml-1">
-                Keep going. Every extra comment compounds visibility.
+                Founders who comment consistently see 3-5x more profile views.
               </p>
             )}
           </div>
@@ -254,6 +254,16 @@ export default function Engage() {
           <p className="text-[11px] text-text-subtle text-center pt-1">
             These are starting points. Make them yours before posting.
           </p>
+
+          {/* Post-copy next step */}
+          <div className="flex items-center justify-center gap-4 pt-3">
+            <button
+              onClick={() => { setResults(null); setPostText(''); setLinkedinUrl('') }}
+              className="text-xs font-medium text-primary hover:text-primary-hover transition-colors"
+            >
+              Comment on another post →
+            </button>
+          </div>
         </div>
       )}
     </div>

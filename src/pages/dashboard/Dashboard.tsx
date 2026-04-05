@@ -18,12 +18,12 @@ import type { GeneratedPost } from '@/types/database'
 // ─── Weekly plan templates ─────────────────────────────────────────────────────
 
 const WEEKLY_TEMPLATES = [
-  (p: string) => `${p}: what's actually working right now`,
-  (p: string) => `The thing nobody warned me about ${p.toLowerCase()}`,
-  (p: string) => `What I got wrong about ${p.toLowerCase()}`,
-  (p: string) => `A recent ${p.toLowerCase()} lesson worth sharing`,
-  (p: string) => `${p}: the uncomfortable truth`,
-  (p: string) => `How my thinking on ${p.toLowerCase()} has changed`,
+  (p: string) => `Why most founders underestimate ${p.toLowerCase()}`,
+  (p: string) => `The uncomfortable truth about ${p.toLowerCase()}`,
+  (p: string) => `What I got wrong about ${p.toLowerCase()} (and what I'd do differently)`,
+  (p: string) => `${p}: the one thing that actually moved the needle`,
+  (p: string) => `3 lessons from this month on ${p.toLowerCase()}`,
+  (p: string) => `What nobody tells you about ${p.toLowerCase()} at the early stage`,
 ]
 
 function getWeekOfYear(): number {
@@ -174,25 +174,25 @@ export default function Dashboard() {
         </Link>
       )}
 
-      {/* ─── Greeting ─────────────────────────────────────────────────────── */}
-      <div>
-        <h1 className="text-xl font-bold text-text">
+      {/* ─── Hero: Next Step card (top of page — most important element) ── */}
+      {nextStep && (
+        <NextStepCard nextStep={nextStep} />
+      )}
+
+      {/* ─── Greeting (compact, below hero) ──────────────────────────────── */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-lg font-bold text-text">
           {isFirstVisit
-            ? `Great start, ${firstName}. Post this today.`
+            ? `Great start, ${firstName}.`
             : `${greeting}, ${firstName}.`}
         </h1>
         {company && !isFirstVisit && (
-          <div className="flex items-center gap-2 mt-1 min-w-0">
-            <span className="text-sm text-text-muted truncate">{company.name}</span>
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="text-xs text-text-muted truncate">{company.name}</span>
             <StageBadge stage={company.stage} isIndividual={company.is_individual} />
           </div>
         )}
       </div>
-
-      {/* ─── Hero: Next Step card ─────────────────────────────────────────── */}
-      {nextStep && (
-        <NextStepCard nextStep={nextStep} />
-      )}
 
       {/* ─── First-visit: post checklist ──────────────────────────────────── */}
       {isFirstVisit && !loading && recentPosts.length > 0 && (() => {
@@ -399,7 +399,7 @@ export default function Dashboard() {
                             className="inline-flex items-center gap-1 text-[11px] text-text-muted hover:text-text transition-colors"
                           >
                             <ArrowRight className="w-3 h-3" />
-                            Generate early
+                            Prep this post
                           </Link>
                         )}
                       </div>
@@ -435,7 +435,7 @@ export default function Dashboard() {
       {/* ─── Quick actions ────────────────────────────────────────────────── */}
       {!isFirstVisit && (
         <div>
-          <p className="section-label mb-2.5">Tools</p>
+          <p className="section-label mb-2.5">Quick actions</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {[
               { to: '/dashboard/write', icon: PenLine, label: 'Write Post', sub: '3 variations in your voice' },
@@ -462,40 +462,69 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* ─── Scoreboard ───────────────────────────────────────────────────── */}
-      {!loading && allPosts.length >= 3 && (() => {
+      {/* ─── Growth Scoreboard ────────────────────────────────────────────── */}
+      {!loading && (() => {
         const totalPosts = allPosts.length
-        const publishedCount = allPosts.filter(p => p.is_published).length
-        const copiedCount = allPosts.filter(p => p.was_copied).length
-        const copyRate = Math.round((copiedCount / totalPosts) * 100)
-        const ratedPosts = allPosts.filter(p => p.performance_rating != null)
-        const avgRating = ratedPosts.length > 0
-          ? (ratedPosts.reduce((sum, p) => sum + (p.performance_rating ?? 0), 0) / ratedPosts.length).toFixed(1)
-          : null
+        if (totalPosts === 0) return null
 
-        if (publishedCount === 0 && copiedCount === 0 && ratedPosts.length === 0) return null
+        // For users with very few posts, show encouragement instead of sad zeros
+        if (totalPosts < 3) {
+          return (
+            <div>
+              <p className="section-label mb-2.5">Your growth</p>
+              <div className="bg-surface border border-border rounded-card px-4 py-4 text-center">
+                <p className="text-sm text-text font-medium">{totalPosts} post{totalPosts !== 1 ? 's' : ''} generated. Keep going.</p>
+                <p className="text-xs text-text-muted mt-1">Generate 3 posts to unlock your growth stats and see what resonates.</p>
+              </div>
+            </div>
+          )
+        }
+
+        const copiedCount = allPosts.filter(p => p.was_copied).length
+        const copyRate = totalPosts > 0 ? Math.round((copiedCount / totalPosts) * 100) : 0
+
+        // Top variation insight
+        const varCounts: Record<string, number> = {}
+        allPosts.filter(p => p.was_copied && p.selected_variation).forEach(p => {
+          varCounts[p.selected_variation!] = (varCounts[p.selected_variation!] ?? 0) + 1
+        })
+        const topVar = Object.entries(varCounts).sort((a, b) => b[1] - a[1])[0]
+        const topVariation = topVar ? topVar[0] : null
+        const topVarLabel = topVariation === 'controversial' ? 'Debate' : topVariation === 'bold' ? 'Bold' : 'Safe'
+
+        // Streak: weeks with at least 1 post
+        const weeksWithPosts = new Set(allPosts.map(p => {
+          const d = new Date(p.created_at)
+          const startOfWeek = new Date(d)
+          startOfWeek.setDate(d.getDate() - d.getDay() + 1)
+          return startOfWeek.toISOString().split('T')[0]
+        })).size
 
         const stats = [
           {
-            label: 'Published',
-            value: publishedCount > 0 ? String(publishedCount) : '-',
-            sub: publishedCount > 0 ? `of ${totalPosts} generated` : 'mark posts as published',
+            label: 'Posts this month',
+            value: String(profile?.posts_this_month ?? totalPosts),
+            sub: totalPosts <= 3 ? 'Keep going — consistency compounds' : `${totalPosts} total generated`,
           },
           {
             label: 'Copy rate',
-            value: copiedCount > 0 ? `${copyRate}%` : '-',
-            sub: copiedCount > 0 ? `${copiedCount} copied` : 'copy posts to track',
+            value: copiedCount > 0 ? `${copyRate}%` : '—',
+            sub: copiedCount > 0 ? `${copiedCount} posts you actually used` : 'Copy a post to start tracking',
           },
           {
-            label: 'Avg rating',
-            value: avgRating ?? '-',
-            sub: avgRating ? `${ratedPosts.length} rated` : 'rate posts to track',
+            label: topVariation && copiedCount >= 3 ? `Top style: ${topVarLabel}` : 'Posting streak',
+            value: topVariation && copiedCount >= 3
+              ? `${topVar![1]}x copied`
+              : `${weeksWithPosts} week${weeksWithPosts !== 1 ? 's' : ''}`,
+            sub: topVariation && copiedCount >= 3
+              ? `Your ${topVarLabel} posts resonate most`
+              : weeksWithPosts >= 3 ? 'Great momentum — keep it up' : 'Post weekly to build your streak',
           },
         ]
 
         return (
           <div>
-            <p className="section-label mb-2.5">Your record</p>
+            <p className="section-label mb-2.5">Your growth</p>
             <div className="grid grid-cols-3 gap-2">
               {stats.map(({ label, value, sub }) => (
                 <div key={label} className="bg-surface border border-border rounded-card px-3 py-3.5 text-center">
@@ -553,9 +582,14 @@ export default function Dashboard() {
                           {relativeTime(post.created_at)}
                         </span>
                       </div>
-                      <p className="text-sm text-text-muted leading-snug group-hover:text-text transition-colors">
-                        {truncate(text, 90)}
+                      <p className="text-sm text-text font-medium leading-snug group-hover:text-primary transition-colors">
+                        {text.split('\n')[0]?.slice(0, 80) || truncate(text, 80)}
                       </p>
+                      {text.split('\n').length > 1 && (
+                        <p className="text-xs text-text-muted mt-0.5 leading-snug">
+                          {truncate(text.split('\n').slice(1).join(' ').trim(), 60)}
+                        </p>
+                      )}
                     </div>
                     <div className="flex items-center gap-1 shrink-0" onClick={e => e.preventDefault()}>
                       <button
@@ -592,30 +626,19 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* ─── Persona strip ────────────────────────────────────────────────── */}
+      {/* ─── Persona strip (compact) ─────────────────────────────────────── */}
       {company?.persona_statement && (
-        <div className="bg-surface border border-border rounded-card px-4 py-3 space-y-2">
-          <div className="flex items-center justify-between">
-            <p className="text-xs text-text-muted font-medium uppercase tracking-wide">
-              {company.is_individual ? 'Your personal brand' : 'Your founder brand'}
-            </p>
-            <Link
-              to="/dashboard/settings"
-              className="text-[11px] text-text-subtle hover:text-text-muted transition-colors"
-            >
-              Edit
-            </Link>
-          </div>
-          <p className="text-sm text-text leading-snug">{company.persona_statement}</p>
-          {company.content_pillars && company.content_pillars.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 pt-0.5">
-              {company.content_pillars.map(pillar => (
-                <span key={pillar} className="text-xs px-2 py-0.5 rounded-full bg-primary/[0.08] border border-primary/20 text-primary font-medium">
-                  {pillar}
-                </span>
-              ))}
-            </div>
-          )}
+        <div className="flex items-center gap-3 bg-surface border border-border rounded-card px-4 py-2.5">
+          <p className="text-xs text-text-muted flex-1 min-w-0 truncate">
+            <span className="font-medium text-text-muted">Voice:</span>{' '}
+            {company.persona_statement}
+          </p>
+          <Link
+            to="/dashboard/settings"
+            className="text-[11px] text-text-subtle hover:text-primary transition-colors shrink-0"
+          >
+            Edit →
+          </Link>
         </div>
       )}
 
@@ -713,7 +736,7 @@ function NextStepCard({ nextStep }: NextStepProps) {
       border: 'border-primary/20',
       bg: 'bg-primary/[0.03]',
       title: "Today's your posting day.",
-      desc: 'Keep the momentum going. 3 variations ready in under a minute.',
+      desc: 'Founders who post 3x/week see 5-10x more profile views. Keep the momentum going.',
       cta: 'Generate post',
       href: '/dashboard/write',
     },

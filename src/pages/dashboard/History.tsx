@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { FileText, MessageSquare, RefreshCw, Shuffle, Star, ChevronDown, ChevronUp, CheckCircle2, ImageDown, TrendingUp, Minus, TrendingDown } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/auth'
+import { toast } from '@/store/toast'
 import CopyButton from '@/components/ui/CopyButton'
 import { QuoteCardModal } from '@/components/ui/QuoteCard'
 import { cn, truncate } from '@/lib/utils'
@@ -44,6 +45,10 @@ export default function History() {
       supabase.from('draft_rewrites').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(50),
       supabase.from('remixed_posts').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(50),
     ])
+
+    if (postsRes.error || commentsRes.error || rewritesRes.error || remixesRes.error) {
+      toast.error('Some content failed to load. Try refreshing.')
+    }
 
     const all: HistoryItem[] = [
       ...(postsRes.data ?? []).map(d => ({ type: 'post' as const, data: d, created_at: d.created_at })),
@@ -90,7 +95,7 @@ export default function History() {
     return acc
   }, {})
   const topVariation = Object.entries(varCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null
-  const showStats = totalPosts >= 5
+  const showStats = totalPosts >= 1
 
   // 48h rating nudge
   const now = Date.now()
@@ -139,18 +144,34 @@ export default function History() {
 
       {/* Stats */}
       {!loading && showStats && (
-        <div className="grid grid-cols-3 gap-2">
-          {[
-            { label: 'Posts generated', value: String(totalPosts) },
-            { label: 'Copy rate',       value: `${copyRate}%` },
-            { label: 'Top variation',   value: topVariation ? topVariation.charAt(0).toUpperCase() + topVariation.slice(1) : '-' },
-          ].map(({ label, value }) => (
-            <div key={label} className="bg-surface border border-border rounded-card px-3 py-3.5 text-center">
-              <p className="text-lg font-bold text-text tabular-nums">{value}</p>
-              <p className="text-[11px] text-text-muted mt-0.5">{label}</p>
+        totalPosts < 3 ? (
+          <div className="bg-surface border border-border rounded-card px-4 py-4">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-sm font-medium text-text">{totalPosts} of 3 posts to unlock insights</p>
+              <span className="text-xs text-text-muted">{totalPosts}/3</span>
             </div>
-          ))}
-        </div>
+            <div className="h-2 bg-surface-hover rounded-full overflow-hidden">
+              <div
+                className="h-full bg-primary rounded-full transition-all duration-500"
+                style={{ width: `${Math.round((totalPosts / 3) * 100)}%` }}
+              />
+            </div>
+            <p className="text-xs text-text-muted mt-2">Generate {3 - totalPosts} more post{3 - totalPosts !== 1 ? 's' : ''} to see your copy rate, top variation, and posting patterns.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-3 gap-2">
+            {[
+              { label: 'Posts generated', value: String(totalPosts) },
+              { label: 'Copy rate',       value: `${copyRate}%` },
+              { label: 'Top variation',   value: topVariation ? topVariation.charAt(0).toUpperCase() + topVariation.slice(1) : '-' },
+            ].map(({ label, value }) => (
+              <div key={label} className="bg-surface border border-border rounded-card px-3 py-3.5 text-center">
+                <p className="text-lg font-bold text-text tabular-nums">{value}</p>
+                <p className="text-[11px] text-text-muted mt-0.5">{label}</p>
+              </div>
+            ))}
+          </div>
+        )
       )}
 
       {/* Filter chips — scrollable on mobile */}
@@ -179,13 +200,18 @@ export default function History() {
           ))}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="border border-dashed border-border rounded-card p-10 text-center space-y-1">
-          <p className="text-sm font-medium text-text-muted">Nothing here yet.</p>
-          <p className="text-xs text-text-subtle">
+        <div className="border border-dashed border-border rounded-card p-10 text-center space-y-2">
+          <p className="text-sm font-medium text-text">Your content library is empty — for now.</p>
+          <p className="text-xs text-text-muted leading-relaxed max-w-sm mx-auto">
             {filter === 'all'
-              ? 'Your generated posts, comments, and rewrites will show up here.'
-              : `Your ${filter} will appear here once you generate some.`}
+              ? 'Every post you generate lives here. You\'ll see your copy rate, top-performing variations, and posting patterns over time.'
+              : `Your ${filter}s will appear here once you generate some.`}
           </p>
+          {filter === 'all' && (
+            <a href="/dashboard/write" className="inline-block text-xs font-medium text-primary hover:text-primary-hover transition-colors mt-2">
+              Write your first post →
+            </a>
+          )}
         </div>
       ) : (
         <div className="space-y-2">
