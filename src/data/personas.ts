@@ -249,6 +249,116 @@ export const personas: PersonaData[] = [
     cta: 'Build my solopreneur voice',
     ctaSub: 'Free to start. No credit card. 4 questions, 2 minutes.',
   },
+
+  // ── US Founders ──────────────────────────────────────────────────────────────
+  {
+    slug: 'us-founders',
+    label: 'US Founders',
+    metaTitle: 'Wrively for US Founders • LinkedIn Content Built for the US Tech Scene',
+    metaDescription: 'Wrively is the Voice Layer for US founders. YC, seed-stage, and Series A founders in SF, NYC, and Austin use Wrively to post consistently in their own voice.',
+    badge: 'For US founders',
+    headline: 'Building in the US means your LinkedIn is your pipeline.',
+    subheadline: 'Investors in Sand Hill Road. Early users in Austin. Future hires in NYC. They all research you on LinkedIn first. Wrively makes sure what they find sounds like you, not like every other founder pitch.',
+    intro: 'The US tech scene runs on LinkedIn. Before a VC takes a meeting, before a customer replies to your cold email, before a candidate accepts your offer, they search you. If your LinkedIn is empty or sounds generic, you lose the warm intro. Wrively helps US founders post consistently in their own voice, so every search ends in trust.',
+    painPoints: [
+      'You raised a pre-seed or seed round and you know LinkedIn visibility matters for the next round. You\'re not posting.',
+      'You\'ve seen other YC founders build huge LinkedIn followings. You tried. It didn\'t click.',
+      'ChatGPT gave you posts that sound like LinkedIn lunch-and-learn content. That\'s not your voice.',
+      'You\'re in SF, NYC, or Austin — your peers are networking loudly on LinkedIn and you\'re invisible.',
+    ],
+    features: [
+      {
+        title: 'Voice built for the US tech vocabulary',
+        body: 'Wrively understands what "seed", "Series A", "ARR", "design partner", and "GTM" mean. Your posts reference the specific stage you\'re in, not a generic "early-stage founder" template.',
+      },
+      {
+        title: 'Posts that investors actually read',
+        body: 'US VCs scroll LinkedIn daily looking for founders they want to back. The posts they engage with are specific, vulnerable, and show real thinking. Wrively writes in that register, in your voice.',
+      },
+      {
+        title: 'Three angles for different moments',
+        body: 'Safe for authority-building before a fundraise. Bold for when you want to be discovered. Contrarian for when the industry is getting something wrong. Every post in your voice.',
+      },
+      {
+        title: 'Engage with US tech thought leaders',
+        body: 'Paste any post from a VC, customer, or industry voice. Wrively writes three specific, intelligent comments in your voice. No more "great insight!" replies that get lost in the feed.',
+      },
+    ],
+    howItWorks: [
+      {
+        step: 1,
+        title: 'Tell Wrively about your startup and stage',
+        body: 'Pre-seed? Seed? Series A? B2B SaaS or developer tools? Wrively builds a Voice Layer specific to your stage and vertical in under 2 minutes.',
+      },
+      {
+        step: 2,
+        title: 'Generate posts in your voice',
+        body: 'Pick a topic from your pillars or paste a rough idea. Three variations appear in seconds. Your name, your company, your specific context.',
+      },
+      {
+        step: 3,
+        title: 'Copy and post in under 3 minutes',
+        body: 'Paddle handles billing in USD with no surprises. Cancel anytime. Most US founders posting consistently on Wrively started free and upgraded after the habit stuck.',
+      },
+    ],
+    cta: 'Build my founder voice',
+    ctaSub: 'Free to start. No credit card. Accepted from 190+ countries.',
+  },
+
+  // ── UK Founders ──────────────────────────────────────────────────────────────
+  {
+    slug: 'uk-founders',
+    label: 'UK Founders',
+    metaTitle: 'Wrively for UK Founders • LinkedIn Content for London Tech Founders',
+    metaDescription: 'Wrively is the Voice Layer for UK founders. London, Cambridge, Manchester, and Edinburgh founders use Wrively to post on LinkedIn consistently without sounding like a template.',
+    badge: 'For UK founders',
+    headline: 'London investors read LinkedIn before they read your deck.',
+    subheadline: 'SeedCamp, LocalGlobe, Atomico, and every UK seed fund runs pattern matching on LinkedIn. Your posts are your audition. Wrively writes them in your voice, not in generic founder-speak.',
+    intro: 'The UK tech scene is smaller and more connected than the US. Word-of-mouth matters more. Your LinkedIn is how investors, customers, and future co-founders form their first impression long before you meet. If your posts sound like corporate LinkedIn content, you get lumped in with every other founder pitching the same idea. Wrively makes your LinkedIn sound like you specifically, which is the only way to stand out in a market this size.',
+    painPoints: [
+      'You\'re building in London or Manchester and you know your LinkedIn is your first impression for UK VCs. It\'s empty.',
+      'You\'ve tried AI writing tools. The output sounds American, generic, or both. Not how you actually talk.',
+      'The UK founders getting funded are posting consistently. You can see the correlation. You\'re not on it.',
+      'You\'ve got strong opinions about the UK startup ecosystem but turning them into posts takes hours you don\'t have.',
+    ],
+    features: [
+      {
+        title: 'Voice that matches how you actually write',
+        body: 'You pick the tone: professional, casual, bold, or educational. Wrively writes in that register, with British spellings where it matters, and without the American startup jargon that doesn\'t land here.',
+      },
+      {
+        title: 'Stage-aware content for the UK ecosystem',
+        body: 'Pre-seed in London looks different from seed in Cambridge. Wrively knows where you are and writes with context that reflects the UK funding environment — not generic advice lifted from US playbooks.',
+      },
+      {
+        title: 'Three variations for different audiences',
+        body: 'Safe for UK corporate investors and enterprise customers. Bold for your peer founders. Contrarian when the whole UK ecosystem is doing the same thing and you disagree. Pick the angle per post.',
+      },
+      {
+        title: 'Engage with the UK tech community',
+        body: 'Paste posts from UK VCs, founders, or industry voices. Get three specific comments in your voice. Build relationships with the people who matter in a market where everyone eventually meets.',
+      },
+    ],
+    howItWorks: [
+      {
+        step: 1,
+        title: 'Set up your founder voice in 2 minutes',
+        body: 'Your company, stage, audience, and personality. Wrively builds a model of how you specifically communicate. First post ready before you leave the setup screen.',
+      },
+      {
+        step: 2,
+        title: 'Post consistently without the time cost',
+        body: 'Under 3 minutes from opening the app to having a post copied and ready to paste on LinkedIn. 52 posts a year beats 0, especially in a market this connected.',
+      },
+      {
+        step: 3,
+        title: 'Billing in GBP or USD, accepted from anywhere',
+        body: 'Paddle handles UK VAT and international payments. Start free, upgrade when you\'re posting consistently. Cancel anytime.',
+      },
+    ],
+    cta: 'Build my founder voice',
+    ctaSub: 'Free to start. No credit card. Accepted from 190+ countries.',
+  },
 ]
 
 export function getPersona(slug: string): PersonaData | undefined {

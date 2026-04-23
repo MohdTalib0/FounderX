@@ -70,9 +70,9 @@ const PLANS = [
 ] as const
 
 const COMPARISON = [
-  { label: 'Posts per month',       free: '12',            starter: '80',             pro: 'Unlimited' },
-  { label: 'Comment suggestions',   free: '15',            starter: '100',            pro: 'Unlimited' },
-  { label: 'Draft rewrites',        free: '5',             starter: '40',             pro: 'Unlimited' },
+  { label: 'Posts per month',       free: '12',            starter: '40',             pro: 'Unlimited' },
+  { label: 'Comment suggestions',   free: '15',            starter: '50',             pro: 'Unlimited' },
+  { label: 'Draft rewrites',        free: '5',             starter: '20',             pro: 'Unlimited' },
   { label: 'Persona regeneration',  free: 'Once',          starter: 'Anytime',        pro: 'Anytime' },
   { label: 'Content history',       free: '30 days',       starter: '90 days',        pro: 'Full' },
   { label: 'Priority AI',           free: false,           starter: false,            pro: true },
@@ -138,7 +138,7 @@ export default function Pricing() {
           operatingSystem: 'Web',
           offers: [
             { '@type': 'Offer', name: 'Free', price: '0', priceCurrency: 'USD', description: '12 posts per month, 15 comment suggestions, 5 rewrites & remixes. No credit card required.' },
-            { '@type': 'Offer', name: 'Starter', price: '9', priceCurrency: 'USD', description: '80 posts per month, 100 comment suggestions, 40 rewrites & remixes, persona regeneration.' },
+            { '@type': 'Offer', name: 'Starter', price: '9', priceCurrency: 'USD', description: '40 posts per month, 50 comment suggestions, 20 rewrites & remixes, refine and regenerate per post, voice sample training, persona regeneration.' },
             { '@type': 'Offer', name: 'Pro', price: '19', priceCurrency: 'USD', description: 'Unlimited posts, comments, and rewrites with performance insights and priority AI.' },
           ],
         })}</script>
@@ -169,15 +169,20 @@ export default function Pricing() {
           Every plan includes the full product. Limits are the only difference.
         </p>
 
-        <div className="flex items-center justify-center gap-5 mt-8">
+        <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 mt-8">
           <div className="flex items-center gap-1.5 text-xs text-text-muted">
             <Shield className="w-3.5 h-3.5 text-success" />
-            No credit card
+            No credit card to start
           </div>
-          <div className="w-px h-3 bg-border" />
+          <div className="w-px h-3 bg-border hidden sm:block" />
           <div className="flex items-center gap-1.5 text-xs text-text-muted">
             <RefreshCw className="w-3.5 h-3.5 text-text-subtle" />
             Cancel anytime
+          </div>
+          <div className="w-px h-3 bg-border hidden sm:block" />
+          <div className="flex items-center gap-1.5 text-xs text-text-muted">
+            <Check className="w-3.5 h-3.5 text-success" />
+            Accepted from 190+ countries
           </div>
         </div>
       </section>
@@ -196,6 +201,32 @@ export default function Pricing() {
 
           {/* Pro */}
           <PlanCard plan={PLANS[2]} isLoggedIn={isLoggedIn} />
+        </div>
+
+        {/* Checkout trust signals */}
+        <div className="mt-10 rounded-2xl border border-border bg-surface/60 px-5 py-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+            <div className="flex flex-col items-center gap-1">
+              <Shield className="w-4 h-4 text-success" />
+              <p className="text-xs font-medium text-text">Secure checkout</p>
+              <p className="text-[10px] text-text-subtle leading-tight">Paddle handles payment</p>
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <Check className="w-4 h-4 text-success" />
+              <p className="text-xs font-medium text-text">Global payments</p>
+              <p className="text-[10px] text-text-subtle leading-tight">USD, cards, PayPal, Apple Pay</p>
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <RefreshCw className="w-4 h-4 text-text-muted" />
+              <p className="text-xs font-medium text-text">Cancel anytime</p>
+              <p className="text-[10px] text-text-subtle leading-tight">No contracts, no lock-in</p>
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <Shield className="w-4 h-4 text-text-muted" />
+              <p className="text-xs font-medium text-text">Privacy-first</p>
+              <p className="text-[10px] text-text-subtle leading-tight">Your content is yours</p>
+            </div>
+          </div>
         </div>
 
         <p className="text-center text-xs text-text-subtle mt-6">

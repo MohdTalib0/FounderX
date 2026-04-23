@@ -8,7 +8,7 @@ import { toast } from '@/store/toast'
 
 const LIMITS = {
   free:    { posts: 12,   comments: 15,  rewrites: 5  },
-  starter: { posts: 80,   comments: 100, rewrites: 40 },
+  starter: { posts: 40,   comments: 50,  rewrites: 20 },
   pro:     { posts: null, comments: null, rewrites: null },
 }
 

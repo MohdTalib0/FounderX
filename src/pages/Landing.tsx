@@ -7,10 +7,8 @@ import PublicHeader from '@/components/layout/PublicHeader'
 import PublicFooter from '@/components/layout/PublicFooter'
 import LiveDemo from '@/components/landing/LiveDemo'
 import { cn } from '@/lib/utils'
-import { useThemeStore } from '@/store/theme'
 
 export default function Landing() {
-  const { theme } = useThemeStore()
   return (
     <div className="min-h-screen bg-background text-text overflow-x-hidden">
       <Helmet>
@@ -98,50 +96,106 @@ export default function Landing() {
           </div>
         </div>
 
-        {/* App preview */}
-        <div className="px-4 sm:px-6 lg:px-10 max-w-7xl mx-auto">
-          <div className="relative rounded-2xl overflow-hidden shadow-[0_0_80px_rgba(99,102,241,0.1)]">
-            <img
-              src={theme === 'dark' ? '/og/hero-preview.png' : '/og/hero-preview-light.png'}
-              alt="Wrively dashboard: today's post ready, weekly tracker, quick actions"
-              width={1600}
-              height={900}
-              className="w-full h-auto block"
-              loading="eager"
-            />
+        {/* Output preview: rough idea → polished LinkedIn post */}
+        <div className="px-4 sm:px-6 lg:px-10 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1.2fr] gap-4 md:gap-6 items-stretch">
+            {/* Rough input */}
+            <div className="bg-surface border border-border rounded-2xl p-5 flex flex-col gap-3">
+              <p className="text-[10px] font-bold tracking-widest text-text-subtle uppercase">Your rough idea</p>
+              <p className="text-sm text-text-muted italic leading-relaxed flex-1">
+                "had a call with a user today and realized we've been building the wrong thing for 6 months"
+              </p>
+              <p className="text-xs text-text-subtle">14 words, 8 seconds of typing</p>
+            </div>
+
+            {/* Arrow + timer */}
+            <div className="flex md:flex-col items-center justify-center gap-2 md:gap-1 py-2">
+              <div className="flex items-center gap-1 text-[10px] font-bold text-primary uppercase tracking-widest">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                12s
+              </div>
+              <ArrowRight className="w-5 h-5 text-primary md:rotate-90" />
+            </div>
+
+            {/* Polished output */}
+            <div className="bg-primary/[0.03] border border-primary/25 rounded-2xl p-5 flex flex-col gap-3 shadow-[0_0_40px_rgba(99,102,241,0.08)]">
+              <div className="flex items-center justify-between">
+                <p className="text-[10px] font-bold tracking-widest text-primary uppercase">LinkedIn post</p>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full border border-amber-500/25 bg-amber-500/[0.08] text-amber-400 tracking-wide">BOLD</span>
+              </div>
+              <div className="flex-1 space-y-2.5">
+                <p className="text-sm text-text font-medium leading-snug">
+                  I spent 6 months building the wrong thing.
+                </p>
+                <p className="text-sm text-text-muted leading-relaxed">
+                  One 30-min call with a real user killed 3 quarters of my roadmap. The feature they actually wanted wasn't on our list. The one we were obsessed with? They never mentioned it.
+                </p>
+                <p className="text-sm text-text-muted leading-relaxed">
+                  Talk to users early. Talk to them often. Talk to them before you write a single line of code.
+                </p>
+                <p className="text-sm text-text italic">What's the one question you wish you'd asked 6 months ago?</p>
+              </div>
+            </div>
+          </div>
+          <p className="text-center text-xs text-text-subtle mt-5">
+            Real output from Wrively. Your posts sound like you, not like this founder.
+          </p>
+        </div>
+      </section>
+
+      {/* The problem — hit the pain first, then show the fix */}
+      <section className="bg-surface border-y border-border">
+        <div className="max-w-7xl mx-auto px-5 py-16 sm:py-20">
+          <div className="max-w-2xl mb-10">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight leading-tight mb-4">
+              Founders don't stop posting because they have nothing to say.
+            </h2>
+            <p className="text-base sm:text-lg text-primary font-medium mb-3">
+              They stop because every time they try, it doesn't sound like them.
+            </p>
+            <p className="text-base text-text-muted leading-relaxed">
+              The blank page. The AI draft that could've been written by anyone.
+              The 45 minutes of editing that still doesn't feel right.
+              You quit. Not because you're not interesting. Because you don't have a system.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              {
+                num: '01',
+                title: 'The blank page',
+                body: 'You open the editor. Nothing comes. You close it. Tell yourself you\'ll post tomorrow. Tomorrow never comes.',
+                color: 'text-violet-400',
+                bg: 'bg-violet-500/[0.04] border-violet-500/15',
+              },
+              {
+                num: '02',
+                title: 'Generic AI output',
+                body: '"As a founder, leveraging authenticity is key to building community." That\'s not you. That\'s nobody.',
+                color: 'text-amber-400',
+                bg: 'bg-amber-500/[0.04] border-amber-500/15',
+              },
+              {
+                num: '03',
+                title: 'You quit. Again.',
+                body: 'Three posts. No traction. No system. You decide LinkedIn isn\'t worth it. For the third time this year.',
+                color: 'text-red-400',
+                bg: 'bg-red-500/[0.04] border-red-500/15',
+              },
+            ].map(({ num, title, body, color, bg }) => (
+              <div key={num} className={cn('rounded-2xl border p-6', bg)}>
+                <p className={cn('text-xs font-bold tracking-widest mb-4', color)}>{num}</p>
+                <h3 className="font-semibold text-text mb-2">{title}</h3>
+                <p className="text-sm text-text-muted leading-relaxed">{body}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Live Demo — try before signup */}
       <LiveDemo />
-
-      {/* Featured testimonial */}
-      <section className="border-y border-border bg-surface">
-        <div className="max-w-4xl mx-auto px-5 py-10">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-            <div className="flex items-center gap-3 shrink-0">
-              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary">A</div>
-              <div>
-                <p className="text-sm font-semibold text-text">Alex R.</p>
-                <p className="text-xs text-text-muted">Seed-stage SaaS founder</p>
-              </div>
-            </div>
-            <div className="hidden sm:block w-px h-10 bg-border shrink-0" />
-            <p className="text-[15px] text-text leading-relaxed italic flex-1">
-              "I posted twice in 2023, got 8 likes each time, and quit. I've now posted every week for 6 weeks.
-              Two investors reached out. I didn't change. My process did."
-            </p>
-            <div className="hidden sm:flex gap-0.5 shrink-0">
-              {[1,2,3,4,5].map(i => (
-                <svg key={i} className="w-3.5 h-3.5 text-amber-400 fill-amber-400" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Voice Layer visual */}
       <section className="max-w-5xl mx-auto px-5 py-20 sm:py-28">
@@ -240,56 +294,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* The problem */}
-      <section className="bg-surface border-y border-border">
-        <div className="max-w-7xl mx-auto px-5 py-20 sm:py-28">
-          <div className="max-w-2xl mb-14">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight mb-5">
-              Founders don't stop posting because they have nothing to say.
-            </h2>
-            <p className="text-lg text-primary font-medium mb-4">
-              They stop because every time they try, it doesn't sound like them.
-            </p>
-            <p className="text-base text-text-muted leading-relaxed">
-              The blank page. The AI draft that could've been written by anyone.
-              The 45 minutes of editing that still doesn't feel right.
-              You quit. Not because you're not interesting. Because you don't have a system.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {[
-              {
-                num: '01',
-                title: 'The blank page',
-                body: 'You open the editor. Nothing comes. You close it. Tell yourself you\'ll post tomorrow. Tomorrow never comes.',
-                color: 'text-violet-400',
-                bg: 'bg-violet-500/[0.04] border-violet-500/15',
-              },
-              {
-                num: '02',
-                title: 'Generic AI output',
-                body: '"As a founder, leveraging authenticity is key to building community." That\'s not you. That\'s nobody.',
-                color: 'text-amber-400',
-                bg: 'bg-amber-500/[0.04] border-amber-500/15',
-              },
-              {
-                num: '03',
-                title: 'You quit. Again.',
-                body: 'Three posts. No traction. No system. You decide LinkedIn isn\'t worth it. For the third time this year.',
-                color: 'text-red-400',
-                bg: 'bg-red-500/[0.04] border-red-500/15',
-              },
-            ].map(({ num, title, body, color, bg }) => (
-              <div key={num} className={cn('rounded-2xl border p-7', bg)}>
-                <p className={cn('text-xs font-bold tracking-widest mb-5', color)}>{num}</p>
-                <h3 className="font-semibold text-text mb-2.5">{title}</h3>
-                <p className="text-sm text-text-muted leading-relaxed">{body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* How it works */}
       <section className="max-w-7xl mx-auto px-5 py-20 sm:py-28">
@@ -476,58 +480,28 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="max-w-7xl mx-auto px-5 py-20 sm:py-28">
-        <div className="max-w-xl mb-14">
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight mb-4">
-            Founders who stopped making excuses.
+      {/* Early access — honest, no fake testimonials */}
+      <section className="max-w-4xl mx-auto px-5 py-20 sm:py-24">
+        <div className="bg-surface border border-primary/20 rounded-2xl px-6 sm:px-10 py-10 sm:py-12 text-center relative overflow-hidden">
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+          <p className="text-xs font-bold tracking-widest text-primary uppercase mb-4">Early access</p>
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight leading-tight mb-4">
+            We're in early access with founders shipping their first posts this week.
           </h2>
-          <p className="text-base text-text-muted">
-            They all had the same problem. One of them is probably you.
+          <p className="text-base text-text-muted leading-relaxed max-w-xl mx-auto mb-8">
+            Real testimonials are coming as our founders hit their first engagement wins.
+            Until then, try the free demo above or sign up and judge the output yourself.
+            If it doesn't sound like you, you'll know in 2 minutes.
           </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {[
-            {
-              initial: 'A',
-              name: 'Alex R.',
-              role: 'Seed-stage SaaS founder',
-              quote: 'I posted twice in 2023, got 8 likes each time, and quit. I\'ve now posted every week for 6 weeks. Two investors reached out. I didn\'t change. My process did.',
-            },
-            {
-              initial: 'S',
-              name: 'Sara M.',
-              role: 'B2B fintech co-founder',
-              quote: 'Every AI tool I tried made me sound like a LinkedIn influencer. Wrively actually sounds like me. My team recognized my voice in the first post I showed them.',
-            },
-            {
-              initial: 'J',
-              name: 'James K.',
-              role: 'Dev tools founder',
-              quote: 'I used to spend 90 minutes on a post and never publish it. Now I spend 3 minutes and hit post. The consistency alone has changed how people perceive me.',
-            },
-          ].map(({ initial, name, role, quote }) => (
-            <div key={name} className="bg-surface border border-border rounded-2xl p-7 flex flex-col gap-6">
-              <div className="flex gap-0.5">
-                {[1,2,3,4,5].map(i => (
-                  <svg key={i} className="w-3.5 h-3.5 text-amber-400 fill-amber-400" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                ))}
-              </div>
-              <p className="text-sm text-text leading-relaxed flex-1 italic">"{quote}"</p>
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-primary/15 flex items-center justify-center text-xs font-bold text-primary shrink-0">
-                  {initial}
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-text">{name}</p>
-                  <p className="text-xs text-text-muted">{role}</p>
-                </div>
-              </div>
-            </div>
-          ))}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link to="/signup">
+              <Button size="lg" className="gap-2">
+                Start free in 2 minutes
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+            <span className="text-xs text-text-subtle">No credit card · Cancel anytime</span>
+          </div>
         </div>
       </section>
 
@@ -594,115 +568,22 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="border-b border-border bg-background">
-        <div className="max-w-4xl mx-auto px-5 py-14">
-          <div className="grid grid-cols-3 gap-8 text-center">
-            {[
-              { value: '< 3 min', label: 'From open to first post copied' },
-              { value: '3x/week', label: 'Posting rhythm the product is built around' },
-              { value: '40+', label: 'Founders on Wrively' },
-            ].map(({ value, label }) => (
-              <div key={label}>
-                <p className="text-2xl sm:text-3xl font-bold text-text tracking-tight">{value}</p>
-                <p className="text-xs text-text-muted mt-2 leading-snug">{label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* Pricing teaser */}
-      <section className="max-w-7xl mx-auto px-5 py-20 sm:py-28">
-        <div className="max-w-xl mb-14">
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight mb-4">
-            Start free. Upgrade when you're posting.
-          </h2>
-          <p className="text-base text-text-muted">
-            No credit card required.{' '}
-            <Link to="/pricing" className="text-primary hover:text-primary-hover transition-colors">
-              See full comparison
-            </Link>
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {/* Free */}
-          <div className="bg-surface border border-border rounded-2xl p-7 flex flex-col gap-6">
-            <div>
-              <p className="font-semibold text-text mb-3">Free</p>
-              <div className="flex items-baseline gap-1">
-                <p className="text-4xl font-bold text-text">$0</p>
-              </div>
-              <p className="text-xs text-text-muted mt-2">For founders just starting out.</p>
-            </div>
-            <ul className="space-y-2.5 flex-1">
-              {['12 posts / month', '15 comment suggestions', '5 rewrites & remixes', 'Voice Layer persona', '30-day history'].map(f => (
-                <li key={f} className="flex items-center gap-2.5 text-sm text-text-muted">
-                  <Check className="w-3.5 h-3.5 text-success shrink-0" />
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <Link to="/signup">
-              <Button variant="secondary" className="w-full">Start free</Button>
-            </Link>
-          </div>
-
-          {/* Starter */}
-          <div className="relative bg-surface border border-primary/30 rounded-2xl p-7 flex flex-col gap-6 overflow-hidden shadow-[0_4px_32px_rgba(99,102,241,0.1)]">
-            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary/60 via-primary to-primary/60" />
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <p className="font-semibold text-primary">Starter</p>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-primary/25 bg-primary/[0.08] text-primary tracking-widest uppercase">
-                  Popular
-                </span>
-              </div>
-              <div className="flex items-baseline gap-1">
-                <p className="text-4xl font-bold text-text">$9</p>
-                <p className="text-sm text-text-muted">/mo</p>
-              </div>
-              <p className="text-xs text-text-muted mt-2">Fine-tune every post until it's perfect.</p>
-            </div>
-            <ul className="space-y-2.5 flex-1">
-              {['40 posts / month', 'Refine & regenerate per post', 'Voice sample training', 'Persona regeneration', '90-day history'].map(f => (
-                <li key={f} className="flex items-center gap-2.5 text-sm text-text-muted">
-                  <Check className="w-3.5 h-3.5 text-primary shrink-0" />
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <Link to="/signup">
-              <Button className="w-full gap-1.5">
-                Get Starter <ArrowRight className="w-3.5 h-3.5" />
-              </Button>
-            </Link>
-          </div>
-
-          {/* Pro */}
-          <div className="bg-surface border border-border rounded-2xl p-7 flex flex-col gap-6">
-            <div>
-              <p className="font-semibold text-text mb-3">Pro</p>
-              <div className="flex items-baseline gap-1">
-                <p className="text-4xl font-bold text-text">$19</p>
-                <p className="text-sm text-text-muted">/mo</p>
-              </div>
-              <p className="text-xs text-text-muted mt-2">For founders posting consistently.</p>
-            </div>
-            <ul className="space-y-2.5 flex-1">
-              {['Unlimited posts', 'Unlimited comments and rewrites', 'Persona regeneration', 'Full history', 'Priority AI', 'Performance insights'].map(f => (
-                <li key={f} className="flex items-center gap-2.5 text-sm text-text-muted">
-                  <Check className="w-3.5 h-3.5 text-success shrink-0" />
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <Link to="/signup">
-              <Button variant="secondary" className="w-full">Get Pro</Button>
-            </Link>
-          </div>
-        </div>
+      {/* Pricing CTA — homepage just teases, /pricing tells the full story */}
+      <section className="max-w-3xl mx-auto px-5 py-14 text-center">
+        <p className="text-xs font-bold tracking-widest text-primary uppercase mb-3">Pricing</p>
+        <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-3">
+          Free forever for the first 12 posts a month.
+        </h2>
+        <p className="text-base text-text-muted mb-6">
+          Paid plans start at $9/month. No credit card to try it.
+        </p>
+        <Link to="/pricing">
+          <Button variant="secondary" className="gap-2">
+            See pricing
+            <ArrowRight className="w-4 h-4" />
+          </Button>
+        </Link>
       </section>
 
       {/* FAQ */}

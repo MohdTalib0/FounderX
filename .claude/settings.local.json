@@ -4,7 +4,8 @@
       "Bash(xargs -I {} basename {})",
       "Bash(find 'C:\\\\Users\\\\moham\\\\Project - FounderX' -name *.tsx -path */pages/* -type f)",
       "Bash(grep -B 5 -A 15 \"sent_emails\\\\|email_type\" \"/c/Users/moham/Project - FounderX/supabase/migrations/\"*.sql)",
-      "mcp__Claude_Preview__preview_start"
+      "mcp__Claude_Preview__preview_start",
+      "mcp__da195e7f-f425-4f36-972c-2a81fdf34e85__whoami"
     ]
   }
 }
